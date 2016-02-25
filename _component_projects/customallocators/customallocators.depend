@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1442707465 source:c:\users\tarpeyd12\desktop\customallocators\main.cpp
+	<iostream>
+	<cstdlib>
+	<cstdio>
+	"alloc/alloc.h"
+
+1442707344 c:\users\tarpeyd12\desktop\customallocators\alloc\allocator.h
+	<cassert>
+
+1442623705 c:\users\tarpeyd12\desktop\customallocators\alloc\default_allocator.h
+	"allocator.h"
+	<map>
+
+1442537190 c:\users\tarpeyd12\desktop\customallocators\alloc\alloc.h
+	"align.h"
+	"allocator.h"
+	"default_allocator.h"
+	"linear_allocator.h"
+
+1442537764 c:\users\tarpeyd12\desktop\customallocators\alloc\align.h
+
+1442706348 c:\users\tarpeyd12\desktop\customallocators\alloc\linear_allocator.h
+	"allocator.h"
+	"align.h"
+
