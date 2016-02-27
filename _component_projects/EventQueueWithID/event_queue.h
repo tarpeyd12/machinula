@@ -7,6 +7,8 @@
 
 #include "lib/lthread/lthread.h"
 
+#include "primeID.h"
+
 namespace EventQueue
 {
     class EventQueue;
@@ -18,7 +20,8 @@ namespace EventQueue
         public:
             Event( uintmax_t _et ) : _event_type(_et) {  }
             inline uintmax_t eventType() const { return _event_type; }
-            template < typename T > static inline uintmax_t Type() { return typeid(T).hash_code(); }
+            //template < typename T > static inline uintmax_t Type() { return typeid(T).hash_code(); }
+            template < typename T > static inline uintmax_t Type() { return primeid::type<T>(); }
     };
 
     class Listener

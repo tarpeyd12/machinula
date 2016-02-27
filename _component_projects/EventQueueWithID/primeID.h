@@ -5,22 +5,30 @@
 #include <unordered_map>
 #include <cassert>
 
-#define PRIME_FILENAME "primes.num"
-#define NO_SUPER_ID 1
+#define PRIMEID_NO_SUPER_ID 1
 
-class PrimeID{
-private:
-    static std::unordered_map<uintmax_t, uintmax_t> issuedPrimes;
+/*
+#define __primeid_isType(_class) bool isType( PrimeIDType type ) { return primeid::isType<_class>(type); }
+#define __primeid_isType_operator(_class) bool operator==( PrimeIDType type ) { return primeid::isType<_class>(type); }
 
-    static uintmax_t nextPrime();
+#define primeid_Identifier(_class) static primeid::PrimeIDType _prime_id; __primeid_isType(_class) __primeid_isType_operator(_class)
+#define primeid_initIdentifier(_class) primeid::PrimeIDType _class::_prime_id = primeid::getID<_class>();
+#define primeid_initIdentifier(_class,_parent) primeid::PrimeIDType _class::_prime_id = primeid::getID<_class>(_parent::_prime_id);
+*/
 
-    static FILE* primeFile;
+namespace primeid
+{
+    typedef uintmax_t PrimeIDType;
 
-public:
-    template <class T> static uintmax_t id(const uintmax_t superID);//pass the ID of the superclass, null if none
-    template <class T> static inline uintmax_t type() { return id<T>(NO_SUPER_ID); };
-	template <class T> static bool isType(uintmax_t type) { return (T::id % type == 0); };
-};
+    PrimeIDType nextPrime();
+
+    // pass the ID of the "superclass", null if none
+    template< class T > PrimeIDType getID( const PrimeIDType superID = PRIMEID_NO_SUPER_ID );
+
+    template< class T > inline PrimeIDType type();
+    template< class T > inline bool isType( PrimeIDType type );
+}
+
 
 #include "primeID.inl"
 

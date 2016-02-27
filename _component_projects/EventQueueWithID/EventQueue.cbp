@@ -44,6 +44,10 @@
 		<Unit filename="lib/lthread/TinyThread++-1.1/source/tinythread.h" />
 		<Unit filename="lib/lthread/lthread.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="primeID.h" />
+		<Unit filename="primeID.inl" />
+		<Unit filename="primeid.cpp" />
+		<Unit filename="primenumbers.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

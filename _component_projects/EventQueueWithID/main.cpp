@@ -1,12 +1,16 @@
 #include <iostream>
 
 #include <cassert>
-#include <fstream>
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
 
+#include <fstream>
+#include <sstream>
+
 #include "event_queue.h"
+
+#include "primeID.h"
 
 class characterEvent : public EventQueue::Event
 {
@@ -84,7 +88,7 @@ class myListener : public EventQueue::Listener
             if( e->eventType() == EventQueue::Event::Type<waitEvent>() )
             {
                 const waitEvent * event = static_cast<const waitEvent*>( e );
-                Sleep( event->useconds );
+                //Sleep( event->useconds );
             }
             else
             {
@@ -191,6 +195,54 @@ int main( int argc, char ** argv )
     event_queue->hookListener( l2 );
     //heavyListener * l3 = new heavyListener();
     //event_queue->hookListener( l3 );
+
+
+    if( 0 )
+    {
+        std::string outstring = "namespace primeid\n{\n\tint __primeNumberData[] =\n\t{\n\t\t";
+        {
+            std::fstream file( "primes.num", std::fstream::in | std::fstream::binary );
+
+            file.seekg( 0, file.end );
+            int length = file.tellg();
+            file.seekg( 0, file.beg );
+
+            std::vector<char> dataout;
+            dataout.resize( length );
+
+            file.read( &dataout[0], length );
+
+            file.close();
+
+            int * pdataout = reinterpret_cast<int*>( dataout.data() );
+
+            std::vector<int> primes( pdataout, pdataout + dataout.size()/sizeof(int) );
+
+            //int l = primes.size();
+            while( primes.size() > 1024 ) primes.pop_back();
+
+            for( uintmax_t i = 0; i < primes.size(); ++i )
+            {
+                std::stringstream stream;
+
+                stream << "0x" << std::hex << primes[i] << ", ";
+                if( (i+1) % 8 == 0 )
+                {
+                    stream << "\n\t\t";
+                }
+
+                outstring += stream.str();
+            }
+        }
+        outstring += "0x0\n\t};\n}\n";
+
+        std::fstream ofile( "primenumbers.h", std::fstream::out | std::fstream::trunc );
+
+        ofile << outstring;
+
+        ofile.close();
+    }
+
 
     std::fstream file( argv[1], std::fstream::in | std::fstream::binary );
 

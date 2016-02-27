@@ -84,7 +84,7 @@ class myListener : public EventQueue::Listener
             if( e->eventType() == EventQueue::Event::Type<waitEvent>() )
             {
                 const waitEvent * event = static_cast<const waitEvent*>( e );
-                Sleep( event->useconds );
+                //Sleep( event->useconds );
             }
             else
             {
