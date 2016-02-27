@@ -196,7 +196,7 @@ int main( int argc, char ** argv )
     //heavyListener * l3 = new heavyListener();
     //event_queue->hookListener( l3 );
 
-
+/*
     if( 0 )
     {
         std::string outstring = "namespace primeid\n{\n\tint __primeNumberData[] =\n\t{\n\t\t";
@@ -243,7 +243,7 @@ int main( int argc, char ** argv )
         ofile.close();
     }
 
-
+*/
     std::fstream file( argv[1], std::fstream::in | std::fstream::binary );
 
     event_queue->queueEvent( new waitEvent( 0 ) );
