@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="EventQueue" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/EventQueue" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/EventQueue" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="./main.cpp" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-fomit-frame-pointer" />
+			<Add option="-fexpensive-optimizations" />
+			<Add option="-O3" />
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="event_queue.cpp" />
+		<Unit filename="event_queue.h" />
+		<Unit filename="lib/lthread/TinyThread++-1.1/source/fast_mutex.h" />
+		<Unit filename="lib/lthread/TinyThread++-1.1/source/tinythread.cpp" />
+		<Unit filename="lib/lthread/TinyThread++-1.1/source/tinythread.h" />
+		<Unit filename="lib/lthread/lthread.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="primeID.h" />
+		<Unit filename="primeID.inl" />
+		<Unit filename="primeid.cpp" />
+		<Unit filename="primenumbers.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
