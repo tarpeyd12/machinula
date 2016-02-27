@@ -17,7 +17,7 @@
 namespace ecs
 {
     typedef std::size_t ComponentID;
-    struct EntitySystem;
+    struct EntityManager;
 
     struct Component
     {
@@ -32,13 +32,13 @@ namespace ecs
         std::unordered_map< ComponentID, Component* > mComponents; // is actually a hashmap, so it uses some extra memory :/
     };
 
-    struct EntitySystem
+    struct EntityManager
     {
         protected:
             static std::multimap< ComponentID, Entity* > componentStore;
         public:
 
-            EntitySystem();
+            EntityManager();
 
             template < typename ComponentType >
             inline void addComponent( Entity * e, ComponentType * comp );
@@ -56,7 +56,7 @@ namespace ecs
             inline void _process_get_entities_verticle( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const;
     };
 
-    std::multimap< ComponentID, Entity* > EntitySystem::componentStore;
+    std::multimap< ComponentID, Entity* > EntityManager::componentStore;
 
 }
 

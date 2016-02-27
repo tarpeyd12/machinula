@@ -19,17 +19,17 @@ int main()
 {
     std::cout << "Hello world!" << std::endl;
 
-    ecs::EntitySystem entitySystem;
+    ecs::EntitySystem entityManager;
 
     for(int i = 0; i < 750000; ++i)
     {
         ecs::Entity * e = new ecs::Entity();
 
-        if(i%1==0) entitySystem.addComponent( e, new testcomponent<1>() );
-        if(i%2==0) entitySystem.addComponent( e, new testcomponent<2>() );
-        if(i%3==0) entitySystem.addComponent( e, new testcomponent<3>() );
-        if(i%4==0) entitySystem.addComponent( e, new testcomponent<4>() );
-        if(i%5==0) entitySystem.addComponent( e, new testcomponent<5>() );
+        if(i%1==0) entityManager.addComponent( e, new testcomponent<1>() );
+        if(i%2==0) entityManager.addComponent( e, new testcomponent<2>() );
+        if(i%3==0) entityManager.addComponent( e, new testcomponent<3>() );
+        if(i%4==0) entityManager.addComponent( e, new testcomponent<4>() );
+        if(i%5==0) entityManager.addComponent( e, new testcomponent<5>() );
     }
     std::cout << "Init done." << std::endl;
 
@@ -48,7 +48,7 @@ int main()
         if(i%25==0) std::cout << i << std::endl;
         entities.clear();
 
-        entitySystem.getEntities( desiredComponents, entities );
+        entityManager.getEntities( desiredComponents, entities );
         //entitySystem.getEntities<testcomponent7>( entities );
 
         std::cout << "ResultEntityCount=" << entities.size() << "\n";
