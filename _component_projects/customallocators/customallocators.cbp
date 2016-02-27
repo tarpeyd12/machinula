@@ -39,6 +39,8 @@
 		<Unit filename="alloc/allocator.h" />
 		<Unit filename="alloc/default_allocator.h" />
 		<Unit filename="alloc/linear_allocator.h" />
+		<Unit filename="alloc/object_pool_allocator.h" />
+		<Unit filename="alloc/pool_allocator.h" />
 		<Unit filename="alloc/stack_allocator.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>

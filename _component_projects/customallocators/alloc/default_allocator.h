@@ -11,6 +11,7 @@ namespace alloc
     {
         private:
             std::map< void *, std::size_t > _allocated_blocks;
+
         public:
             DefaultAllocator( std::size_t block_size = 0, void * block_start = 0 );
             ~DefaultAllocator();
@@ -36,12 +37,16 @@ namespace alloc
     DefaultAllocator::allocateBlock( std::size_t size, uint8_t align )
     {
         assert( size > 0 );
-        ++_num_allocations;
-        _used_memory += size;
+
+        if( _block_size > 0 && _block_size - size < _used_memory )
+            return nullptr;
+
+        _incrementAllocations( size );
+
         void * block = malloc( size );
+
         _allocated_blocks.insert( std::pair<void*,std::size_t>(block, size) );
-        //std::cout << " _num_allocations = " << _num_allocations;
-        //std::cout << " _used_memory = " << _used_memory << "\n";
+
         return block;
     }
 
@@ -49,13 +54,15 @@ namespace alloc
     DefaultAllocator::deallocateBlock( void * block )
     {
         assert( block != nullptr );
+
         auto it = _allocated_blocks.find( block );
+
         assert( it != _allocated_blocks.end() );
-        _used_memory -= it->second;
+
+        _decrementAllocations( it->second );
+
         _allocated_blocks.erase( it );
-        --_num_allocations;
-        //std::cout << " _num_allocations = " << _num_allocations;
-        //std::cout << " _used_memory = " << _used_memory << "\n";
+
         free( block );
     }
 }

@@ -24,3 +24,42 @@
 	"allocator.h"
 	"align.h"
 
+1443052901 source:c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\main.cpp
+	<iostream>
+	<vector>
+	<cstdlib>
+	<cstdio>
+	"alloc/alloc.h"
+
+1443049841 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\alloc.h
+	"align.h"
+	"allocator.h"
+	"default_allocator.h"
+	"linear_allocator.h"
+	"stack_allocator.h"
+	"pool_allocator.h"
+	"object_pool_allocator.h"
+
+1443040919 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\align.h
+
+1443036444 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\allocator.h
+	<iostream>
+	<cassert>
+
+1443034468 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\default_allocator.h
+	"allocator.h"
+	<map>
+
+1443034477 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\linear_allocator.h
+	"allocator.h"
+	"align.h"
+
+1443045703 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\stack_allocator.h
+	"allocator.h"
+
+1443034443 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\pool_allocator.h
+	"allocator.h"
+
+1443049950 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\object_pool_allocator.h
+	"pool_allocator.h"
+
