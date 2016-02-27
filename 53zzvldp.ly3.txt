@@ -1,0 +1,89 @@
+﻿Revert "Merge branch 'refs/heads/Entity-System-Finish'"
+
+This reverts commit 636ede6cfdc7f038219289a6b0069c4967ef77f5, reversing
+changes made to 890212500d4fa57aa6d57401a0609856458e0e60.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is ahead of 'origin/master' by 4 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	modified:   _component_projects/EventQueue/EventQueue.depend
+#	modified:   _component_projects/EventQueue/EventQueue.layout
+#	modified:   _component_projects/EventQueue/main.cpp
+#	deleted:    _component_projects/EventQueueWithID/EventQueue.cbp
+#	deleted:    _component_projects/EventQueueWithID/EventQueue.depend
+#	deleted:    _component_projects/EventQueueWithID/EventQueue.layout
+#	deleted:    _component_projects/EventQueueWithID/event_queue.cpp
+#	deleted:    _component_projects/EventQueueWithID/event_queue.h
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/README.txt
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/Doxyfile
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/annotated.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/bc_s.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classes.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1chrono_1_1duration-members.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1chrono_1_1duration.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1condition__variable-members.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1condition__variable.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1fast__mutex-members.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1fast__mutex.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1lock__guard-members.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1lock__guard.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1mutex-members.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1mutex.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1ratio-members.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1ratio.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1recursive__mutex-members.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1recursive__mutex.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1thread-members.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1thread.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1thread_1_1id-members.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/classtthread_1_1thread_1_1id.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/closed.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/doxygen.css
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/doxygen.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/fast__mutex_8h.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/fast__mutex_8h_source.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/files.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/functions.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/functions_func.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/globals.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/globals_defs.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/index.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/namespacemembers.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/namespacemembers_func.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/namespacemembers_type.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/namespaces.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/namespacetthread.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/namespacetthread_1_1chrono.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/namespacetthread_1_1this__thread.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/nav_f.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/nav_h.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/open.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/tab_a.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/tab_b.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/tab_h.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/tab_s.png
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/tabs.css
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/tinythread_8h.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/doc/html/tinythread_8h_source.html
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/source/fast_mutex.h
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/source/tinythread.cpp
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/source/tinythread.h
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/test/Makefile
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/test/Makefile.msvc
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/test/fractal.cpp
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/test/hello.cpp
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/TinyThread++-1.1/test/test.cpp
+#	deleted:    _component_projects/EventQueueWithID/lib/lthread/lthread.h
+#	deleted:    _component_projects/EventQueueWithID/main.cpp
+#	deleted:    _component_projects/EventQueueWithID/primeID.h
+#	deleted:    _component_projects/EventQueueWithID/primeID.inl
+#	deleted:    _component_projects/EventQueueWithID/primeid.cpp
+#	deleted:    _component_projects/EventQueueWithID/primenumbers.h
+#	deleted:    _component_projects/EventQueueWithID/primes.num
+#	modified:   _component_projects/ecstest/ecstest.layout
+#
+
