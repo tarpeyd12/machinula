@@ -47,6 +47,7 @@ namespace alloc
         uint8_t
         forwardAdj_withHeader( const void * address, uint8_t align, uint8_t header_size )
         {
+            // TODO: make sure without a doubt that this line is comparable to the ones commented out
             return forwardAdj( address + header_size, align );
 
             /*uint8_t adjustment = forwardAdj( address, align );
