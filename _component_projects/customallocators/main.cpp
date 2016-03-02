@@ -8,18 +8,18 @@
 
 #define _MEM_POOL_SIZE (1024*1024*1024*0.5)
 
-#define _NUM_TESTS 10
+#define _NUM_TESTS 1
 
 struct data_chunk
 {
-    uint32_t data[4];
+    uint64_t data[4];
 };
 
 int main()
 {
     std::ios_base::sync_with_stdio( false );
 
-    alloc::DefaultAllocator d( _MEM_POOL_SIZE+sizeof(uintptr_t)*32, nullptr );
+    alloc::DefaultAllocator d( _MEM_POOL_SIZE+sizeof(uintptr_t)*64, nullptr );
 
     void * _mem_pool = d.allocateBlock( _MEM_POOL_SIZE, 0 );
 
@@ -28,7 +28,7 @@ int main()
 
     for( unsigned c = 0; c < _NUM_TESTS; ++c )
     {
-        std::cout << c << " ... " << std::flush;
+        std::cout << "la: " << c << " ... " << std::flush;
 
         while( la->unusedMemory() > sizeof(data_chunk) )
         {
@@ -46,7 +46,7 @@ int main()
 
     for( unsigned c = 0; c < _NUM_TESTS; ++c )
     {
-        std::cout << c << " ... " << std::flush;
+        std::cout << "sa: " << c << " ... " << std::flush;
 
         unsigned _num_chunks = _MEM_POOL_SIZE/sizeof(data_chunk*);
         data_chunk ** chunks = (data_chunk**)sa->allocateBlock( _num_chunks, alignof(data_chunk*));
@@ -76,7 +76,7 @@ int main()
     std::vector<data_chunk*> chunks;
     for( unsigned c = 0; c < _NUM_TESTS; ++c )
     {
-        std::cout << c << " ... " << std::flush;
+        std::cout << "pa: " << c << " ... " << std::flush;
 
         while( pa->unusedMemory() > sizeof(data_chunk) )
         {
@@ -87,6 +87,30 @@ int main()
         for( auto p : chunks )
         {
             pa->deallocate<data_chunk>( p );
+        }
+
+        chunks.clear();
+
+        std::cout << "Done." << std::endl;
+    }
+
+    alloc::Allocator * fa;
+    fa = new(d.allocate<alloc::FreeListAllocator>()) alloc::FreeListAllocator( _MEM_POOL_SIZE, _mem_pool );
+
+    //std::vector<data_chunk*> chunks;
+    for( unsigned c = 0; c < _NUM_TESTS; ++c )
+    {
+        std::cout << "fa: " << c << " ... " << std::flush;
+
+        while( fa->unusedMemory() > sizeof(data_chunk) )
+        {
+            chunks.push_back( new(fa->allocate<data_chunk>()) data_chunk );
+            chunks.back()->data[0] = 0;
+        }
+
+        for( auto p : chunks )
+        {
+            fa->deallocate<data_chunk>( p );
         }
 
         chunks.clear();
@@ -106,9 +130,14 @@ int main()
     std::cout << "Max bytes allocated = " << pa->maxUsedMemory() << std::endl;
     std::cout << "Max num allocations = " << pa->maxNumAllocations() << std::endl;
 
+    std::cout << "\nFreeList allocator:" << std::endl;
+    std::cout << "Max bytes allocated = " << fa->maxUsedMemory() << std::endl;
+    std::cout << "Max num allocations = " << fa->maxNumAllocations() << std::endl;
+
     d.deallocate<alloc::LinearAllocator>( la );
     d.deallocate<alloc::StackAllocator>( sa );
     d.deallocate<alloc::PoolAllocator>( pa );
+    d.deallocate<alloc::FreeListAllocator>( fa );
 
     d.deallocateBlock( _mem_pool );
 

@@ -10,6 +10,10 @@ namespace alloc
     {
         public:
             ObjectPoolAllocator( std::size_t block_size, void * block_start );
+
+        private:
+            ObjectPoolAllocator( const ObjectPoolAllocator & ) = delete;
+            ObjectPoolAllocator & operator = ( const ObjectPoolAllocator & ) = delete;
     };
 
     template < typename Type >

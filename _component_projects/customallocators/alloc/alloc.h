@@ -9,5 +9,6 @@
 #include "stack_allocator.h"
 #include "pool_allocator.h"
 #include "object_pool_allocator.h"
+#include "free_list_allocator.h"
 
 #endif // ALLOC_H_INCLUDED

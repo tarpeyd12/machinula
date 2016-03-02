@@ -8,11 +8,21 @@ namespace alloc
     class StackAllocator : public Allocator
     {
         private:
+
+            struct _AllocationHeader
+            {
+                #ifndef NDEBUG
+                void * prev_address;
+                #endif // NDEBUG
+
+                uint8_t adjust;
+            };
+
+            void * _current_pos;
+
             #ifndef NDEBUG
             void * _prev_pos;
             #endif // NDEBUG
-
-            void * _current_pos;
 
         public:
             StackAllocator( std::size_t block_size, void * block_start );
@@ -24,15 +34,6 @@ namespace alloc
         private:
             StackAllocator( const StackAllocator & ) = delete;
             StackAllocator & operator = ( const StackAllocator & ) = delete;
-
-            struct _AllocationHeader
-            {
-                #ifndef NDEBUG
-                void * prev_address;
-                #endif // NDEBUG
-
-                uint8_t adjust;
-            };
     };
 
     StackAllocator::StackAllocator( std::size_t block_size, void * block_start )

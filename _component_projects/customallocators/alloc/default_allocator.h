@@ -3,14 +3,16 @@
 
 #include "allocator.h"
 
-#include <map>
+//#include <map>
+#include <unordered_map>
 
 namespace alloc
 {
     class DefaultAllocator final : public Allocator
     {
         private:
-            std::map< void *, std::size_t > _allocated_blocks;
+            //std::map< void *, std::size_t > _allocated_blocks;
+            std::unordered_map< void *, std::size_t > _allocated_blocks;
 
         public:
             DefaultAllocator( std::size_t block_size = 0, void * block_start = 0 );
@@ -18,6 +20,8 @@ namespace alloc
 
             void * allocateBlock( std::size_t size, uint8_t align ) override;
             void deallocateBlock( void * block ) override;
+
+            void clear();
 
         private:
             DefaultAllocator( const DefaultAllocator & ) = delete;
@@ -64,6 +68,15 @@ namespace alloc
         _allocated_blocks.erase( it );
 
         free( block );
+    }
+
+    void
+    DefaultAllocator::clear()
+    {
+        while( _allocated_blocks.size() )
+        {
+            deallocateBlock( _allocated_blocks.begin()->first );
+        }
     }
 }
 

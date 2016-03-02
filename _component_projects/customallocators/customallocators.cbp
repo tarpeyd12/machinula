@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DDEBUG" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -38,6 +39,7 @@
 		<Unit filename="alloc/alloc.h" />
 		<Unit filename="alloc/allocator.h" />
 		<Unit filename="alloc/default_allocator.h" />
+		<Unit filename="alloc/free_list_allocator.h" />
 		<Unit filename="alloc/linear_allocator.h" />
 		<Unit filename="alloc/object_pool_allocator.h" />
 		<Unit filename="alloc/pool_allocator.h" />
