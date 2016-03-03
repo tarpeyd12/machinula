@@ -12,7 +12,7 @@
 
 struct data_chunk
 {
-    uint64_t data[4];
+    uint8_t data[4];
 };
 
 int main()

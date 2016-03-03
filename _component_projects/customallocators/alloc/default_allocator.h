@@ -47,7 +47,7 @@ namespace alloc
 
         _incrementAllocations( size );
 
-        void * block = malloc( size );
+        void * block = ::operator new( size );
 
         _allocated_blocks.insert( std::pair<void*,std::size_t>(block, size) );
 
@@ -67,7 +67,7 @@ namespace alloc
 
         _allocated_blocks.erase( it );
 
-        free( block );
+        ::operator delete( block );
     }
 
     void
