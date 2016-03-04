@@ -8,12 +8,32 @@ struct testcomponent : public ecs::Component
     ecs_ComponentID;
     static int p;
     int a;
-    testcomponent() : a(++p)
+    testcomponent()
+    : a(++p)
     { }
 };
 template< int I > ecs_initComponentID(testcomponent<I>);
 template< int I > int testcomponent<I>::p = 0;
 
+class TestSystem : public ecs::System
+{
+    public:
+        TestSystem( const std::vector<ecs::ComponentID> &requiredComponentTypes )
+        : System( requiredComponentTypes )
+        { }
+
+        inline
+        void
+        processEntity( ecs::Entity *e )
+        {
+            e->get<testcomponent<1>>()->a++;
+            e->get<testcomponent<2>>()->a++;
+            e->get<testcomponent<3>>()->a++;
+            e->get<testcomponent<4>>()->a++;
+            e->get<testcomponent<5>>()->a++;
+        }
+
+};
 
 int main()
 {
@@ -42,15 +62,17 @@ int main()
     desiredComponents.push_back( testcomponent<4>::_component_id );
     desiredComponents.push_back( testcomponent<5>::_component_id );
 
+    TestSystem testSystem(desiredComponents);
+
     for( int i = 0; i < 1000; ++i )
     //for( int i = 0; i < 10; ++i )
     {
-        if(i%25==0) std::cout << i << std::endl;
-        entities.clear();
-
-        entityManager.getEntities( desiredComponents, entities );
+        std::cout << i << std::endl;
         //entitySystem.getEntities<testcomponent7>( entities );
 
+        testSystem.processEntities();
+
+        /*
         std::cout << "ResultEntityCount=" << entities.size() << "\n";
 
         for( auto e : entities )
