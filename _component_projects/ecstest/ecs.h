@@ -17,7 +17,7 @@
 namespace ecs
 {
     typedef std::size_t ComponentID;
-    struct EntityManager;
+    struct Manager;
 
     struct Component
     {
@@ -32,13 +32,13 @@ namespace ecs
         std::unordered_map< ComponentID, Component* > mComponents; // is actually a hashmap, so it uses some extra memory :/
     };
 
-    struct EntityManager
+    struct Manager
     {
         protected:
             static std::multimap< ComponentID, Entity* > componentStore;
         public:
 
-            EntityManager();
+            Manager();
 
             template < typename ComponentType >
             inline void addComponent( Entity * e, ComponentType * comp );
@@ -50,15 +50,31 @@ namespace ecs
             inline void getEntities( std::vector< Entity* > &result ) const;
 
             inline void getEntities( const std::vector<ComponentID> &componentTypes, std::vector< Entity* > &result ) const;
-        private:
 
+        private:
             inline void _process_get_entities_horizontal( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const;
             inline void _process_get_entities_verticle( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const;
     };
 
-    std::multimap< ComponentID, Entity* > EntityManager::componentStore;
+    std::multimap< ComponentID, Entity* > Manager::componentStore;
 
-    static EntityManager * entityManager;// There should only be one entity manager in a game, and this is it
+    static Manager * manager;// There should only be one entity manager in a game, and this is it
+
+    class System
+    {
+        protected:
+            std::vector<ComponentID> requiredComponentTypes;
+
+        public:
+            System( const std::vector<ComponentID> &requiredComponentTypes );
+
+            inline void getReleventEntities( std::vector< Entity* > &result );
+
+            inline void processEntities();
+
+        protected:
+            inline virtual void processEntity( Entity *e ) = 0;
+    };
 }
 
 

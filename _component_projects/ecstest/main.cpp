@@ -19,7 +19,7 @@ int main()
 {
     std::cout << "Hello world!" << std::endl;
 
-    ecs::EntityManager entityManager;
+    ecs::Manager entityManager;
 
     for(int i = 0; i < 750000; ++i)
     {

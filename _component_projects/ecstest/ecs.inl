@@ -17,16 +17,16 @@ namespace ecs
     }
 
 
-    EntityManager::EntityManager()
+    Manager::Manager()
     {
-        assert( entityManager == NULL );
-        entityManager = this;//so all entity systems can register themselves
+        assert( manager == NULL );
+        manager = this;//so all entity systems can register themselves
     }
 
     template < typename ComponentType >
     inline
     void
-    EntityManager::addComponent( Entity * e, ComponentType * comp )
+    Manager::addComponent( Entity * e, ComponentType * comp )
     {
         componentStore.insert( std::pair< ComponentID, Entity* >( ComponentType::_component_id, e ) );
         e->mComponents.insert( std::pair< ComponentID, Component* >( ComponentType::_component_id, comp ) );
@@ -35,7 +35,7 @@ namespace ecs
     template < typename ComponentType >
     inline
     ComponentType *
-    EntityManager::getComponent( Entity * e ) const
+    Manager::getComponent( Entity * e ) const
     {
         return (ComponentType*)e->mComponents[ ComponentType::_component_id ];
     }
@@ -43,7 +43,7 @@ namespace ecs
     template < typename ComponentType >
     inline
     void
-    EntityManager::getEntities( std::vector< Entity* > &result ) const
+    Manager::getEntities( std::vector< Entity* > &result ) const
     {
         auto iterPair = componentStore.equal_range( ComponentType::_component_id );
         for( auto iter = iterPair.first; iter != iterPair.second; ++iter )
@@ -54,7 +54,7 @@ namespace ecs
 
     inline
     void
-    EntityManager::getEntities( const std::vector<ComponentID> &componentTypes, std::vector< Entity* > &result ) const
+    Manager::getEntities( const std::vector<ComponentID> &componentTypes, std::vector< Entity* > &result ) const
     {
         if( !componentTypes.size() )
             return;
@@ -94,7 +94,7 @@ namespace ecs
 
     inline
     void
-    EntityManager::_process_get_entities_horizontal( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const
+    Manager::_process_get_entities_horizontal( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const
     {
         // this section is faster for small sets of components on a single thread
         std::size_t num_components = componentLikelyhood.size();
@@ -122,7 +122,7 @@ namespace ecs
 
     inline
     void
-    EntityManager::_process_get_entities_verticle( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const
+    Manager::_process_get_entities_verticle( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const
     {
         // this section is faster for large sets of components on MULTIPLE THREADS
         auto iterPair = componentStore.equal_range( componentLikelyhood.front().second );
@@ -160,6 +160,31 @@ namespace ecs
 
             if( temp_entities[e]->mComponents.find( id ) != temp_entities[e]->mComponents.end() )
                 result.push_back( temp_entities[e] );
+        }
+    }
+
+    System::System( const std::vector<ComponentID> &requiredComponentTypes)
+    {
+        this->requiredComponentTypes = requiredComponentTypes;
+    }
+
+    inline
+    void
+    System::getReleventEntities( std::vector< Entity* > &result )
+    {
+        manager->getEntities(requiredComponentTypes, result);
+    }
+
+    inline
+    void
+    System::processEntities()
+    {
+        std::vector< Entity* > toProcess;
+        getReleventEntities(toProcess);
+
+        for(Entity* e : toProcess)
+        {
+            processEntity(e);
         }
     }
 }
