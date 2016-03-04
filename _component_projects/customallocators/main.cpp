@@ -12,14 +12,15 @@
 
 struct data_chunk
 {
-    uint8_t data[4];
+    uint8_t data[8];
 };
 
 int main()
 {
     std::ios_base::sync_with_stdio( false );
 
-    alloc::DefaultAllocator d( _MEM_POOL_SIZE+sizeof(uintptr_t)*64, nullptr );
+    alloc::DefaultAllocator d( _MEM_POOL_SIZE+sizeof(uintptr_t)*1024, nullptr );
+    alloc::DefaultAllocator d2( _MEM_POOL_SIZE+sizeof(uintptr_t)*64, nullptr );
 
     void * _mem_pool = d.allocateBlock( _MEM_POOL_SIZE, 0 );
 
@@ -49,7 +50,8 @@ int main()
         std::cout << "sa: " << c << " ... " << std::flush;
 
         unsigned _num_chunks = _MEM_POOL_SIZE/sizeof(data_chunk*);
-        data_chunk ** chunks = (data_chunk**)sa->allocateBlock( _num_chunks, alignof(data_chunk*));
+        //data_chunk ** chunks = (data_chunk**)sa->allocateBlock( _num_chunks, alignof(data_chunk*));
+        data_chunk ** chunks = (data_chunk**)d2.allocateBlock( _num_chunks, alignof(data_chunk*));
 
         unsigned _last_chunk = 0;
 
@@ -65,7 +67,8 @@ int main()
             sa->deallocate<data_chunk>(chunks[--_last_chunk]);
         }
 
-        sa->deallocateBlock( chunks );
+        //sa->deallocateBlock( chunks );
+        d2.deallocateBlock( chunks );
 
         std::cout << "Done." << std::endl;
     }
@@ -144,6 +147,34 @@ int main()
     std::cout << "\nDefault allocator:" << std::endl;
     std::cout << "Max bytes allocated = " << d.maxUsedMemory() << std::endl;
     std::cout << "Max num allocations = " << d.maxNumAllocations() << std::endl;
+
+    std::cout << "\nalloc::stl_adapter expirementation:" << std::endl;
+
+    _mem_pool = d.allocateBlock( _MEM_POOL_SIZE, 0 );
+
+    fa = new(d.allocate<alloc::FreeListAllocator>()) alloc::FreeListAllocator( _MEM_POOL_SIZE, _mem_pool );
+
+    std::vector< data_chunk, alloc::stl_adapter<data_chunk> > v( (const alloc::stl_adapter<data_chunk>&)alloc::stl_adapter<data_chunk>(fa) );
+
+    //v.reserve(100);
+
+    while( fa->unusedMemory() > sizeof(data_chunk) )
+    {
+        data_chunk d;
+        d.data[0] = 0;
+        v.push_back( d );
+        if( v.size() >= v.capacity() )
+        {
+            //v.reserve( v.capacity() + 8192 );
+            std::cout << "fa->unusedMemory() = " << fa->unusedMemory() << std::endl;
+        }
+    }
+
+    d.deallocate<alloc::FreeListAllocator>( fa );
+
+    d.deallocateBlock( _mem_pool );
+
+    std::cout << "\nComplete!" << std::endl;
 
     return 0;
 }

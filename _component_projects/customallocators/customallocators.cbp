@@ -44,6 +44,7 @@
 		<Unit filename="alloc/object_pool_allocator.h" />
 		<Unit filename="alloc/pool_allocator.h" />
 		<Unit filename="alloc/stack_allocator.h" />
+		<Unit filename="alloc/stl_adapter.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

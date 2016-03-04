@@ -1,6 +1,9 @@
 #ifndef ALLOCATOR_H_INCLUDED
 #define ALLOCATOR_H_INCLUDED
-#include <iostream>
+
+//#include <iostream>
+
+#include <type_traits>
 #include <cassert>
 
 namespace alloc
@@ -37,7 +40,7 @@ namespace alloc
             inline Type * allocate() final { return (Type*)this->allocateBlock( sizeof(Type), alignof(Type) ); }
 
             template < class Type >
-            inline void deallocate( void * block ) final { ((Type*)block)->~Type(); deallocateBlock( block ); }
+            inline void deallocate( void * block ) final { if( std::is_destructible<Type>() ) { ((Type*)block)->~Type(); } deallocateBlock( block ); }
 
             inline void *      getBlock() const { return _block_start; }
             inline std::size_t getSize()  const { return _block_size; }
