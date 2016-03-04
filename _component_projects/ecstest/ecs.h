@@ -28,7 +28,7 @@ namespace ecs
     {
         Entity();
 
-        template< typename ComponentType > ComponentType *getAs();
+        template< typename ComponentType > ComponentType *get();
         std::unordered_map< ComponentID, Component* > mComponents; // is actually a hashmap, so it uses some extra memory :/
     };
 

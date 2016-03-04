@@ -55,11 +55,11 @@ int main()
 
         for( auto e : entities )
         {
-            e->getAs<testcomponent<1>>()->a++;
-            e->getAs<testcomponent<2>>()->a++;
-            e->getAs<testcomponent<3>>()->a++;
-            e->getAs<testcomponent<4>>()->a++;
-            e->getAs<testcomponent<5>>()->a++;
+            e->get<testcomponent<1>>()->a++;
+            e->get<testcomponent<2>>()->a++;
+            e->get<testcomponent<3>>()->a++;
+            e->get<testcomponent<4>>()->a++;
+            e->get<testcomponent<5>>()->a++;
         }
 
         /*entities.clear();

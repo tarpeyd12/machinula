@@ -11,7 +11,7 @@ namespace ecs
     template< typename ComponentType >
     inline
     ComponentType *
-    Entity::getAs()
+    Entity::get()
     {
        return (ComponentType*)mComponents[ ComponentType::_component_id ];
     }
