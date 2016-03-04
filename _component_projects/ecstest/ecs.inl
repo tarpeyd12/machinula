@@ -19,7 +19,8 @@ namespace ecs
 
     EntityManager::EntityManager()
     {
-
+        assert( entityManager == NULL );
+        entityManager = this;//so all entity systems can register themselves
     }
 
     template < typename ComponentType >

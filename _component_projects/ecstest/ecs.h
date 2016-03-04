@@ -58,6 +58,7 @@ namespace ecs
 
     std::multimap< ComponentID, Entity* > EntityManager::componentStore;
 
+    static EntityManager * entityManager;// There should only be one entity manager in a game, and this is it
 }
 
 
