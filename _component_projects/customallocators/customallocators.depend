@@ -24,3 +24,131 @@
 	"allocator.h"
 	"align.h"
 
+1443052901 source:c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\main.cpp
+	<iostream>
+	<vector>
+	<cstdlib>
+	<cstdio>
+	"alloc/alloc.h"
+
+1443049841 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\alloc.h
+	"align.h"
+	"allocator.h"
+	"default_allocator.h"
+	"linear_allocator.h"
+	"stack_allocator.h"
+	"pool_allocator.h"
+	"object_pool_allocator.h"
+
+1443040919 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\align.h
+
+1443036444 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\allocator.h
+	<iostream>
+	<cassert>
+
+1443034468 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\default_allocator.h
+	"allocator.h"
+	<map>
+
+1443034477 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\linear_allocator.h
+	"allocator.h"
+	"align.h"
+
+1443045703 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\stack_allocator.h
+	"allocator.h"
+
+1443034443 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\pool_allocator.h
+	"allocator.h"
+
+1443049950 c:\users\tarpeyd12\desktop\allocationexpirements\customallocators\alloc\object_pool_allocator.h
+	"pool_allocator.h"
+
+1456984981 source:c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\main.cpp
+	<iostream>
+	<vector>
+	<cstdlib>
+	<cstdio>
+	"alloc/alloc.h"
+
+1456889471 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\alloc.h
+	"align.h"
+	"allocator.h"
+	"default_allocator.h"
+	"linear_allocator.h"
+	"stack_allocator.h"
+	"pool_allocator.h"
+	"object_pool_allocator.h"
+	"free_list_allocator.h"
+
+1456984318 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\align.h
+
+1456650568 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\allocator.h
+	<iostream>
+	<cassert>
+
+1456984955 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\default_allocator.h
+	"allocator.h"
+	<unordered_map>
+
+1456647884 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\linear_allocator.h
+	"allocator.h"
+	"align.h"
+
+1456985024 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\stack_allocator.h
+	"allocator.h"
+
+1456647884 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\pool_allocator.h
+	"allocator.h"
+
+1456875282 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\object_pool_allocator.h
+	"pool_allocator.h"
+
+1456889492 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\free_list_allocator.h
+	"allocator.h"
+
+1457141575 source:c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\main.cpp
+	<iostream>
+	<vector>
+	<cstdlib>
+	<cstdio>
+	"alloc/alloc.h"
+
+1457122625 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\alloc.h
+	"align.h"
+	"allocator.h"
+	"default_allocator.h"
+	"linear_allocator.h"
+	"stack_allocator.h"
+	"pool_allocator.h"
+	"object_pool_allocator.h"
+	"free_list_allocator.h"
+	"stl_adapter.h"
+
+1457122625 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\align.h
+
+1457122625 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\allocator.h
+	<type_traits>
+	<cassert>
+
+1457122625 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\default_allocator.h
+	"allocator.h"
+	<unordered_map>
+
+1457122625 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\linear_allocator.h
+	"allocator.h"
+	"align.h"
+
+1457122625 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\stack_allocator.h
+	"allocator.h"
+
+1457122625 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\pool_allocator.h
+	"allocator.h"
+
+1457122625 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\object_pool_allocator.h
+	"pool_allocator.h"
+
+1457122625 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\free_list_allocator.h
+	"allocator.h"
+
+1457125235 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\stl_adapter.h
+

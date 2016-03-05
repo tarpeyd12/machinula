@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DDEBUG" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -30,16 +31,26 @@
 		</Build>
 		<Compiler>
 			<Add option="-march=corei7" />
+			<Add option="-fomit-frame-pointer" />
+			<Add option="-fexpensive-optimizations" />
+			<Add option="-O3" />
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add option="-s" />
+		</Linker>
 		<Unit filename="alloc/align.h" />
 		<Unit filename="alloc/alloc.h" />
 		<Unit filename="alloc/allocator.h" />
 		<Unit filename="alloc/default_allocator.h" />
+		<Unit filename="alloc/free_list_allocator.h" />
 		<Unit filename="alloc/linear_allocator.h" />
+		<Unit filename="alloc/object_pool_allocator.h" />
+		<Unit filename="alloc/pool_allocator.h" />
 		<Unit filename="alloc/stack_allocator.h" />
+		<Unit filename="alloc/stl_adapter.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

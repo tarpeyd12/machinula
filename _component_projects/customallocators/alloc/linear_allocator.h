@@ -50,8 +50,7 @@ namespace alloc
 
         _next_free_block = (void*)( address + size );
 
-        _used_memory += adjustment + size;
-        ++_num_allocations;
+        _incrementAllocations( size + adjustment );
 
         return (void*)address;
     }
