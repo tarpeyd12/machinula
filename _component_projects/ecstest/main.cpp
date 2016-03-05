@@ -8,28 +8,48 @@ struct testcomponent : public ecs::Component
     ecs_ComponentID;
     static int p;
     int a;
-    testcomponent() : a(++p)
+    testcomponent()
+    : a(++p)
     { }
 };
 template< int I > ecs_initComponentID(testcomponent<I>);
 template< int I > int testcomponent<I>::p = 0;
 
+class TestSystem : public ecs::System
+{
+    public:
+        TestSystem( const std::vector<ecs::ComponentID> &requiredComponentTypes )
+        : System( requiredComponentTypes )
+        { }
+
+        inline
+        void
+        processEntity( ecs::Entity *e )
+        {
+            e->get<testcomponent<1>>()->a++;
+            e->get<testcomponent<2>>()->a++;
+            e->get<testcomponent<3>>()->a++;
+            e->get<testcomponent<4>>()->a++;
+            e->get<testcomponent<5>>()->a++;
+        }
+
+};
 
 int main()
 {
     std::cout << "Hello world!" << std::endl;
 
-    ecs::EntitySystem entitySystem;
+    ecs::Manager entityManager;
 
     for(int i = 0; i < 750000; ++i)
     {
         ecs::Entity * e = new ecs::Entity();
 
-        if(i%1==0) entitySystem.addComponent( e, new testcomponent<1>() );
-        if(i%2==0) entitySystem.addComponent( e, new testcomponent<2>() );
-        if(i%3==0) entitySystem.addComponent( e, new testcomponent<3>() );
-        if(i%4==0) entitySystem.addComponent( e, new testcomponent<4>() );
-        if(i%5==0) entitySystem.addComponent( e, new testcomponent<5>() );
+        if(i%1==0) entityManager.addComponent( e, new testcomponent<1>() );
+        if(i%2==0) entityManager.addComponent( e, new testcomponent<2>() );
+        if(i%3==0) entityManager.addComponent( e, new testcomponent<3>() );
+        if(i%4==0) entityManager.addComponent( e, new testcomponent<4>() );
+        if(i%5==0) entityManager.addComponent( e, new testcomponent<5>() );
     }
     std::cout << "Init done." << std::endl;
 
@@ -42,24 +62,26 @@ int main()
     desiredComponents.push_back( testcomponent<4>::_component_id );
     desiredComponents.push_back( testcomponent<5>::_component_id );
 
+    TestSystem testSystem(desiredComponents);
+
     for( int i = 0; i < 1000; ++i )
     //for( int i = 0; i < 10; ++i )
     {
-        if(i%25==0) std::cout << i << std::endl;
-        entities.clear();
-
-        entitySystem.getEntities( desiredComponents, entities );
+        std::cout << i << std::endl;
         //entitySystem.getEntities<testcomponent7>( entities );
 
+        testSystem.processEntities();
+
+        /*
         std::cout << "ResultEntityCount=" << entities.size() << "\n";
 
         for( auto e : entities )
         {
-            e->getAs<testcomponent<1>>()->a++;
-            e->getAs<testcomponent<2>>()->a++;
-            e->getAs<testcomponent<3>>()->a++;
-            e->getAs<testcomponent<4>>()->a++;
-            e->getAs<testcomponent<5>>()->a++;
+            e->get<testcomponent<1>>()->a++;
+            e->get<testcomponent<2>>()->a++;
+            e->get<testcomponent<3>>()->a++;
+            e->get<testcomponent<4>>()->a++;
+            e->get<testcomponent<5>>()->a++;
         }
 
         /*entities.clear();

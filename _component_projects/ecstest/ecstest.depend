@@ -29,3 +29,18 @@
 
 1442355598 d:\allocationexpirements\ecstest\ecs.inl
 
+1457070174 source:c:\users\scott\onedrive\documents\machinula\_component_projects\ecstest\main.cpp
+	<iostream>
+	<typeinfo>
+	"ecs.h"
+
+1457129933 c:\users\scott\onedrive\documents\machinula\_component_projects\ecstest\ecs.h
+	<vector>
+	<map>
+	<unordered_map>
+	<algorithm>
+	<cassert>
+	"ecs.inl"
+
+1457130444 c:\users\scott\onedrive\documents\machinula\_component_projects\ecstest\ecs.inl
+
