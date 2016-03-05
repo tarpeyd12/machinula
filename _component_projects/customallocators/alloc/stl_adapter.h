@@ -27,7 +27,7 @@ namespace alloc
             stl_adapter( const stl_adapter< Type > &o ) throw();
 
             template < class OtherType >
-            stl_adapter( const stl_adapter< OtherType > &o ) throw() : std::allocator<Type>(o) { _allocator = o._allocator; }
+            stl_adapter( const stl_adapter< OtherType > &o ) throw() : std::allocator<Type>() { _allocator = o._allocator; fprintf(stderr, "stl_adapter< Type >::stl_adapter( const stl_adapter< OtherType > &o )\n");  }
 
             ~stl_adapter() throw();
 
@@ -38,19 +38,21 @@ namespace alloc
     : std::allocator<Type>()
     {
         _allocator = _al;
-        fprintf(stderr, "Hello allocator!\n");
+        fprintf(stderr, "stl_adapter< Type >::stl_adapter( Allocator * _al )\n");
     }
 
     template < typename Type >
     stl_adapter< Type >::stl_adapter( const stl_adapter< Type > &o ) throw()
-    : std::allocator<Type>(o)
+    : std::allocator<Type>()
     {
         _allocator = o._allocator;
+        fprintf(stderr, "stl_adapter< Type >::stl_adapter( const stl_adapter< Type > &o )\n");
     }
 
     template < typename Type >
     stl_adapter< Type >::~stl_adapter() throw()
     {
+        fprintf(stderr, "stl_adapter< Type >::~stl_adapter()\n");
         _allocator = nullptr;
     }
 
@@ -58,21 +60,17 @@ namespace alloc
     typename stl_adapter< Type >::pointer
     stl_adapter< Type >::allocate( stl_adapter< Type >::size_type n, const void * hint )
     {
-        //assert( n % sizeof(Type) == 0 );
-        fprintf(stderr, "Alloc %d bytes.\n", n*sizeof(Type));
+        fprintf(stderr, "Alloc %d bytes, over %d.\n", n*sizeof(Type), n );
         //return std::allocator<Type>::allocate( n, hint );
-        //return _allocator->allocate<Type>( n );
-        return reinterpret_cast<Type*>( _allocator->allocateBlock( n, alignof(Type) ) );
+        return reinterpret_cast<Type*>( _allocator->allocateBlock( n*sizeof(Type), alignof(Type) ) );
     }
 
     template < typename Type >
     void
     stl_adapter< Type >::deallocate( pointer p, stl_adapter< Type >::size_type n )
     {
-        //assert( n % sizeof(Type) == 0 );
         fprintf(stderr, "Dealloc %d bytes (%p).\n", n*sizeof(Type), p);
         //return std::allocator<T>::deallocate(p, n);
-        //return _allocator->deallocate<Type>( p );
         return _allocator->deallocateBlock( p );
     }
 
