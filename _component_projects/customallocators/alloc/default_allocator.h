@@ -11,8 +11,8 @@ namespace alloc
     class DefaultAllocator final : public Allocator
     {
         private:
-            //std::map< void *, std::size_t > _allocated_blocks;
-            std::unordered_map< void *, std::size_t > _allocated_blocks;
+            //std::map< uintptr_t, std::size_t > _allocated_blocks;
+            std::unordered_map< uintptr_t, std::size_t > _allocated_blocks;
 
         public:
             DefaultAllocator( std::size_t block_size = 0, void * block_start = 0 );
@@ -49,7 +49,7 @@ namespace alloc
 
         void * block = ::operator new( size );
 
-        _allocated_blocks.insert( std::pair<void*,std::size_t>(block, size) );
+        _allocated_blocks.insert( std::pair<uintptr_t,std::size_t>( reinterpret_cast<uintptr_t>(block), size ) );
 
         return block;
     }
@@ -59,7 +59,7 @@ namespace alloc
     {
         assert( block != nullptr );
 
-        auto it = _allocated_blocks.find( block );
+        auto it = _allocated_blocks.find( reinterpret_cast<uintptr_t>(block) );
 
         assert( it != _allocated_blocks.end() );
 
@@ -75,7 +75,7 @@ namespace alloc
     {
         while( _allocated_blocks.size() )
         {
-            deallocateBlock( _allocated_blocks.begin()->first );
+            deallocateBlock( reinterpret_cast<void*>(_allocated_blocks.begin()->first) );
         }
     }
 }

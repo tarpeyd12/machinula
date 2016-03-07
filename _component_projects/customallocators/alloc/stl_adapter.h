@@ -26,6 +26,10 @@ namespace alloc
             stl_adapter( Allocator * _al ) throw();
             stl_adapter( const stl_adapter< Type > &o ) throw();
 
+            // all possible types of stl_adapter are friends with all other types of stl_adapter
+            template< typename >
+            friend class stl_adapter;
+
             template < class OtherType >
             stl_adapter( const stl_adapter< OtherType > &o ) throw() : std::allocator<Type>() { _allocator = o._allocator; fprintf(stderr, "stl_adapter< Type >::stl_adapter( const stl_adapter< OtherType > &o )\n");  }
 
