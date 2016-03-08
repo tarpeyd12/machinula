@@ -3,7 +3,7 @@
 
 #include "allocator.h"
 
-//#include <map>
+#include <map>
 #include <unordered_map>
 
 namespace alloc
@@ -11,8 +11,8 @@ namespace alloc
     class DefaultAllocator final : public Allocator
     {
         private:
-            //std::map< uintptr_t, std::size_t > _allocated_blocks;
-            std::unordered_map< uintptr_t, std::size_t > _allocated_blocks;
+            std::map< uintptr_t, std::size_t > _allocated_blocks;
+            //std::unordered_map< uintptr_t, std::size_t > _allocated_blocks;
 
         public:
             DefaultAllocator( std::size_t block_size = 0, void * block_start = 0 );

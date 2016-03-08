@@ -8,12 +8,12 @@
 
 #define _MEM_POOL_SIZE (1024*1024*1024*0.5)
 
-#define _NUM_TESTS 1
+#define _NUM_TESTS 10
 
-#define TEST_LINEAR 0
-#define TEST_STACK  0
-#define TEST_POOL   0
-#define TEST_FLIST  0
+#define TEST_LINEAR 1
+#define TEST_STACK  1
+#define TEST_POOL   1
+#define TEST_FLIST  1
 #define TEST_SLTADP 1
 
 struct data_chunk
@@ -168,10 +168,10 @@ int main()
 
     std::cout << "\nstd::vector<>:" << std::endl;
 
-    std::vector< data_chunk, alloc::stl_adapter<data_chunk> > v( (const alloc::stl_adapter<data_chunk>&)alloc::stl_adapter<data_chunk>(fa) );
-
     for( unsigned c = 0; c < _NUM_TESTS; ++c  )
     {
+        alloc::stl::vector< data_chunk > v( fa );
+
         v.reserve( (fa->unusedMemory()-sizeof(std::size_t)-sizeof(uint8_t))/sizeof(data_chunk) );
 
         for(; v.size() < v.capacity() ;)
@@ -181,25 +181,46 @@ int main()
             v.push_back( dc );
         }
 
-        v.clear();
-        v.shrink_to_fit(); // NOTE: some implementations won't actually clear the memory with this call.
+        v.clear_all_memory();
+
+        //v.clear();
+        //v.shrink_to_fit(); // NOTE: some implementations won't actually clear the memory with this call.
     }
 
     std::cout << "\nstd::unordered_map<>:" << std::endl;
 
-    std::unordered_map< std::size_t, data_chunk, std::hash<std::size_t>, std::equal_to<std::size_t>, alloc::stl_adapter< std::pair< const std::size_t, data_chunk > > >
-    m( 1,
-      (const std::hash<std::size_t>&)std::hash<std::size_t>(),
-      (const std::equal_to<std::size_t>&)std::equal_to<std::size_t>(),
-      (const alloc::stl_adapter< std::pair< const std::size_t, data_chunk > >&)alloc::stl_adapter< std::pair< const std::size_t, data_chunk > >(fa)
-      );
+    for( unsigned c = 0; c < _NUM_TESTS; ++c  )
+    {
+        alloc::stl::unordered_map< std::size_t, data_chunk > m( fa );
 
-    data_chunk dc;
-    dc.data[0] = 0;
-    m.insert( std::pair<std::size_t,data_chunk>(0,dc) );
+        for(; fa->unusedMemory() > 1024*1024*33 ;)
+        {
+            data_chunk dc;
+            dc.data[0] = 0;
+            //m.insert( std::pair<std::size_t,data_chunk>(0,dc) );
+            m.insert( std::pair<std::size_t,data_chunk>(fa->unusedMemory(),dc) );
+        }
 
-    //m.erase( m.begin(), m.end() );
-    m.clear();
+        m.erase( m.begin(), m.end() );
+    }
+
+    std::cout << "\nstd::map<>:" << std::endl;
+    alloc::stl::map< std::size_t, data_chunk > m( fa );
+    for( unsigned c = 0; c < _NUM_TESTS; ++c  )
+    {
+
+
+        for(; fa->unusedMemory() > 1024*1024*33 ;)
+        {
+            data_chunk dc;
+            dc.data[0] = 0;
+            //m.insert( std::pair<std::size_t,data_chunk>(0,dc) );
+            m.insert( std::pair<std::size_t,data_chunk>(fa->unusedMemory(),dc) );
+        }
+
+        //m.erase( m.begin(), m.end() );
+        m.clear_all_memory();
+    }
 
     d.deallocate<alloc::FreeListAllocator>( fa );
 

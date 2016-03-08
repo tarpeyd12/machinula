@@ -12,5 +12,6 @@
 #include "free_list_allocator.h"
 
 #include "stl_adapter.h"
+#include "stl_alias.h"
 
 #endif // ALLOC_H_INCLUDED

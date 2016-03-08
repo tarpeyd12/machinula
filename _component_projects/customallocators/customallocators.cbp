@@ -22,7 +22,9 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-fomit-frame-pointer" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -51,6 +53,7 @@
 		<Unit filename="alloc/pool_allocator.h" />
 		<Unit filename="alloc/stack_allocator.h" />
 		<Unit filename="alloc/stl_adapter.h" />
+		<Unit filename="alloc/stl_alias.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
