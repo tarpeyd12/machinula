@@ -86,8 +86,8 @@ namespace alloc
                 : alias::deque< Type >( stl_adapter< Type >(a) )
                 { }
 
-                //inline bool clear_all_memory() { this->clear(); this->shrink_to_fit(); return this->capacity() == 0; }
-                inline bool clear_all_memory() { return false; }
+                inline bool clear_all_memory() { this->clear(); this->shrink_to_fit(); return this->size() == 0; }
+                //inline bool clear_all_memory() { return false; }
         };
 
 

@@ -8,12 +8,12 @@
 
 #define _MEM_POOL_SIZE (1024*1024*1024*0.5)
 
-#define _NUM_TESTS 10
+#define _NUM_TESTS 1
 
-#define TEST_LINEAR 1
-#define TEST_STACK  1
-#define TEST_POOL   1
-#define TEST_FLIST  1
+#define TEST_LINEAR 0
+#define TEST_STACK  0
+#define TEST_POOL   0
+#define TEST_FLIST  0
 #define TEST_SLTADP 1
 
 struct data_chunk
@@ -170,6 +170,7 @@ int main()
 
     for( unsigned c = 0; c < _NUM_TESTS; ++c  )
     {
+        std::cout << "test " << c << " ... " << std::flush;
         alloc::stl::vector< data_chunk > v( fa );
 
         v.reserve( (fa->unusedMemory()-sizeof(std::size_t)-sizeof(uint8_t))/sizeof(data_chunk) );
@@ -185,12 +186,14 @@ int main()
 
         //v.clear();
         //v.shrink_to_fit(); // NOTE: some implementations won't actually clear the memory with this call.
+        std::cout << "Done.\n" << std::flush;
     }
 
     std::cout << "\nstd::unordered_map<>:" << std::endl;
 
     for( unsigned c = 0; c < _NUM_TESTS; ++c  )
     {
+        std::cout << "test " << c << " ... " << std::flush;
         alloc::stl::unordered_map< std::size_t, data_chunk > m( fa );
 
         for(; fa->unusedMemory() > 1024*1024*33 ;)
@@ -202,27 +205,58 @@ int main()
         }
 
         m.erase( m.begin(), m.end() );
+        std::cout << "Done.\n" << std::flush;
     }
 
     std::cout << "\nstd::map<>:" << std::endl;
+
+    //pa = new(d.allocate<alloc::ObjectPoolAllocator<std::pair<const std::size_t,data_chunk>>>()) alloc::ObjectPoolAllocator<std::pair<const std::size_t,data_chunk>>( _MEM_POOL_SIZE, _mem_pool );
+
     alloc::stl::map< std::size_t, data_chunk > m( fa );
     for( unsigned c = 0; c < _NUM_TESTS; ++c  )
     {
+        std::cout << "test " << c << " ... " << std::flush;
+        for(; fa->unusedMemory() > 1024*1024*33 ;)
+        {
+            data_chunk dc;
+            dc.data[0] = 0;
+            m.insert( std::pair<std::size_t,data_chunk>(m.size(),dc) );
+        }
 
+        //m.erase( m.begin(), m.end() );
+        m.clear_all_memory();
+        std::cout << "Done.\n" << std::flush;
+    }
+
+    std::cout << "\nstd::deque<>:" << std::endl;
+
+    alloc::stl::deque< data_chunk > q( fa );
+
+    for( unsigned c = 0; c < _NUM_TESTS; ++c  )
+    {
+        std::cout << "test " << c << " ... " << std::flush;
 
         for(; fa->unusedMemory() > 1024*1024*33 ;)
         {
             data_chunk dc;
             dc.data[0] = 0;
-            //m.insert( std::pair<std::size_t,data_chunk>(0,dc) );
-            m.insert( std::pair<std::size_t,data_chunk>(fa->unusedMemory(),dc) );
+            q.push_back( dc );
+            q.push_back( dc );
+            q.pop_front();
         }
 
-        //m.erase( m.begin(), m.end() );
-        m.clear_all_memory();
+
+
+        alloc::stl::deque< data_chunk >(fa).swap( q );
+        if(!q.clear_all_memory()) std::cout << "err ";
+
+        std::cout << "Done.\n" << std::flush;
     }
 
+    std::cout << "fa->usedMemory() = " << fa->usedMemory() << std::endl;
+
     d.deallocate<alloc::FreeListAllocator>( fa );
+    //d.deallocate< alloc::ObjectPoolAllocator<std::pair<const std::size_t,data_chunk>> >( pa );
 
     d.deallocateBlock( _mem_pool );
 

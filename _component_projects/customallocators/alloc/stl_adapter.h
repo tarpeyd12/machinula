@@ -34,7 +34,7 @@ namespace alloc
                 inline Allocator * __getInternalAllocator() const { return _allocator; }
 
                 template < class OtherType >
-                adapter( const adapter< OtherType > &o ) throw() : std::allocator<Type>()
+                adapter( const adapter< OtherType > &o ) throw() : std::allocator<Type>(o)
                 {
                     _allocator = o.__getInternalAllocator();
                     #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
@@ -58,7 +58,7 @@ namespace alloc
 
         template < typename Type >
         adapter< Type >::adapter( const adapter< Type > &o ) throw()
-        : std::allocator<Type>()
+        : std::allocator<Type>(o)
         {
             _allocator = o._allocator;
             #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
@@ -95,6 +95,20 @@ namespace alloc
             #endif // ___ALLOC_STL_ADAPTER_DEBUGPRINT
             //return std::allocator<T>::deallocate(p, n);
             return _allocator->deallocateBlock( p );
+        }
+
+        template< class T1, class T2 >
+        bool
+        operator==( const adapter<T1>& lhs, const adapter<T2>& rhs )
+        {
+            return lhs.__getInternalAllocator() == rhs.__getInternalAllocator();
+        }
+
+        template< class T1, class T2 >
+        bool
+        operator!=( const adapter<T1>& lhs, const adapter<T2>& rhs )
+        {
+            return lhs.__getInternalAllocator() != rhs.__getInternalAllocator();
         }
 
     }
