@@ -30,6 +30,8 @@ namespace alloc
             inline void * allocateBlock( std::size_t size, uint8_t align ) override;
             inline void deallocateBlock( void * block ) override;
 
+            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+
         private:
             FreeListAllocator( const FreeListAllocator & ) = delete;
             FreeListAllocator & operator = ( const FreeListAllocator & ) = delete;
@@ -180,6 +182,38 @@ namespace alloc
         }
 
         _decrementAllocations( block_size );
+    }
+
+    void
+    FreeListAllocator::printDebugInfo( std::ostream& out ) const
+    {
+        void * pend;
+        out << "FreeListAllocator(" << this << "):\n";
+        out << "\tBlock Start: " << getBlock() << "\n";
+        out << "\tBlock Size: " << getSize() << " bytes\n";
+        out << "\tBlock End:  " << (pend = (void*)(reinterpret_cast<uintptr_t>(getBlock())+getSize())) << "\n";
+        out << "\tUsed Memory: " << usedMemory() << " bytes\n";
+        out << "\tUnused Memory: " << unusedMemory() << " bytes\n";
+        out << "\tNumber of Allocations: " << numAllocations() << "\n";
+        out << "\tMax Used Memory: " << maxUsedMemory() << " bytes\n";
+        out << "\tMax Number of Allocations: " << maxNumAllocations() << "\n";
+
+        if(true)
+        {
+            out << "{\n";
+            out << "\tfree:\n\t{\n";
+            std::size_t numFreeBlocks = 0;
+            _FreeBlock * curr_block = _free_blocks;
+            while( curr_block != nullptr && (void*)curr_block >= _block_start && (void*)curr_block < pend)
+            {
+
+                out << "\t\taddr:" << curr_block << ",size:" << curr_block->size << ",end:" << curr_block+curr_block->size << ",next:" << curr_block->next << "\n";
+                curr_block = curr_block->next;
+                ++numFreeBlocks;
+            }
+            out << "\t}(freeBlocks:" << numFreeBlocks << ");\n";
+            out << "};\n";
+        }
     }
 }
 

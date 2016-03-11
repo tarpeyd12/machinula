@@ -77,3 +77,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+_component_projects/customallocators/data_dump.txt
