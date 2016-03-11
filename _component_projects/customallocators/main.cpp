@@ -6,7 +6,8 @@
 
 #include "alloc/alloc.h"
 
-#define _MEM_POOL_SIZE (1024*1024*1024*0.5)
+//#define _MEM_POOL_SIZE (1024*1024*1024*0.5)
+#define _MEM_POOL_SIZE (1024*1024*1024*0.25)
 
 #define _NUM_TESTS 1
 
@@ -14,7 +15,7 @@
 #define TEST_STACK  0
 #define TEST_POOL   0
 #define TEST_FLIST  0
-#define TEST_SLTADP 1
+#define TEST_SLTADP 0
 
 struct data_chunk
 {
@@ -84,13 +85,17 @@ int main()
 
     alloc::Allocator * pa;
     pa = new(d.allocate<alloc::PoolAllocator>()) alloc::PoolAllocator( sizeof(data_chunk), alignof(data_chunk), _MEM_POOL_SIZE, _mem_pool );
+
     #if TEST_POOL
     std::vector<data_chunk*> chunks;
     for( unsigned c = 0; c < _NUM_TESTS; ++c )
     {
         std::cout << "pa: " << c << " ... " << std::flush;
 
-        while( pa->unusedMemory() > sizeof(data_chunk) )
+        //pa->printDebugInfo();
+
+        //while( pa->unusedMemory() > sizeof(data_chunk) )
+        while( pa->unusedMemory() > _MEM_POOL_SIZE/2 )
         {
             chunks.push_back( new(pa->allocate<data_chunk>()) data_chunk );
             chunks.back()->data[0] = 0;
@@ -148,6 +153,11 @@ int main()
     std::cout << "Max bytes allocated = " << fa->maxUsedMemory() << std::endl;
     std::cout << "Max num allocations = " << fa->maxNumAllocations() << std::endl;
 
+    la->printDebugInfo();
+    sa->printDebugInfo();
+    pa->printDebugInfo();
+    fa->printDebugInfo();
+
     d.deallocate<alloc::LinearAllocator>( la );
     d.deallocate<alloc::StackAllocator>( sa );
     d.deallocate<alloc::PoolAllocator>( pa );
@@ -165,15 +175,16 @@ int main()
     _mem_pool = d.allocateBlock( _MEM_POOL_SIZE, 0 );
 
     fa = new(d.allocate<alloc::FreeListAllocator>()) alloc::FreeListAllocator( _MEM_POOL_SIZE, _mem_pool );
+    alloc::Allocator * ra = new(d.allocate<alloc::ProxyAllocator>()) alloc::ProxyAllocator( fa );
 
     std::cout << "\nstd::vector<>:" << std::endl;
 
     for( unsigned c = 0; c < _NUM_TESTS; ++c  )
     {
         std::cout << "test " << c << " ... " << std::flush;
-        alloc::stl::vector< data_chunk > v( fa );
+        alloc::stl::vector< data_chunk > v( ra );
 
-        v.reserve( (fa->unusedMemory()-sizeof(std::size_t)-sizeof(uint8_t))/sizeof(data_chunk) );
+        v.reserve( (ra->unusedMemory()-sizeof(std::size_t)-sizeof(uint8_t))/sizeof(data_chunk) );
 
         for(; v.size() < v.capacity() ;)
         {
@@ -194,14 +205,14 @@ int main()
     for( unsigned c = 0; c < _NUM_TESTS; ++c  )
     {
         std::cout << "test " << c << " ... " << std::flush;
-        alloc::stl::unordered_map< std::size_t, data_chunk > m( fa );
+        alloc::stl::unordered_map< std::size_t, data_chunk > m( ra );
 
-        for(; fa->unusedMemory() > 1024*1024*33 ;)
+        for(; ra->unusedMemory() > 1024*1024*33 ;)
         {
             data_chunk dc;
             dc.data[0] = 0;
             //m.insert( std::pair<std::size_t,data_chunk>(0,dc) );
-            m.insert( std::pair<std::size_t,data_chunk>(fa->unusedMemory(),dc) );
+            m.insert( std::pair<std::size_t,data_chunk>(ra->unusedMemory(),dc) );
         }
 
         m.erase( m.begin(), m.end() );
@@ -216,7 +227,7 @@ int main()
     for( unsigned c = 0; c < _NUM_TESTS; ++c  )
     {
         std::cout << "test " << c << " ... " << std::flush;
-        for(; fa->unusedMemory() > 1024*1024*33 ;)
+        for(; ra->unusedMemory() > 1024*1024*33 ;)
         {
             data_chunk dc;
             dc.data[0] = 0;
@@ -230,13 +241,13 @@ int main()
 
     std::cout << "\nstd::deque<>:" << std::endl;
 
-    alloc::stl::deque< data_chunk > q( fa );
-
     for( unsigned c = 0; c < _NUM_TESTS; ++c  )
     {
+        alloc::stl::deque< data_chunk > q( fa );
+
         std::cout << "test " << c << " ... " << std::flush;
 
-        for(; fa->unusedMemory() > 1024*1024*33 ;)
+        for(; ra->unusedMemory() > 1024*1024*33 ;)
         {
             data_chunk dc;
             dc.data[0] = 0;
@@ -245,16 +256,12 @@ int main()
             q.pop_front();
         }
 
-
-
-        alloc::stl::deque< data_chunk >(fa).swap( q );
         if(!q.clear_all_memory()) std::cout << "err ";
 
         std::cout << "Done.\n" << std::flush;
     }
 
-    std::cout << "fa->usedMemory() = " << fa->usedMemory() << std::endl;
-
+    d.deallocate<alloc::ProxyAllocator>( ra );
     d.deallocate<alloc::FreeListAllocator>( fa );
     //d.deallocate< alloc::ObjectPoolAllocator<std::pair<const std::size_t,data_chunk>> >( pa );
 
@@ -262,6 +269,8 @@ int main()
 
     std::cout << "\nComplete!" << std::endl;
     #endif
+
+    d.printDebugInfo();
 
     return 0;
 }

@@ -18,6 +18,8 @@ namespace alloc
             inline void * allocateBlock( std::size_t size, uint8_t align ) override;
             inline void deallocateBlock( void * block ) override;
 
+            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+
             void clear();
 
         private:
@@ -60,6 +62,34 @@ namespace alloc
     {
         // do not be here!
         assert( 0 && "Use LinearAllocator::clear(); not deallocateBlock." );
+    }
+
+    void
+    LinearAllocator::printDebugInfo( std::ostream& out ) const
+    {
+        out << "LinearAllocator(" << this << "):\n";
+        out << "\tBlock Start: " << getBlock() << "\n";
+        out << "\tBlock Size: " << getSize() << " bytes\n";
+        out << "\tUsed Memory: " << usedMemory() << " bytes\n";
+        out << "\tUnused Memory: " << unusedMemory() << " bytes\n";
+        out << "\tNumber of Allocations: " << numAllocations() << "\n";
+        out << "\tMax Used Memory: " << maxUsedMemory() << " bytes\n";
+        out << "\tMax Number of Allocations: " << maxNumAllocations() << "\n";
+
+        if(true)
+        {
+            out << "{\n";
+
+            out << "\tused:\n\t{\n";
+            out << "\t\taddr:" << _block_start << ",size:" << reinterpret_cast<uintptr_t>(_next_free_block)-reinterpret_cast<uintptr_t>(_block_start) << ",end:" << _next_free_block << "\n";
+            out << "\t}\n";
+
+            out << "\tfree:\n\t{\n";
+            out << "\t\taddr:" << _next_free_block << ",size:" << _block_size-reinterpret_cast<uintptr_t>(_next_free_block)-reinterpret_cast<uintptr_t>(_block_start) << ",end:" << (void*)(reinterpret_cast<uintptr_t>(_block_start)+_block_size) << "\n";
+            out << "\t}\n";
+
+            out << "};\n";
+        }
     }
 
     void

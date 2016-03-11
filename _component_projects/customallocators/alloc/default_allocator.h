@@ -15,11 +15,13 @@ namespace alloc
             //std::unordered_map< uintptr_t, std::size_t > _allocated_blocks;
 
         public:
-            DefaultAllocator( std::size_t block_size = 0, void * block_start = 0 );
+            DefaultAllocator( std::size_t block_size = 0, void * block_start = nullptr );
             ~DefaultAllocator();
 
             void * allocateBlock( std::size_t size, uint8_t align ) override;
             void deallocateBlock( void * block ) override;
+
+            void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
             void clear();
 
@@ -68,6 +70,31 @@ namespace alloc
         _allocated_blocks.erase( it );
 
         ::operator delete( block );
+    }
+
+    void
+    DefaultAllocator::printDebugInfo( std::ostream& out ) const
+    {
+        out << "DefaultAllocator(" << this << "):\n";
+        //out << "\tBlock Start: " << getBlock() << "\n";
+        out << "\tBlock Size: " << getSize() << " bytes\n";
+        out << "\tUsed Memory: " << usedMemory() << " bytes\n";
+        out << "\tUnused Memory: " << unusedMemory() << " bytes\n";
+        out << "\tNumber of Allocations: " << numAllocations() << "\n";
+        out << "\tMax Used Memory: " << maxUsedMemory() << " bytes\n";
+        out << "\tMax Number of Allocations: " << maxNumAllocations() << "\n";
+
+        if(true)
+        {
+            out << "{\n";
+            out << "\tused:\n\t{\n";
+            for( auto c : _allocated_blocks )
+            {
+                out << "\t\taddr:" << c.first << ",size:" << c.second << ",end:" << c.first+c.second << "\n";
+            }
+            out << "\t}(allocatedBlocks:" << _allocated_blocks.size() << ");\n";
+            out << "};\n";
+        }
     }
 
     void

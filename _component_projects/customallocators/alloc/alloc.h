@@ -11,6 +11,8 @@
 #include "object_pool_allocator.h"
 #include "free_list_allocator.h"
 
+#include "proxy_allocator.h"
+
 #include "stl_adapter.h"
 #include "stl_alias.h"
 

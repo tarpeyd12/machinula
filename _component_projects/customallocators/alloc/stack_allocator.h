@@ -31,6 +31,8 @@ namespace alloc
             inline void * allocateBlock( std::size_t size, uint8_t align ) override;
             inline void deallocateBlock( void * block ) override;
 
+            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+
         private:
             StackAllocator( const StackAllocator & ) = delete;
             StackAllocator & operator = ( const StackAllocator & ) = delete;
@@ -98,7 +100,34 @@ namespace alloc
         #ifndef NDEBUG
         _prev_pos = header->prev_address;
         #endif // NDEBUG
+    }
 
+    void
+    StackAllocator::printDebugInfo( std::ostream& out ) const
+    {
+        out << "StackAllocator(" << this << "):\n";
+        out << "\tBlock Start: " << getBlock() << "\n";
+        out << "\tBlock Size: " << getSize() << " bytes\n";
+        out << "\tUsed Memory: " << usedMemory() << " bytes\n";
+        out << "\tUnused Memory: " << unusedMemory() << " bytes\n";
+        out << "\tNumber of Allocations: " << numAllocations() << "\n";
+        out << "\tMax Used Memory: " << maxUsedMemory() << " bytes\n";
+        out << "\tMax Number of Allocations: " << maxNumAllocations() << "\n";
+
+        if(true)
+        {
+            out << "{\n";
+
+            out << "\tused:\n\t{\n";
+            out << "\t\taddr:" << _block_start << ",size:" << reinterpret_cast<uintptr_t>(_current_pos)-reinterpret_cast<uintptr_t>(_block_start) << ",end:" << _current_pos << "\n";
+            out << "\t}\n";
+
+            out << "\tfree:\n\t{\n";
+            out << "\t\taddr:" << _current_pos << ",size:" << _block_size-reinterpret_cast<uintptr_t>(_current_pos)-reinterpret_cast<uintptr_t>(_block_start) << ",end:" << (void*)(reinterpret_cast<uintptr_t>(_block_start)+_block_size) << "\n";
+            out << "\t}\n";
+
+            out << "};\n";
+        }
     }
 
 }
