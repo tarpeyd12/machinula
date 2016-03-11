@@ -111,11 +111,12 @@
 1457685445 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\free_list_allocator.h
 	"allocator.h"
 
-1457674915 source:c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\main.cpp
+1457688565 source:c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\main.cpp
 	<iostream>
 	<vector>
 	<cstdlib>
 	<cstdio>
+	<fstream>
 	"alloc/alloc.h"
 
 1457659021 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\alloc.h
@@ -137,39 +138,39 @@
 	<type_traits>
 	<cassert>
 
-1457671103 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\default_allocator.h
+1457688565 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\default_allocator.h
 	"allocator.h"
 	<map>
 	<unordered_map>
 
-1457669468 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\linear_allocator.h
+1457688565 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\linear_allocator.h
 	"allocator.h"
 	"align.h"
 
-1457670046 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\stack_allocator.h
+1457688565 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\stack_allocator.h
 	"allocator.h"
 
-1457675933 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\pool_allocator.h
+1457688565 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\pool_allocator.h
 	"allocator.h"
 
 1457149222 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\object_pool_allocator.h
 	"pool_allocator.h"
 
-1457669379 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\free_list_allocator.h
+1457688565 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\free_list_allocator.h
 	"allocator.h"
 
 1457581679 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\stl_adapter.h
 
 1457677407 c:\users\tarpeyd12\documents\github\machinula\_component_projects\customallocators\alloc\stl_adapter.h
 
-1457579841 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\stl_alias.h
+1457688565 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\stl_alias.h
 	<vector>
 	<unordered_map>
 	<map>
 	<deque>
 	"stl_adapter.h"
 
-1457662227 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\proxy_allocator.h
+1457688565 c:\users\tarpe\documents\github\machinula\_component_projects\customallocators\alloc\proxy_allocator.h
 	<iostream>
 	"allocator.h"
 

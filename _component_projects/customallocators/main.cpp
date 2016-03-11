@@ -8,10 +8,11 @@
 
 #include "alloc/alloc.h"
 
-#define _MEM_POOL_SIZE (1024*1024*1024*0.125)
+//#define _MEM_POOL_SIZE (1024*1024*1024*0.125)
+#define _MEM_POOL_SIZE (1024*1024*1024*0.5)
 #define _DATA_CHUNK_SIZE 64
 
-#define _NUM_TESTS 1
+#define _NUM_TESTS 10
 
 #define TEST_LINEAR 1
 #define TEST_STACK  1
@@ -311,6 +312,7 @@ int main()
 
     #if PRINT_DEBUG
     d.printDebugInfo(outfile);
+    outfile.close();
     #endif // PRINT_DEBUG
 
     return 0;
