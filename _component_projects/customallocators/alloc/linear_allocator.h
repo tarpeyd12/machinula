@@ -70,6 +70,7 @@ namespace alloc
         out << "LinearAllocator(" << this << "):\n";
         out << "\tBlock Start: " << getBlock() << "\n";
         out << "\tBlock Size: " << getSize() << " bytes\n";
+        out << "\tBlock End:  " << (void*)(reinterpret_cast<uintptr_t>(getBlock())+getSize()) << "\n";
         out << "\tUsed Memory: " << usedMemory() << " bytes\n";
         out << "\tUnused Memory: " << unusedMemory() << " bytes\n";
         out << "\tNumber of Allocations: " << numAllocations() << "\n";

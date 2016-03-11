@@ -4,27 +4,35 @@
 #include <cstdlib>
 #include <cstdio>
 
+#include <fstream>
+
 #include "alloc/alloc.h"
 
-//#define _MEM_POOL_SIZE (1024*1024*1024*0.5)
-#define _MEM_POOL_SIZE (1024*1024*1024*0.25)
+#define _MEM_POOL_SIZE (1024*1024*1024*0.125)
+#define _DATA_CHUNK_SIZE 64
 
 #define _NUM_TESTS 1
 
-#define TEST_LINEAR 0
-#define TEST_STACK  0
-#define TEST_POOL   0
-#define TEST_FLIST  0
-#define TEST_SLTADP 0
+#define TEST_LINEAR 1
+#define TEST_STACK  1
+#define TEST_POOL   1
+#define TEST_FLIST  1
+#define TEST_SLTADP 1
+
+#define PRINT_DEBUG 1
 
 struct data_chunk
 {
-    uint8_t data[8];
+    uint8_t data[_DATA_CHUNK_SIZE];
 };
 
 int main()
 {
     std::ios_base::sync_with_stdio( false );
+
+    #if PRINT_DEBUG
+    std::fstream outfile( "data_dump.txt", std::fstream::out );
+    #endif // PRINT_DEBUG
 
     //alloc::DefaultAllocator d( _MEM_POOL_SIZE+sizeof(uintptr_t)*1024, nullptr );
     alloc::DefaultAllocator d( 0, nullptr );
@@ -45,11 +53,18 @@ int main()
             i->data[0] = 0;
         }
 
+        std::cout << "clearing ... " << std::flush;
+
         la->clear();
 
         std::cout << "Done." << std::endl;
     }
     #endif
+    #if PRINT_DEBUG
+    std::cout << "Printing Debug ... " << std::flush;
+    la->printDebugInfo(outfile);
+    std::cout << "Done." << std::endl;
+    #endif // PRINT_DEBUG
 
     alloc::Allocator * sa;
     sa = new(d.allocate<alloc::StackAllocator>()) alloc::StackAllocator( _MEM_POOL_SIZE, _mem_pool );
@@ -71,6 +86,8 @@ int main()
             ++_last_chunk;
         }
 
+        std::cout << "clearing ... " << std::flush;
+
         while( _last_chunk )
         {
             sa->deallocate<data_chunk>(chunks[--_last_chunk]);
@@ -82,12 +99,17 @@ int main()
         std::cout << "Done." << std::endl;
     }
     #endif
+    #if PRINT_DEBUG
+    std::cout << "Printing Debug ... " << std::flush;
+    sa->printDebugInfo(outfile);
+    std::cout << "Done." << std::endl;
+    #endif // PRINT_DEBUG
 
     alloc::Allocator * pa;
     pa = new(d.allocate<alloc::PoolAllocator>()) alloc::PoolAllocator( sizeof(data_chunk), alignof(data_chunk), _MEM_POOL_SIZE, _mem_pool );
 
-    #if TEST_POOL
     std::vector<data_chunk*> chunks;
+    #if TEST_POOL
     for( unsigned c = 0; c < _NUM_TESTS; ++c )
     {
         std::cout << "pa: " << c << " ... " << std::flush;
@@ -101,6 +123,8 @@ int main()
             chunks.back()->data[0] = 0;
         }
 
+        std::cout << "clearing ... " << std::flush;
+
         for( auto p : chunks )
         {
             pa->deallocate<data_chunk>( p );
@@ -111,6 +135,11 @@ int main()
         std::cout << "Done." << std::endl;
     }
     #endif
+    #if PRINT_DEBUG
+    std::cout << "Printing Debug ... " << std::flush;
+    pa->printDebugInfo(outfile);
+    std::cout << "Done." << std::endl;
+    #endif // PRINT_DEBUG
 
     alloc::Allocator * fa;
     fa = new(d.allocate<alloc::FreeListAllocator>()) alloc::FreeListAllocator( _MEM_POOL_SIZE, _mem_pool );
@@ -126,6 +155,8 @@ int main()
             chunks.back()->data[0] = 0;
         }
 
+        std::cout << "clearing ... " << std::flush;
+
         for( auto p : chunks )
         {
             fa->deallocate<data_chunk>( p );
@@ -136,6 +167,11 @@ int main()
         std::cout << "Done." << std::endl;
     }
     #endif
+    #if PRINT_DEBUG
+    std::cout << "Printing Debug ... " << std::flush;
+    fa->printDebugInfo(outfile);
+    std::cout << "Done." << std::endl;
+    #endif // PRINT_DEBUG
 
     std::cout << "\nLinear allocator:" << std::endl;
     std::cout << "Max bytes allocated = " << la->maxUsedMemory() << std::endl;
@@ -152,11 +188,6 @@ int main()
     std::cout << "\nFreeList allocator:" << std::endl;
     std::cout << "Max bytes allocated = " << fa->maxUsedMemory() << std::endl;
     std::cout << "Max num allocations = " << fa->maxNumAllocations() << std::endl;
-
-    la->printDebugInfo();
-    sa->printDebugInfo();
-    pa->printDebugInfo();
-    fa->printDebugInfo();
 
     d.deallocate<alloc::LinearAllocator>( la );
     d.deallocate<alloc::StackAllocator>( sa );
@@ -193,7 +224,9 @@ int main()
             v.push_back( dc );
         }
 
-        v.clear_all_memory();
+        std::cout << "clearing ... " << std::flush;
+
+        if(!v.clear_all_memory()) std::cout << "err ";
 
         //v.clear();
         //v.shrink_to_fit(); // NOTE: some implementations won't actually clear the memory with this call.
@@ -211,11 +244,13 @@ int main()
         {
             data_chunk dc;
             dc.data[0] = 0;
-            //m.insert( std::pair<std::size_t,data_chunk>(0,dc) );
-            m.insert( std::pair<std::size_t,data_chunk>(ra->unusedMemory(),dc) );
+            m.insert( std::pair<std::size_t,data_chunk>(m.size(),dc) );
         }
 
-        m.erase( m.begin(), m.end() );
+        std::cout << "clearing ... " << std::flush;
+
+        if(!m.clear_all_memory()) std::cout << "err ";
+
         std::cout << "Done.\n" << std::flush;
     }
 
@@ -234,8 +269,10 @@ int main()
             m.insert( std::pair<std::size_t,data_chunk>(m.size(),dc) );
         }
 
-        //m.erase( m.begin(), m.end() );
-        m.clear_all_memory();
+        std::cout << "clearing ... " << std::flush;
+
+        if(!m.clear_all_memory()) std::cout << "err ";
+
         std::cout << "Done.\n" << std::flush;
     }
 
@@ -256,6 +293,8 @@ int main()
             q.pop_front();
         }
 
+        std::cout << "clearing ... " << std::flush;
+
         if(!q.clear_all_memory()) std::cout << "err ";
 
         std::cout << "Done.\n" << std::flush;
@@ -270,7 +309,9 @@ int main()
     std::cout << "\nComplete!" << std::endl;
     #endif
 
-    d.printDebugInfo();
+    #if PRINT_DEBUG
+    d.printDebugInfo(outfile);
+    #endif // PRINT_DEBUG
 
     return 0;
 }

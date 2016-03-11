@@ -99,10 +99,11 @@ namespace alloc
     void
     PoolAllocator::printDebugInfo( std::ostream& out ) const
     {
+        void * pend;
         out << "PoolAllocator(" << this << "):\n";
         out << "\tBlock Start: " << getBlock() << "\n";
         out << "\tBlock Size: " << getSize() << " bytes\n";
-        out << "\tBlock End:  " << (void*)(reinterpret_cast<uintptr_t>(getBlock())+getSize()) << " bytes\n";
+        out << "\tBlock End:  " << (pend = (void*)(reinterpret_cast<uintptr_t>(getBlock())+getSize())) << "\n";
         out << "\tUsed Memory: " << usedMemory() << " bytes\n";
         out << "\tUnused Memory: " << unusedMemory() << " bytes\n";
         out << "\tNumber of Allocations: " << numAllocations() << "\n";
@@ -116,15 +117,17 @@ namespace alloc
             out << "\tfree:\n\t{\n";
             std::size_t numFreeBuckets = 0;
             void ** fbl = _free_block_list;
-            while( fbl != nullptr )
+            while( fbl != nullptr && (void*)fbl >= _block_start && (void*)fbl < pend )
             {
                 void * block = (void*)fbl;
                 void ** next = (void**)(*fbl);
+
                 out << "\t\taddr:" << block << ",size:" << _object_size << ",end:" << (void*)(reinterpret_cast<uintptr_t>(block)+_object_size) << ",next:" << next << "\n";
 
                 // point fbl to the address that the data at fbl is pointing to.
-                fbl = next;
+                fbl = (void**)(*fbl);
                 ++numFreeBuckets;
+                //if( numFreeBuckets >= 100 ) break;
             }
 
             out << "\t}(freeBuckets:" << numFreeBuckets << ");\n";

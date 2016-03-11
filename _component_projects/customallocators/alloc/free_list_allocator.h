@@ -187,9 +187,11 @@ namespace alloc
     void
     FreeListAllocator::printDebugInfo( std::ostream& out ) const
     {
+        void * pend;
         out << "FreeListAllocator(" << this << "):\n";
         out << "\tBlock Start: " << getBlock() << "\n";
         out << "\tBlock Size: " << getSize() << " bytes\n";
+        out << "\tBlock End:  " << (pend = (void*)(reinterpret_cast<uintptr_t>(getBlock())+getSize())) << "\n";
         out << "\tUsed Memory: " << usedMemory() << " bytes\n";
         out << "\tUnused Memory: " << unusedMemory() << " bytes\n";
         out << "\tNumber of Allocations: " << numAllocations() << "\n";
@@ -202,7 +204,7 @@ namespace alloc
             out << "\tfree:\n\t{\n";
             std::size_t numFreeBlocks = 0;
             _FreeBlock * curr_block = _free_blocks;
-            while( curr_block != nullptr )
+            while( curr_block != nullptr && (void*)curr_block >= _block_start && (void*)curr_block < pend)
             {
 
                 out << "\t\taddr:" << curr_block << ",size:" << curr_block->size << ",end:" << curr_block+curr_block->size << ",next:" << curr_block->next << "\n";

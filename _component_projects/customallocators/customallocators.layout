@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="alloc\align.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="alloc\object_pool_allocator.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="644" topLine="8" />
+			<Cursor1 position="515" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="alloc\pool_allocator.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="251" topLine="0" />
+			<Cursor1 position="3514" topLine="78" />
 		</Cursor>
 	</File>
 	<File name="alloc\proxy_allocator.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1752" topLine="16" />
+			<Cursor1 position="2171" topLine="3" />
+		</Cursor>
+	</File>
+	<File name="alloc\linear_allocator.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2182" topLine="42" />
+		</Cursor>
+	</File>
+	<File name="alloc\align.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="190" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="alloc\alloc.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -21,49 +31,39 @@
 			<Cursor1 position="322" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="alloc\allocator.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="275" topLine="15" />
+			<Cursor1 position="8908" topLine="255" />
 		</Cursor>
 	</File>
-	<File name="alloc\free_list_allocator.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="alloc\stl_alias.h" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2246" topLine="45" />
-		</Cursor>
-	</File>
-	<File name="alloc\pool_allocator.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4206" topLine="91" />
+			<Cursor1 position="2912" topLine="36" />
 		</Cursor>
 	</File>
 	<File name="alloc\default_allocator.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2832" topLine="61" />
+			<Cursor1 position="2415" topLine="48" />
+		</Cursor>
+	</File>
+	<File name="alloc\free_list_allocator.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4103" topLine="60" />
+		</Cursor>
+	</File>
+	<File name="alloc\allocator.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="275" topLine="1" />
 		</Cursor>
 	</File>
 	<File name="alloc\stack_allocator.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4130" topLine="87" />
+			<Cursor1 position="3221" topLine="73" />
 		</Cursor>
 	</File>
 	<File name="alloc\stl_adapter.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1287" topLine="24" />
-		</Cursor>
-	</File>
-	<File name="alloc\linear_allocator.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2987" topLine="57" />
-		</Cursor>
-	</File>
-	<File name="alloc\object_pool_allocator.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="515" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="alloc\stl_alias.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1500" topLine="32" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
