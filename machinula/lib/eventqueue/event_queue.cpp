@@ -5,7 +5,7 @@
 namespace EventQueue
 {
     EventQueue::EventQueue( std::size_t num_threads )
-    : numThreads( num_threads ? num_threads : 1 ), _processingThread( EventQueue::_eventProcessingFunction, (void*)this )
+    : _eventQueueLock(), _eventQueueCondition(), events(), _listenerVectorLock(), listeners(), numThreads( num_threads ? num_threads : 1 ), _processingThread( EventQueue::_eventProcessingFunction, (void*)this )
     {  }
 
     EventQueue::~EventQueue()

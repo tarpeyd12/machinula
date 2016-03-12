@@ -58,6 +58,25 @@ namespace alloc
         namespace alias
         {
             template < typename KeyType, typename ValueType >
+            using unordered_multimap = std::unordered_multimap< KeyType, ValueType, std::hash<KeyType>, std::equal_to<KeyType>, stl_adapter< std::pair< const KeyType, ValueType > > >;
+        }
+
+        template < typename KeyType, typename ValueType >
+        class unordered_multimap : public alias::unordered_multimap< KeyType, ValueType >
+        {
+            public:
+                unordered_multimap( Allocator * a = nullptr )
+                : alias::unordered_multimap< KeyType, ValueType >( 1, std::hash<KeyType>(), std::equal_to<KeyType>(), stl_adapter< std::pair< const KeyType, ValueType > >(a) )
+                { }
+
+                // clear the table, return false. unordered_multimap keeps the hash table and does not free it until deconstruction.
+                inline bool clear_all_memory() { this->clear(); return false; }
+        };
+
+
+        namespace alias
+        {
+            template < typename KeyType, typename ValueType >
             using map = std::map< KeyType, ValueType, std::less<KeyType>, stl_adapter< std::pair< const KeyType, ValueType > > >;
         }
 

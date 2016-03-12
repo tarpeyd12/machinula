@@ -31,12 +31,16 @@ namespace EventQueue
         public:
 
             Listener() : _parent_queue(nullptr) {  }
+            Listener( const Listener & _l ) : _parent_queue( _l._parent_queue ) {  }
             virtual ~Listener() { _parent_queue = nullptr; }
 
             EventQueue * parentQueue() const { return _parent_queue; }
 
             virtual void processEvent( const Event * e ) = 0;
             virtual bool isRelevant( const Event * e ) = 0;
+
+        private:
+            Listener & operator= ( const Listener & _l ) = delete;
     };
 
     class EventQueue

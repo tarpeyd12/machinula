@@ -17,7 +17,7 @@ namespace alloc
             PoolAllocator( std::size_t object_size, uint8_t object_align, std::size_t block_size, void * block_start );
             ~PoolAllocator();
 
-            inline void * allocateBlock( std::size_t size, uint8_t align ) override;
+            inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             inline void deallocateBlock( void * block ) override;
 
             void printDebugInfo( std::ostream& out = std::cerr ) const override;
@@ -28,7 +28,7 @@ namespace alloc
     };
 
     PoolAllocator::PoolAllocator( std::size_t object_size, uint8_t object_align, std::size_t block_size, void * block_start )
-    : Allocator( block_size, block_start ), _object_size(object_size), _object_alignment(object_align)
+    : Allocator( block_size, block_start ), _object_size(object_size), _object_alignment(object_align), _free_block_list(nullptr)
     {
         /*if( _object_size < sizeof(void*) )
             _object_size = sizeof(void*);*/

@@ -18,7 +18,7 @@ namespace alloc
             DefaultAllocator( std::size_t block_size = 0, void * block_start = nullptr );
             ~DefaultAllocator();
 
-            void * allocateBlock( std::size_t size, uint8_t align ) override;
+            void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             void deallocateBlock( void * block ) override;
 
             void printDebugInfo( std::ostream& out = std::cerr ) const override;
@@ -31,7 +31,7 @@ namespace alloc
     };
 
     DefaultAllocator::DefaultAllocator( std::size_t block_size, void * block_start )
-    : Allocator( block_size, block_start )
+    : Allocator( block_size, block_start ), _allocated_blocks()
     { }
 
     DefaultAllocator::~DefaultAllocator()
@@ -40,7 +40,7 @@ namespace alloc
     }
 
     void *
-    DefaultAllocator::allocateBlock( std::size_t size, uint8_t align )
+    DefaultAllocator::allocateBlock( std::size_t size, uint8_t /*align*/ )
     {
         assert( size > 0 );
 
@@ -78,7 +78,7 @@ namespace alloc
         out << "DefaultAllocator(" << this << "):\n";
         //out << "\tBlock Start: " << getBlock() << "\n";
         out << "\tBlock Size: " << getSize() << " bytes\n";
-        out << "\tBlock End:  " << (void*)(reinterpret_cast<uintptr_t>(getBlock())+getSize()) << "\n";
+        //out << "\tBlock End:  " << (void*)(reinterpret_cast<uintptr_t>(getBlock())+getSize()) << "\n";
         out << "\tUsed Memory: " << usedMemory() << " bytes\n";
         out << "\tUnused Memory: " << unusedMemory() << " bytes\n";
         out << "\tNumber of Allocations: " << numAllocations() << "\n";

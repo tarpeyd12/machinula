@@ -15,7 +15,7 @@ namespace alloc
             LinearAllocator( std::size_t block_size, void * block_start );
             ~LinearAllocator();
 
-            inline void * allocateBlock( std::size_t size, uint8_t align ) override;
+            inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             inline void deallocateBlock( void * block ) override;
 
             void printDebugInfo( std::ostream& out = std::cerr ) const override;
@@ -58,7 +58,7 @@ namespace alloc
     }
 
     void
-    LinearAllocator::deallocateBlock( void * block )
+    LinearAllocator::deallocateBlock( void * /*block*/ )
     {
         // do not be here!
         assert( 0 && "Use LinearAllocator::clear(); not deallocateBlock." );

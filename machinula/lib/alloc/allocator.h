@@ -57,6 +57,9 @@ namespace alloc
         protected:
             inline void _incrementAllocations( std::size_t size ) { assert( size > 0 ); _max_num_allocations = std::max( _max_num_allocations, ++_num_allocations ); _max_used_memory = std::max( _max_used_memory, _used_memory += size ); }
             inline void _decrementAllocations( std::size_t size ) { assert( size > 0 ); --_num_allocations; _used_memory -= size; }
+        private:
+            Allocator( const Allocator & ) = delete;
+            Allocator & operator = ( const Allocator & ) = delete;
     };
 }
 

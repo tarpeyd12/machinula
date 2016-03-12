@@ -25,44 +25,44 @@ namespace alloc
                     typedef adapter< OtherType > other;
                 };
 
-                pointer allocate( size_type n, const void * hint = 0 );
-                void deallocate( pointer p, size_type n );
-
                 adapter( Allocator * _al ) throw();
                 adapter( const adapter< Type > &o ) throw();
 
                 inline Allocator * __getInternalAllocator() const { return _allocator; }
 
                 template < class OtherType >
-                adapter( const adapter< OtherType > &o ) throw() : std::allocator<Type>(o)
+                adapter( const adapter< OtherType > &o ) throw()
+                : std::allocator<Type>(o), _allocator( o.__getInternalAllocator() )
                 {
-                    _allocator = o.__getInternalAllocator();
                     #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
-                    fprintf(stderr, "stl::adapter< Type >::stl::adapter( const stl::adapter< OtherType > &o )\n");
+                    std::cerr << "stl::adapter< Type >::stl::adapter( const stl::adapter< OtherType > &o )\n";
                     #endif // ___ALLOC_STL_ADAPTER_DEBUGPRINT
                 }
 
                 ~adapter() throw();
 
+                adapter< Type > & operator= ( const adapter< Type > & o );
+
+                pointer allocate( size_type n, const void * hint = 0 );
+                void deallocate( pointer p, size_type n );
+
         };
 
         template < typename Type >
         adapter< Type >::adapter( Allocator * _al ) throw()
-        : std::allocator<Type>()
+        : std::allocator<Type>(), _allocator( _al )
         {
-            _allocator = _al;
             #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
-            fprintf(stderr, "stl::adapter< Type >::stl::adapter( Allocator * _al )\n");
+            std::cerr << "stl::adapter< Type >::stl::adapter( Allocator * _al )\n";
             #endif // ___ALLOC_STL_ADAPTER_DEBUGPRINT
         }
 
         template < typename Type >
         adapter< Type >::adapter( const adapter< Type > &o ) throw()
-        : std::allocator<Type>(o)
+        : std::allocator<Type>(o), _allocator( o._allocator )
         {
-            _allocator = o._allocator;
             #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
-            fprintf(stderr, "stl::adapter< Type >::stl::adapter( const stl::adapter< Type > &o )\n");
+            std::cerr << "stl::adapter< Type >::stl::adapter( const stl::adapter< Type > &o )\n";
             #endif // ___ALLOC_STL_ADAPTER_DEBUGPRINT
         }
 
@@ -70,17 +70,25 @@ namespace alloc
         adapter< Type >::~adapter() throw()
         {
             #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
-            fprintf(stderr, "stl::adapter< Type >::~stl::adapter()\n");
+            std::cerr << "stl::adapter< Type >::~stl::adapter()\n";
             #endif // ___ALLOC_STL_ADAPTER_DEBUGPRINT
             _allocator = nullptr;
         }
 
         template < typename Type >
+        adapter< Type > &
+        adapter< Type >::operator= ( const adapter< Type > & o )
+        {
+            _allocator = o.__getInternalAllocator();
+            return *this;
+        }
+
+        template < typename Type >
         typename adapter< Type >::pointer
-        adapter< Type >::allocate( adapter< Type >::size_type n, const void * hint )
+        adapter< Type >::allocate( adapter< Type >::size_type n, const void * /*hint*/ )
         {
             #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
-            fprintf(stderr, "Alloc %d bytes, over %d.\n", n*sizeof(Type), n );
+            std::cerr << "Alloc " << n*sizeof(Type) << " bytes, over " << n << ".\n";
             #endif // ___ALLOC_STL_ADAPTER_DEBUGPRINT
             //return std::allocator<Type>::allocate( n, hint );
             return reinterpret_cast<Type*>( _allocator->allocateBlock( n*sizeof(Type), alignof(Type) ) );
@@ -88,10 +96,10 @@ namespace alloc
 
         template < typename Type >
         void
-        adapter< Type >::deallocate( pointer p, adapter< Type >::size_type n )
+        adapter< Type >::deallocate( pointer p, adapter< Type >::size_type /*n*/ )
         {
             #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
-            fprintf(stderr, "Dealloc %d bytes (%p).\n", n*sizeof(Type), p);
+            std::cerr << "Dealloc "  << n*sizeof(Type) << " bytes (" << p << ").\n";
             #endif // ___ALLOC_STL_ADAPTER_DEBUGPRINT
             //return std::allocator<T>::deallocate(p, n);
             return _allocator->deallocateBlock( p );
