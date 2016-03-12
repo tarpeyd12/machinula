@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="main.cpp" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -39,6 +40,25 @@
 		<Linker>
 			<Add option="-s" />
 		</Linker>
+		<Unit filename="lib/alloc.h" />
+		<Unit filename="lib/alloc/align.h" />
+		<Unit filename="lib/alloc/alloc.h" />
+		<Unit filename="lib/alloc/allocator.h" />
+		<Unit filename="lib/alloc/default_allocator.h" />
+		<Unit filename="lib/alloc/free_list_allocator.h" />
+		<Unit filename="lib/alloc/linear_allocator.h" />
+		<Unit filename="lib/alloc/object_pool_allocator.h" />
+		<Unit filename="lib/alloc/pool_allocator.h" />
+		<Unit filename="lib/alloc/proxy_allocator.h" />
+		<Unit filename="lib/alloc/stack_allocator.h" />
+		<Unit filename="lib/alloc/stl_adapter.h" />
+		<Unit filename="lib/alloc/stl_alias.h" />
+		<Unit filename="lib/ecs.h" />
+		<Unit filename="lib/ecs/ecs.h" />
+		<Unit filename="lib/ecs/ecs.inl" />
+		<Unit filename="lib/event_queue.h" />
+		<Unit filename="lib/eventqueue/event_queue.cpp" />
+		<Unit filename="lib/eventqueue/event_queue.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

@@ -1,0 +1,83 @@
+# depslib dependency file v1.0
+1457741607 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
+	"lib/alloc.h"
+	<iostream>
+	<cassert>
+	<fstream>
+	<cstdlib>
+	<cstdio>
+	<cmath>
+	"lib/event_queue.h"
+
+1457741016 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc.h
+	"alloc/alloc.h"
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\alloc.h
+	"align.h"
+	"allocator.h"
+	"default_allocator.h"
+	"linear_allocator.h"
+	"stack_allocator.h"
+	"pool_allocator.h"
+	"object_pool_allocator.h"
+	"free_list_allocator.h"
+	"proxy_allocator.h"
+	"stl_adapter.h"
+	"stl_alias.h"
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\align.h
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\allocator.h
+	<type_traits>
+	<cassert>
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\default_allocator.h
+	"allocator.h"
+	<map>
+	<unordered_map>
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\linear_allocator.h
+	"allocator.h"
+	"align.h"
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\stack_allocator.h
+	"allocator.h"
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\pool_allocator.h
+	"allocator.h"
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\object_pool_allocator.h
+	"pool_allocator.h"
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
+	"allocator.h"
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\proxy_allocator.h
+	<iostream>
+	"allocator.h"
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\stl_adapter.h
+
+1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\stl_alias.h
+	<vector>
+	<unordered_map>
+	<map>
+	<deque>
+	<queue>
+	"stl_adapter.h"
+
+1457741433 source:c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.cpp
+	"event_queue.h"
+	<cassert>
+
+1457741155 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
+	<iostream>
+	<vector>
+	<queue>
+	<thread>
+	<mutex>
+	<condition_variable>
+
+1457741000 c:\users\tarpe\documents\github\machinula\machinula\lib\event_queue.h
+	"eventqueue/event_queue.h"
+
