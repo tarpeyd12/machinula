@@ -91,7 +91,7 @@ namespace alloc
             out << "\tused:\n\t{\n";
             for( auto c : _allocated_blocks )
             {
-                out << "\t\taddr:" << c.first << ",size:" << c.second << ",end:" << c.first+c.second << "\n";
+                out << "\t\taddr:" << (void*)c.first << ",size:" << c.second << ",end:" << (void*)(c.first+c.second) << "\n";
             }
             out << "\t}(allocatedBlocks:" << _allocated_blocks.size() << ");\n";
             out << "};\n";

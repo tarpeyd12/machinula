@@ -1,18 +1,19 @@
 #ifndef ECS_H_INCLUDED
 #define ECS_H_INCLUDED
 
-#include <vector>
+/*#include <vector>
 #include <map>
-#include <unordered_map>
+#include <unordered_map>*/
+
 #include <algorithm>
 #include <cassert>
 
-/* pulled from :
+/* pulled and adapted from :
  *   http://entity-systems.wikidot.com/test-for-parallel-processing-of-components#cpp
  */
 
-#define ecs_ComponentID static ecs::ComponentID _component_id;
-#define ecs_initComponentID(a) ecs::ComponentID a::_component_id = typeid(a).hash_code();
+#define ecs_ComponentID      static ecs::ComponentID    _component_id;
+#define ecs_initComponentID(a)      ecs::ComponentID a::_component_id = typeid(a).hash_code();
 
 namespace ecs
 {

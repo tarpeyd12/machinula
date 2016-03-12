@@ -77,6 +77,25 @@ namespace alloc
 
         namespace alias
         {
+            template < typename KeyType, typename ValueType >
+            using multimap = std::multimap< KeyType, ValueType, std::less<KeyType>, stl_adapter< std::pair< const KeyType, ValueType > > >;
+        }
+
+        template < typename KeyType, typename ValueType >
+        class multimap : public alias::multimap< KeyType, ValueType >
+        {
+            public:
+                multimap( Allocator * a = nullptr )
+                : alias::multimap< KeyType, ValueType >( std::less<KeyType>(), stl_adapter< std::pair< const KeyType, ValueType > >(a) )
+                { }
+
+                // clear all, then return size of internal tree, map *should* scale directly in memory usage with tree size.
+                inline bool clear_all_memory() { this->clear(); return this->size() == 0; }
+        };
+
+
+        namespace alias
+        {
             template < typename Type >
             using deque = std::deque< Type, stl_adapter< Type > >;
         }

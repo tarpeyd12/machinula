@@ -1,13 +1,7 @@
 # depslib dependency file v1.0
-1457741607 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
-	"lib/alloc.h"
+1457743233 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
 	<iostream>
-	<cassert>
-	<fstream>
-	<cstdlib>
-	<cstdio>
-	<cmath>
-	"lib/event_queue.h"
+	"lib/alloc.h"
 
 1457741016 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc.h
 	"alloc/alloc.h"
@@ -31,7 +25,7 @@
 	<type_traits>
 	<cassert>
 
-1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\default_allocator.h
+1457743259 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\default_allocator.h
 	"allocator.h"
 	<map>
 	<unordered_map>
@@ -58,7 +52,7 @@
 
 1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\stl_adapter.h
 
-1457737013 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\stl_alias.h
+1457743222 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\stl_alias.h
 	<vector>
 	<unordered_map>
 	<map>
@@ -66,11 +60,11 @@
 	<queue>
 	"stl_adapter.h"
 
-1457741433 source:c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.cpp
+1457741991 source:c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.cpp
 	"event_queue.h"
 	<cassert>
 
-1457741155 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
+1457742121 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
 	<iostream>
 	<vector>
 	<queue>
