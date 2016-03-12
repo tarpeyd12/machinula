@@ -127,6 +127,7 @@ namespace EventQueue
         return e;
     }
 
+    // this function is the main function of the thread.
     void
     EventQueue::_eventProcessingFunction( void * _data )
     {
@@ -134,8 +135,16 @@ namespace EventQueue
 
         EventQueue * eventQueue = static_cast<EventQueue*>( _data );
 
+        // make sure we dont have more threads than we have listeners.
         std::size_t num_threads = std::min( eventQueue->numThreads, eventQueue->listeners.size() );
+        // make sure we have at least one thread.
         num_threads = std::max<std::size_t>( num_threads, 1 );
+
+        /*std::thread ** listenerThreads = nullptr;
+        if( num_threads > 1 )
+        {
+            new std::thread*[num_threads-1];
+        }*/
 
         while( true )
         {
@@ -151,6 +160,7 @@ namespace EventQueue
                 // lock
                 std::lock_guard<std::mutex> _lock(eventQueue->_listenerVectorLock);
 
+                // TODO: hoist this if-else
                 // threaded?
                 if( num_threads <= 1 )
                 {
@@ -159,6 +169,7 @@ namespace EventQueue
                 }
                 else
                 {
+                    // TODO: make listenerThreads more permanent so we don't allocate and deallocate all the time.
                     // multi threaded
                     std::thread ** listenerThreads = new std::thread*[num_threads-1];
 
@@ -182,6 +193,11 @@ namespace EventQueue
             // deallocate event
             eventQueue->_deallocateEvent( e );
         }
+
+        /*if( listenerThreads )
+        {
+            delete [] listenerThreads;
+        }*/
     }
 
     void

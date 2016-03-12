@@ -13,18 +13,13 @@ main( int argc, char* argv[] )
 
     alloc::DefaultAllocator defaultAllocator( 0, nullptr );
 
-    #if !USE_DEFAULT
     void * _mem_pool;
 
     std::size_t _mem_size = 1024*1024*1024;
 
     alloc::FreeListAllocator * fla = new(defaultAllocator.allocate<alloc::FreeListAllocator>()) alloc::FreeListAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
-    //alloc::LinearAllocator * fla = new(defaultAllocator.allocate<alloc::LinearAllocator>()) alloc::LinearAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
 
     alloc::stl::unordered_multimap< int, int > * mm1 = new(fla->allocate<alloc::stl::unordered_multimap< int, int >>()) alloc::stl::unordered_multimap< int, int >( fla );
-    #else
-    alloc::stl::unordered_multimap< int, int > * mm1 = new(defaultAllocator.allocate<alloc::stl::unordered_multimap< int, int >>()) alloc::stl::unordered_multimap< int, int >( &defaultAllocator );
-    #endif
 
     std::cout << "inserting ..." << std::endl;
 
@@ -42,16 +37,10 @@ main( int argc, char* argv[] )
 
     std::cout << "cleaning up ..." << std::endl;
 
-    #if !USE_DEFAULT
     fla->deallocate<alloc::stl::unordered_multimap< int, int > >( mm1 );
     defaultAllocator.deallocate<alloc::FreeListAllocator>( fla );
-    //fla->clear();
-    //defaultAllocator.deallocate<alloc::LinearAllocator>( fla );
 
     defaultAllocator.deallocateBlock( _mem_pool );
-    #else
-    defaultAllocator.deallocate<alloc::stl::unordered_multimap< int, int > >( mm1 );
-    #endif
 
     defaultAllocator.printDebugInfo(std::cout);
 
