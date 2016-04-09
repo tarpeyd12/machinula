@@ -22,6 +22,7 @@ namespace alloc
             };
 
             _FreeBlock * _free_blocks;
+            //uintmax_t deallocLoops;
 
         public:
             FreeListAllocator( std::size_t block_size, void * block_start );
@@ -45,6 +46,7 @@ namespace alloc
 
         _free_blocks->size = block_size;
         _free_blocks->next = nullptr;
+        //deallocLoops = 0;
     }
 
     FreeListAllocator::~FreeListAllocator()
@@ -151,6 +153,7 @@ namespace alloc
             }
             prev_block = curr_block;
             curr_block = curr_block->next;
+            //++deallocLoops;
         }
 
         if( prev_block == nullptr )
@@ -197,6 +200,7 @@ namespace alloc
         out << "\tNumber of Allocations: " << numAllocations() << "\n";
         out << "\tMax Used Memory: " << maxUsedMemory() << " bytes\n";
         out << "\tMax Number of Allocations: " << maxNumAllocations() << "\n";
+        //out << "\tNumber of deallocLoops: " << deallocLoops << "\n";
 
         if(true)
         {
