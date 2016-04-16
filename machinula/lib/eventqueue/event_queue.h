@@ -12,6 +12,7 @@
 namespace EventQueue
 {
     class EventQueue;
+    class Listener;
 
     class Event
     {
@@ -21,26 +22,6 @@ namespace EventQueue
             Event( uintmax_t _et ) : _event_type(_et) {  }
             inline uintmax_t eventType() const { return _event_type; }
             template < typename T > static inline uintmax_t Type() { return typeid(T).hash_code(); }
-    };
-
-    class Listener
-    {
-        friend class EventQueue;
-        private:
-            EventQueue * _parent_queue;
-        public:
-
-            Listener() : _parent_queue(nullptr) {  }
-            Listener( const Listener & _l ) : _parent_queue( _l._parent_queue ) {  }
-            virtual ~Listener() { _parent_queue = nullptr; }
-
-            EventQueue * parentQueue() const { return _parent_queue; }
-
-            virtual void processEvent( const Event * e ) = 0;
-            virtual bool isRelevant( const Event * e ) = 0;
-
-        private:
-            Listener & operator= ( const Listener & _l ) = delete;
     };
 
     class EventQueue
@@ -79,6 +60,29 @@ namespace EventQueue
 
             void _deallocateEvent( Event * e );
     };
+
+    class Listener
+    {
+        friend class EventQueue;
+        private:
+            EventQueue * _parent_queue;
+        public:
+
+            Listener() : _parent_queue(nullptr) {  }
+            Listener( const Listener & _l ) : _parent_queue( _l._parent_queue ) {  }
+            virtual ~Listener() { _parent_queue = nullptr; }
+
+            inline EventQueue * parentQueue() const { return _parent_queue; }
+            inline void broadcastEvent( Event * e ) { parentQueue()->queueEvent(e);}
+
+            virtual void processEvent( const Event * e ) = 0;
+            virtual bool isRelevant( const Event * e ) = 0;
+
+        private:
+            Listener & operator= ( const Listener & _l ) = delete;
+    };
 }
+
+namespace evq { using namespace EventQueue; }
 
 #endif // EVENT_QUEUE_H_INCLUDED

@@ -1,8 +1,10 @@
 # depslib dependency file v1.0
-1459217806 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
+1460849003 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
+	<cstdlib>
 	<iostream>
 	"lib/alloc.h"
-	<cstdlib>
+	"lib/event_queue.h"
+	"lib/ecs.h"
 
 1458600062 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc.h
 	"alloc/alloc.h"
@@ -44,7 +46,7 @@
 1458600062 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\object_pool_allocator.h
 	"pool_allocator.h"
 
-1459217977 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
+1459224652 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
 	"allocator.h"
 
 1458600062 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\proxy_allocator.h
@@ -61,11 +63,11 @@
 	<queue>
 	"stl_adapter.h"
 
-1458600062 source:c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.cpp
+1460850172 source:c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.cpp
 	"event_queue.h"
 	<cassert>
 
-1458600062 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
+1460848911 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
 	<iostream>
 	<vector>
 	<queue>
@@ -73,6 +75,18 @@
 	<mutex>
 	<condition_variable>
 
-1457741000 c:\users\tarpe\documents\github\machinula\machinula\lib\event_queue.h
+1458600062 c:\users\tarpe\documents\github\machinula\machinula\lib\event_queue.h
 	"eventqueue/event_queue.h"
+
+1458600062 c:\users\tarpe\documents\github\machinula\machinula\lib\ecs.h
+	"ecs/ecs.h"
+
+1460849217 c:\users\tarpe\documents\github\machinula\machinula\lib\ecs\ecs.h
+	<map>
+	<unordered_map>
+	<algorithm>
+	<cassert>
+	"ecs.inl"
+
+1460849197 c:\users\tarpe\documents\github\machinula\machinula\lib\ecs\ecs.inl
 

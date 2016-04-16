@@ -3,7 +3,8 @@
 
 namespace ecs
 {
-    Entity::Entity() //: mComponents(32)
+    Entity::Entity()
+    : mComponents()
     {
 
     }
@@ -163,9 +164,15 @@ namespace ecs
         }
     }
 
-    System::System( const std::vector<ComponentID> &requiredComponentTypes)
+    System::System( const std::vector<ComponentID> &_requiredComponentTypes )
+    : requiredComponentTypes( _requiredComponentTypes )
     {
-        this->requiredComponentTypes = requiredComponentTypes;
+
+    }
+
+    System::~System()
+    {
+        requiredComponentTypes.clear();
     }
 
     inline

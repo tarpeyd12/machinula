@@ -208,7 +208,7 @@ namespace EventQueue
         assert( increment > 0 && starting_index < increment );
 
         // if universal event
-        if( e->eventType() == 0 )
+        if( e->eventType() == 0 ) // a hoisted if statement
         {
             // iterate over the listeners
             for( std::size_t i = starting_index; i < listeners.size(); i += increment )
@@ -236,6 +236,7 @@ namespace EventQueue
     void
     EventQueue::_deallocateEvent( Event * e )
     {
+        // TODO: make this function thread-safe, since we might be using allocators!
         assert( nullptr != e );
         delete e;
     }

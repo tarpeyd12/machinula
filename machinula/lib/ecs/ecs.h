@@ -27,10 +27,11 @@ namespace ecs
 
     struct Entity
     {
+        std::unordered_map< ComponentID, Component* > mComponents; // is actually a hashmap, so it uses some extra memory :/
+
         Entity();
 
         template< typename ComponentType > ComponentType *get();
-        std::unordered_map< ComponentID, Component* > mComponents; // is actually a hashmap, so it uses some extra memory :/
     };
 
     struct Manager
@@ -67,14 +68,15 @@ namespace ecs
             std::vector<ComponentID> requiredComponentTypes;
 
         public:
-            System( const std::vector<ComponentID> &requiredComponentTypes );
+            System( const std::vector<ComponentID> &_requiredComponentTypes );
+            virtual ~System();
 
             inline void getReleventEntities( std::vector< Entity* > &result );
 
             inline void processEntities();
 
         protected:
-            inline virtual void processEntity( Entity *e ) = 0;
+            virtual void processEntity( Entity *e ) = 0;
     };
 }
 
