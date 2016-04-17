@@ -9,19 +9,28 @@
 #include <mutex>
 #include <condition_variable>
 
-namespace EventQueue
+#include "primeID.h"
+
+// TODO: re-factor all the inline functions to event_queue.inl
+
+namespace evq
 {
     class EventQueue;
     class Listener;
 
+    typedef uintmax_t EventType;
+
     class Event
     {
         private:
-            uintmax_t _event_type;
+            EventType _event_type;
         public:
-            Event( uintmax_t _et ) : _event_type(_et) {  }
-            inline uintmax_t eventType() const { return _event_type; }
-            template < typename T > static inline uintmax_t Type() { return typeid(T).hash_code(); }
+            Event( EventType _et ) : _event_type(_et) {  }
+            Event( const Event& e ) = delete;
+            inline EventType eventType() const { return _event_type; }
+            template < typename T > static inline EventType Type() { return primeid::type<T>(); }
+            template < typename T > inline EventType DeriveEventType() { return _event_type = primeid::getID<T>( _event_type ); } // the template parameter T should be of the derived class in the derived classes constructor. ex:   class A : public Event { A() : Event(Event::Type<A>()) {} }; class B : public A { B(){ DeriveEventType<B>(); } };
+            template < typename T > static inline bool isType( const Event * e ) { static_assert(std::is_base_of<Event,T>::value,""); return e->eventType() % Type<T>() == 0; }
     };
 
     class EventQueue
@@ -44,8 +53,8 @@ namespace EventQueue
             EventQueue( std::size_t num_threads = 1 );
             virtual ~EventQueue();
 
-            int queueEvent( Event * e );
-            int hookListener( Listener * l );
+            std::size_t queueEvent( Event * e );
+            std::size_t hookListener( Listener * l );
 
             std::size_t numEventsQueued();
 
@@ -83,6 +92,6 @@ namespace EventQueue
     };
 }
 
-namespace evq { using namespace EventQueue; }
+namespace EventQueue { using namespace evq; }
 
 #endif // EVENT_QUEUE_H_INCLUDED

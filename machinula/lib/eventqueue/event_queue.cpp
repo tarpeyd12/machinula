@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace EventQueue
+namespace evq
 {
     EventQueue::EventQueue( std::size_t num_threads )
     : _eventQueueLock(), _eventQueueCondition(), events(), _listenerVectorLock(), listeners(), numThreads( num_threads ? num_threads : 1 ), _processingThread( EventQueue::_eventProcessingFunction, (void*)this )
@@ -30,12 +30,12 @@ namespace EventQueue
         }
     }
 
-    int
+    std::size_t
     EventQueue::queueEvent( Event * e )
     {
         assert( e != nullptr );
 
-        int size = 0;
+        std::size_t size = 0;
         {
             // lock
             std::lock_guard<std::mutex> _lock(_eventQueueLock);
@@ -55,13 +55,13 @@ namespace EventQueue
         return size;
     }
 
-    int
+    std::size_t
     EventQueue::hookListener( Listener * l )
     {
         assert( l != nullptr );
         assert( l->_parent_queue == nullptr && this != l->_parent_queue );
 
-        int size = 0;
+        std::size_t size = 0;
         {
             // lock
             std::lock_guard<std::mutex> _lock(_listenerVectorLock);
@@ -146,6 +146,12 @@ namespace EventQueue
             new std::thread*[num_threads-1];
         }*/
 
+        std::thread * listenerThreads = nullptr;
+        if( num_threads > 1 )
+        {
+            listenerThreads = new std::thread[num_threads-1];
+        }
+
         while( true )
         {
             Event * e = nullptr;
@@ -171,21 +177,21 @@ namespace EventQueue
                 {
                     // TODO: make listenerThreads more permanent so we don't allocate and deallocate all the time.
                     // multi threaded
-                    std::thread ** listenerThreads = new std::thread*[num_threads-1];
+                    //std::thread * listenerThreads = new std::thread[num_threads-1];
 
                     for( std::size_t i = 0; i < num_threads-1; ++i )
                     {
-                        listenerThreads[i] = new std::thread( [=]{ eventQueue->_passEventToListeners( e, i, num_threads ); } );
+                        listenerThreads[i] = std::thread( [=]{ eventQueue->_passEventToListeners( e, i, num_threads ); } );
                     }
 
                     eventQueue->_passEventToListeners( e, num_threads-1, num_threads );
 
                     for( std::size_t i = 0; i < num_threads-1; ++i )
                     {
-                        listenerThreads[i]->join();
-                        delete listenerThreads[i];
+                        listenerThreads[i].join();
+                        //delete listenerThreads[i];
                     }
-                    delete [] listenerThreads;
+                    //delete [] listenerThreads;
                 }
 
             }
@@ -194,10 +200,10 @@ namespace EventQueue
             eventQueue->_deallocateEvent( e );
         }
 
-        /*if( listenerThreads )
+        if( listenerThreads )
         {
             delete [] listenerThreads;
-        }*/
+        }
     }
 
     void

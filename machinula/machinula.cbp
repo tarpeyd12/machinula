@@ -76,6 +76,10 @@
 		<Unit filename="lib/event_queue.h" />
 		<Unit filename="lib/eventqueue/event_queue.cpp" />
 		<Unit filename="lib/eventqueue/event_queue.h" />
+		<Unit filename="lib/eventqueue/primeID.h" />
+		<Unit filename="lib/eventqueue/primeID.inl" />
+		<Unit filename="lib/eventqueue/primeid.cpp" />
+		<Unit filename="lib/eventqueue/primenumbers.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
