@@ -90,11 +90,11 @@
 
 1460849197 c:\users\tarpe\documents\github\machinula\machinula\lib\ecs\ecs.inl
 
-1460869915 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.cpp
+1460928179 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.cpp
 	"event_queue.h"
 	<cassert>
 
-1460874039 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
+1460939510 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
 	<iostream>
 	<vector>
 	<queue>
@@ -102,6 +102,7 @@
 	<mutex>
 	<condition_variable>
 	"primeID.h"
+	"event_queue.inl"
 
 1460852851 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\primeid.h
 	<iostream>
@@ -197,5 +198,7 @@
 	<cassert>
 	"ecs.inl"
 
-1460849764 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\ecs\ecs.inl
+1460939470 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\ecs\ecs.inl
+
+1460938027 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.inl
 

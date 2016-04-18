@@ -10,11 +10,13 @@
 #include "lib/ecs.h"
 
 // TODO: NOTE: this is a fix for Code::Blocks MinGW not having std::to_string working correctly
-template < typename T > std::string to_string( const T& n )
+template < typename T >
+std::string
+to_string( const T& n )
 {
-    std::ostringstream stm ;
+    std::ostringstream stm;
     stm << n ;
-    return stm.str() ;
+    return stm.str();
 }
 
 
@@ -107,12 +109,12 @@ main( int /*argc*/, char* /*argv*/[] )
 
     for(uintmax_t i = 0; i < 1000000; ++i )
     {
-        eventQueue->queueEvent( new TimerSignalDispachListener::TimerEvent(0) );
+        //eventQueue->queueEvent( new TimerSignalDispachListener::TimerEvent(0) );
         /*eventQueue->queueEvent( new TimerSignalDispachListener::TimerTick(0) );
         eventQueue->queueEvent( new TimerSignalDispachListener::TimerStart(0) );
         eventQueue->queueEvent( new TimerSignalDispachListener::TimerStop(0) );*/
 
-        if(i%(1000)==0) eventQueue->queueEvent( new DebugListener::MessageEvent(to_string(i)) );
+        if(i%(1)==0) eventQueue->queueEvent( new DebugListener::MessageEvent(to_string(i)) );
 
     }
 

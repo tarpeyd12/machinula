@@ -14,7 +14,8 @@ namespace ecs
     ComponentType *
     Entity::get()
     {
-       return (ComponentType*)mComponents[ ComponentType::_component_id ];
+        static_assert( std::is_base_of< Component, ComponentType >::value, "ecs::Entity::get<T>(): typename T must be derived from ecs::Component" );
+        return (ComponentType*)mComponents[ ComponentType::_component_id ];
     }
 
 
@@ -29,6 +30,7 @@ namespace ecs
     void
     Manager::addComponent( Entity * e, ComponentType * comp )
     {
+        static_assert( std::is_base_of< Component, ComponentType >::value, "ecs::Entity::addComponent<T>(): typename T must be derived from ecs::Component" );
         componentStore.insert( std::pair< ComponentID, Entity* >( ComponentType::_component_id, e ) );
         e->mComponents.insert( std::pair< ComponentID, Component* >( ComponentType::_component_id, comp ) );
     }
@@ -38,6 +40,7 @@ namespace ecs
     ComponentType *
     Manager::getComponent( Entity * e ) const
     {
+        static_assert( std::is_base_of< Component, ComponentType >::value, "ecs::Entity::getComponent<T>(): typename T must be derived from ecs::Component" );
         return (ComponentType*)e->mComponents[ ComponentType::_component_id ];
     }
 
@@ -46,6 +49,7 @@ namespace ecs
     void
     Manager::getEntities( std::vector< Entity* > &result ) const
     {
+        static_assert( std::is_base_of< Component, ComponentType >::value, "ecs::Entity::getEntities<T>(): typename T must be derived from ecs::Component" );
         auto iterPair = componentStore.equal_range( ComponentType::_component_id );
         for( auto iter = iterPair.first; iter != iterPair.second; ++iter )
         {
@@ -58,7 +62,9 @@ namespace ecs
     Manager::getEntities( const std::vector<ComponentID> &componentTypes, std::vector< Entity* > &result ) const
     {
         if( !componentTypes.size() )
+        {
             return;
+        }
 
         // don't waste time with the multiple component code if you only have one
         if( componentTypes.size() == 1 )
@@ -82,7 +88,10 @@ namespace ecs
             std::size_t len = std::distance( iterPair.first, iterPair.second );
 
             // if there are no entities with at least one of the given components, then there will be no entities returned.
-            if( !len ) return;
+            if( !len )
+            {
+                return;
+            }
 
             componentLikelyhood.push_back( std::pair<std::size_t,ComponentID>( len, id ) );
         }
@@ -117,7 +126,9 @@ namespace ecs
             }
 
             if( e )
+            {
                 result.push_back( e );
+            }
         }
     }
 
@@ -125,6 +136,7 @@ namespace ecs
     void
     Manager::_process_get_entities_verticle( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const
     {
+        // TODO: Make this function multi-threaded
         // this section is faster for large sets of components on MULTIPLE THREADS
         auto iterPair = componentStore.equal_range( componentLikelyhood.front().second );
 
@@ -147,20 +159,30 @@ namespace ecs
             ComponentID id = componentLikelyhood[i].second;
             for( std::size_t e = 0; e < numents; ++e )
             {
-                if( !doadd_entities[e] ) continue;
+                if( !doadd_entities[e] )
+                {
+                    continue;
+                }
 
                 if( temp_entities[e]->mComponents.find( id ) == temp_entities[e]->mComponents.end() )
+                {
                     doadd_entities[e] = false;
+                }
             }
         }
 
         ComponentID id = componentLikelyhood.back().second;
         for( std::size_t e = 0; e < numents; ++e )
         {
-            if( !doadd_entities[e] ) continue;
+            if( !doadd_entities[e] )
+            {
+                continue;
+            }
 
             if( temp_entities[e]->mComponents.find( id ) != temp_entities[e]->mComponents.end() )
+            {
                 result.push_back( temp_entities[e] );
+            }
         }
     }
 

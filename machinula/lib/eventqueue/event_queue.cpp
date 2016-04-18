@@ -5,7 +5,7 @@
 namespace evq
 {
     EventQueue::EventQueue( std::size_t num_threads )
-    : _eventQueueLock(), _eventQueueCondition(), events(), _listenerVectorLock(), listeners(), numThreads( num_threads ? num_threads : 1 ), _processingThread( EventQueue::_eventProcessingFunction, (void*)this )
+    : _eventQueueLock(), _eventQueueCondition(), events(), _listenerVectorLock(), listeners(), numThreads( num_threads ? num_threads : 1 ), _processingThread( EventQueue::_eventProcessingFunction, this )
     {  }
 
     EventQueue::~EventQueue()
@@ -13,7 +13,7 @@ namespace evq
         // queue a null pointer to signal the thread to terminate
         {
             // we push manually to bypass queueEvent()'s nullptr check
-            std::lock_guard<std::mutex> _lock(_eventQueueLock);
+            std::lock_guard<std::mutex> _lock( _eventQueueLock );
             events.push( nullptr );
             _eventQueueCondition.notify_all();
         }
@@ -129,11 +129,9 @@ namespace evq
 
     // this function is the main function of the thread.
     void
-    EventQueue::_eventProcessingFunction( void * _data )
+    EventQueue::_eventProcessingFunction( EventQueue * eventQueue )
     {
-        assert( _data != nullptr );
-
-        EventQueue * eventQueue = static_cast<EventQueue*>( _data );
+        assert( eventQueue != nullptr );
 
         // make sure we dont have more threads than we have listeners.
         std::size_t num_threads = std::min( eventQueue->numThreads, eventQueue->listeners.size() );
@@ -154,8 +152,7 @@ namespace evq
 
         while( true )
         {
-            Event * e = nullptr;
-            e = eventQueue->pullNextEvent();
+            Event * e = eventQueue->pullNextEvent();
 
             // if the event is a null pointer we exit the infinite loop
             if( e == nullptr )
@@ -175,10 +172,6 @@ namespace evq
                 }
                 else
                 {
-                    // TODO: make listenerThreads more permanent so we don't allocate and deallocate all the time.
-                    // multi threaded
-                    //std::thread * listenerThreads = new std::thread[num_threads-1];
-
                     for( std::size_t i = 0; i < num_threads-1; ++i )
                     {
                         listenerThreads[i] = std::thread( [=]{ eventQueue->_passEventToListeners( e, i, num_threads ); } );
@@ -189,9 +182,7 @@ namespace evq
                     for( std::size_t i = 0; i < num_threads-1; ++i )
                     {
                         listenerThreads[i].join();
-                        //delete listenerThreads[i];
                     }
-                    //delete [] listenerThreads;
                 }
 
             }
