@@ -26,6 +26,20 @@ class TimerSignalDispachListener : public evq::Listener
 
         typedef uintmax_t TimerID;
 
+    private:
+
+        TimerID nextTimerID;
+
+    public:
+
+        struct Timer
+        {
+            TimerID uniqueTimerID;
+            std::string timerName;
+            std::thread timerThread;
+
+        };
+
         struct TimerEvent : public evq::Event
         {
             TimerID uniqueTimerID;
@@ -39,10 +53,10 @@ class TimerSignalDispachListener : public evq::Listener
         {
             std::size_t tick_count;
             std::size_t max_tick_count;
-            float dt;
-            float total_dt;
-            float start_time;
-            float length;
+            double dt;
+            double total_dt;
+            double start_time;
+            double length;
 
             TimerTick( TimerID tid )
             : TimerEvent( tid )
@@ -51,8 +65,8 @@ class TimerSignalDispachListener : public evq::Listener
 
         struct TimerStart : public TimerEvent
         {
-            float start_time;
-            float length;
+            double start_time;
+            double length;
 
             TimerStart( TimerID tid )
             : TimerEvent( tid )
@@ -61,8 +75,8 @@ class TimerSignalDispachListener : public evq::Listener
 
         struct TimerStop : public TimerEvent
         {
-            float start_time;
-            float length;
+            double start_time;
+            double length;
 
             TimerStop( TimerID tid )
             : TimerEvent( tid )
@@ -86,12 +100,14 @@ class DebugListener : public evq::Listener
             {  }
         };
 
-        void processEvent( const evq::Event * e )
+        void
+        processEvent( const evq::Event * e )
         {
             std::cout << static_cast<const MessageEvent*>(e)->message << std::endl;
         }
 
-        bool isRelevant( const evq::Event * e )
+        bool
+        isRelevant( const evq::Event * e )
         {
             return evq::Event::isType<MessageEvent>( e ) && static_cast<const MessageEvent*>(e)->message.size();
         }

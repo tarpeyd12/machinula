@@ -28,14 +28,14 @@ namespace primeid
     PrimeIDType
     type()
     {
-        return getID<T>( PRIMEID_NO_SUPER_ID );
+        return getID< T >( PRIMEID_NO_SUPER_ID );
     }
 
     template< class T >
     bool
     isType( PrimeIDType type )
     {
-        return (T::_prime_id % type == 0);
+        return ( T::_prime_id % type == 0 );
     }
 }
 
