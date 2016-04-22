@@ -82,6 +82,7 @@
 		<Unit filename="lib/eventqueue/primeid.cpp" />
 		<Unit filename="lib/eventqueue/primenumbers.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="timer_dispach.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
