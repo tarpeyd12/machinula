@@ -56,7 +56,7 @@ namespace evq
     }
 
     std::size_t
-    EventQueue::queueEvents( const std::vector<Event *>& ve )
+    EventQueue::queueEvents( const std::vector< Event * > & ve )
     {
         std::size_t size = 0;
         {
@@ -64,10 +64,13 @@ namespace evq
             std::lock_guard<std::mutex> _lock(_eventQueueLock);
 
             // enque
-            for( auto e : ve )
+            //for( auto e : ve )
+            for( std::size_t i = 0; i < ve.size(); ++i  )
             {
-                assert( e != nullptr );
-                events.push( e );
+
+                assert( ve[ i ] != nullptr );
+                events.push( ve[ i ] );
+                //ve[ i ] = nullptr;
             }
 
             size = events.size();

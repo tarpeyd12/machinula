@@ -9,6 +9,8 @@
 #include "lib/event_queue.h"
 #include "lib/ecs.h"
 
+#include "timer_dispach.h"
+
 // TODO: NOTE: this is a fix for Code::Blocks MinGW not having std::to_string working correctly
 template < typename T >
 std::string
@@ -18,74 +20,6 @@ to_string( const T& n )
     stm << n ;
     return stm.str();
 }
-
-
-class TimerSignalDispachListener : public evq::Listener
-{
-    public:
-
-        typedef uintmax_t TimerID;
-
-    private:
-
-        TimerID nextTimerID;
-
-    public:
-
-        struct Timer
-        {
-            TimerID uniqueTimerID;
-            std::string timerName;
-            std::thread timerThread;
-
-        };
-
-        struct TimerEvent : public evq::Event
-        {
-            TimerID uniqueTimerID;
-
-            TimerEvent( TimerID tid )
-            : evq::Event( evq::Event::Type<TimerEvent>() ), uniqueTimerID( tid )
-            {  }
-        };
-
-        struct TimerTick : public TimerEvent
-        {
-            std::size_t tick_count;
-            std::size_t max_tick_count;
-            double dt;
-            double total_dt;
-            double start_time;
-            double length;
-
-            TimerTick( TimerID tid )
-            : TimerEvent( tid )
-            { DeriveEventType<TimerTick>(); }
-        };
-
-        struct TimerStart : public TimerEvent
-        {
-            double start_time;
-            double length;
-
-            TimerStart( TimerID tid )
-            : TimerEvent( tid )
-            { DeriveEventType<TimerStart>(); }
-        };
-
-        struct TimerStop : public TimerEvent
-        {
-            double start_time;
-            double length;
-
-            TimerStop( TimerID tid )
-            : TimerEvent( tid )
-            { DeriveEventType<TimerStop>(); }
-        };
-
-        void processEvent( const evq::Event * /*e*/ ) { return; }
-        bool isRelevant( const evq::Event * /*e*/ ) { return false; }
-};
 
 class DebugListener : public evq::Listener
 {
