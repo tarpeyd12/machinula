@@ -37,13 +37,41 @@ class DebugListener : public evq::Listener
         void
         processEvent( const evq::Event * e )
         {
-            std::cout << static_cast<const MessageEvent*>(e)->message << std::endl;
+            if( evq::Event::isType<MessageEvent>( e ) && static_cast<const MessageEvent*>(e)->message.size() )
+            {
+                std::cout << static_cast<const MessageEvent*>(e)->message << std::endl;
+            }
+            else if( evq::Event::isType<timer_dispach::TimerEvent>( e ) )
+            {
+                if( evq::Event::isType<timer_dispach::TimerStart>( e ) )
+                {
+                    const timer_dispach::TimerStart * tse = static_cast<const timer_dispach::TimerStart*>(e);
+                    std::cout << "TimerStart Event: " << tse->uniqueTimerID << " start: " << tse->start_time << " length: " << tse->length << std::endl;
+                }
+                else if( evq::Event::isType<timer_dispach::TimerStop>( e ) )
+                {
+                    const timer_dispach::TimerStop * tse = static_cast<const timer_dispach::TimerStop*>(e);
+                    std::cout << "TimerStop Event: " << tse->uniqueTimerID << " start: " << tse->start_time << " length: " << tse->length << std::endl;
+                }
+                else if( evq::Event::isType<timer_dispach::TimerTick>( e ) )
+                {
+                    const timer_dispach::TimerTick * tte = static_cast<const timer_dispach::TimerTick*>(e);
+                    std::cout << "TimerTick Event: " << tte->uniqueTimerID << " start: " << tte->start_time << " length: " << tte->length;
+                    std::cout << " tick:" << tte->tick_count << " max_tick_count:" << tte->max_tick_count << " dt:" << tte->dt << " total_dt:" << tte->total_dt;
+                    std::cout << std::endl;
+                }
+                else
+                {
+                    const timer_dispach::TimerEvent * tse = static_cast<const timer_dispach::TimerEvent*>(e);
+                    std::cout << "TimerStart Event: " << tse->uniqueTimerID << std::endl;
+                }
+            }
         }
 
         bool
         isRelevant( const evq::Event * e )
         {
-            return evq::Event::isType<MessageEvent>( e ) && static_cast<const MessageEvent*>(e)->message.size();
+            return true;//evq::Event::isType<MessageEvent>( e ) && static_cast<const MessageEvent*>(e)->message.size();
         }
 };
 
@@ -55,24 +83,24 @@ main( int /*argc*/, char* /*argv*/[] )
     evq::EventQueue * eventQueue = new evq::EventQueue();
 
     eventQueue->hookListener( new DebugListener() );
-    eventQueue->hookListener( new TimerSignalDispachListener() );
+    eventQueue->hookListener( new timer_dispach::TimerSignalDispachListener() );
 
-    for(uintmax_t i = 0; i < 1000000; ++i )
-    {
-        //eventQueue->queueEvent( new TimerSignalDispachListener::TimerEvent(0) );
-        /*eventQueue->queueEvent( new TimerSignalDispachListener::TimerTick(0) );
-        eventQueue->queueEvent( new TimerSignalDispachListener::TimerStart(0) );
-        eventQueue->queueEvent( new TimerSignalDispachListener::TimerStop(0) );*/
+    std::vector<timer_dispach::Timer *> timers;
+    timers.push_back( new timer_dispach::Timer( 1, "TestTimer0", 1.0, eventQueue ) );
+    timers.push_back( new timer_dispach::Timer( 2, "TestTimer1", 1.0/3.0, eventQueue ) );
+    timers.push_back( new timer_dispach::Timer( 3, "TestTimer2", 3000, 10000.0, eventQueue ) );
+    timers.push_back( new timer_dispach::Timer( 4, "TestTimer3", 100000000, 1000000.0, eventQueue ) );
 
-        if(i%(1)==0) eventQueue->queueEvent( new DebugListener::MessageEvent(to_string(i)) );
-
-    }
-
-    std::cout << "Waiting for empty Queue ..." << std::endl;
+    /*std::cout << "Waiting for empty Queue ..." << std::endl;
 
     eventQueue->waitForEmpty();
 
-    std::cout << "Deleting eventQueue ..." << std::endl;
+    std::cout << "Deleting eventQueue ..." << std::endl;*/
+
+    for( auto t : timers )
+    {
+        delete t;
+    }
 
     delete eventQueue;
 

@@ -1,11 +1,12 @@
 # depslib dependency file v1.0
-1461036220 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
+1461382448 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
 	<cstdlib>
 	<iostream>
 	<sstream>
 	"lib/alloc.h"
 	"lib/event_queue.h"
 	"lib/ecs.h"
+	"timer_dispach.h"
 
 1458600062 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc.h
 	"alloc/alloc.h"
@@ -222,4 +223,13 @@
 1461027623 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\primenumbers.h
 
 1461027623 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.inl
+
+1461380688 c:\users\tarpe\documents\github\machinula\machinula\timer_dispach.h
+	<string>
+	<thread>
+	<chrono>
+	"lib/event_queue.h"
+
+1461382656 source:c:\users\tarpe\documents\github\machinula\machinula\timer_dispach.cpp
+	"timer_dispach.h"
 
