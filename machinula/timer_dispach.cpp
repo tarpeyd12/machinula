@@ -49,7 +49,7 @@ namespace timer_dispach
         {
             if( lastTime > start_time + time_per_tick*current_tick )
             {
-                std::this_thread::sleep_for( time_per_tick );
+                //std::this_thread::sleep_for( time_per_tick );
             }
             else
             {
