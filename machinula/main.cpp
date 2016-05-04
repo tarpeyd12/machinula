@@ -86,11 +86,11 @@ main( int /*argc*/, char* /*argv*/[] )
     eventQueue->hookListener( new timer_dispach::TimerSignalDispachListener() );
 
     std::vector<timer_dispach::Timer *> timers;
-    for( std::size_t i = 1; i <= 100; ++i )
+    for( std::size_t i = 1; i <= 4; ++i )
     {
         double dt = 1.0/double(i);
         timers.push_back( new timer_dispach::Timer( i, "TestTimer"+to_string(i-1), dt, eventQueue ) );
-        std::this_thread::sleep_for(std::chrono::microseconds(5));
+        std::this_thread::sleep_for(std::chrono::microseconds(50));
     }
 
     /*std::cout << "Waiting for empty Queue ..." << std::endl;
