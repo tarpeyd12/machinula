@@ -94,4 +94,49 @@ namespace timer_dispach
 
     }
 
+    TimerSignalDispachListener::TimerSignalDispachListener()
+    {
+
+    }
+
+    TimerSignalDispachListener::~TimerSignalDispachListener()
+    {
+
+    }
+
+    void
+    TimerSignalDispachListener::processEvent( const evq::Event * e )
+    {
+
+        const TimerEvent * tev = static_cast<const TimerEvent*>( e );
+
+        if( evq::Event::isType<TimerStart>( e ) )
+        {
+            const TimerStart * tse = static_cast<const TimerStart*>( e );
+            std::cout << "TimerStart Event: " << tse->uniqueTimerID << " start: " << (unsigned long long int)(tse->start_time*1000000000.0) << " length: " << tse->length << std::endl;
+        }
+        else if( evq::Event::isType<TimerStop>( e ) )
+        {
+            const TimerStop * tse = static_cast<const TimerStop*>( e );
+            std::cout << "TimerStop Event: " << tse->uniqueTimerID << " start: " << (unsigned long long int)(tse->start_time*1000000000.0) << " length: " << tse->length << std::endl;
+        }
+        else if( evq::Event::isType<TimerTick>( e ) )
+        {
+            const TimerTick * tte = static_cast<const TimerTick*>( e );
+            std::cout << "TimerTick Event: " << tte->uniqueTimerID << " start: " << (unsigned long long int)(tte->start_time*1000000000.0) << " length: " << tte->length;
+            std::cout << " tick:" << tte->tick_count << " max_tick_count:" << tte->max_tick_count << " dt:" << tte->dt << " total_dt:" << tte->total_dt;
+            std::cout << std::endl;
+        }
+        else
+        {
+            std::cout << "TimerEvent: " << tev->uniqueTimerID << std::endl;
+        }
+    }
+
+    bool
+    TimerSignalDispachListener::isRelevant( const evq::Event * e )
+    {
+        return evq::Event::isType<TimerEvent>( e );
+    }
+
 }

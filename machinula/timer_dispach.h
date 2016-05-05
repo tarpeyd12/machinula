@@ -79,12 +79,15 @@ namespace timer_dispach
     {
         private:
 
-            TimerID nextTimerID;
+            //TimerID nextTimerID;
 
         public:
 
-            void processEvent( const evq::Event * /*e*/ ) { return; }
-            bool isRelevant( const evq::Event * /*e*/ ) { return false; }
+            TimerSignalDispachListener();
+            virtual ~TimerSignalDispachListener();
+
+            void processEvent( const evq::Event * e );
+            bool isRelevant( const evq::Event * e );
     };
 }
 

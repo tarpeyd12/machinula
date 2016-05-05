@@ -82,6 +82,8 @@
 		<Unit filename="lib/eventqueue/primeid.cpp" />
 		<Unit filename="lib/eventqueue/primenumbers.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="random_functor.cpp" />
+		<Unit filename="random_functor.h" />
 		<Unit filename="timer_dispach.cpp" />
 		<Unit filename="timer_dispach.h" />
 		<Extensions>
