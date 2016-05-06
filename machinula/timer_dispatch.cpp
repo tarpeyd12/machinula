@@ -1,6 +1,6 @@
-#include "timer_dispach.h"
+#include "timer_dispatch.h"
 
-namespace timer_dispach
+namespace timer_dispatch
 {
 
     Timer::Timer( TimerID utid, const std::string& n, std::size_t numticks, double timerduration, evq::EventQueue * eq  )
@@ -94,18 +94,18 @@ namespace timer_dispach
 
     }
 
-    TimerSignalDispachListener::TimerSignalDispachListener()
+    TimerSignalDispatchListener::TimerSignalDispatchListener()
     {
 
     }
 
-    TimerSignalDispachListener::~TimerSignalDispachListener()
+    TimerSignalDispatchListener::~TimerSignalDispatchListener()
     {
 
     }
 
     void
-    TimerSignalDispachListener::processEvent( const evq::Event * e )
+    TimerSignalDispatchListener::processEvent( const evq::Event * e )
     {
 
         const TimerEvent * tev = static_cast<const TimerEvent*>( e );
@@ -134,7 +134,7 @@ namespace timer_dispach
     }
 
     bool
-    TimerSignalDispachListener::isRelevant( const evq::Event * e )
+    TimerSignalDispatchListener::isRelevant( const evq::Event * e )
     {
         return evq::Event::isType<TimerEvent>( e );
     }

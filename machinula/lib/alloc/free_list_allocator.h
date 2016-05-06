@@ -211,7 +211,7 @@ namespace alloc
             while( curr_block != nullptr && (void*)curr_block >= _block_start && (void*)curr_block < pend)
             {
 
-                out << "\t\taddr:" << curr_block << ",size:" << curr_block->size << ",end:" << curr_block+curr_block->size << ",next:" << curr_block->next << "\n";
+                out << "\t\taddr:" << curr_block << ",size:" << curr_block->size << ",end:" << (void*)(reinterpret_cast<uintptr_t>(curr_block)+curr_block->size) << ",next:" << curr_block->next << "\n";
                 curr_block = curr_block->next;
                 ++numFreeBlocks;
             }

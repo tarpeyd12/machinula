@@ -84,8 +84,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="random_functor.cpp" />
 		<Unit filename="random_functor.h" />
-		<Unit filename="timer_dispach.cpp" />
-		<Unit filename="timer_dispach.h" />
+		<Unit filename="timer_dispatch.cpp" />
+		<Unit filename="timer_dispatch.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

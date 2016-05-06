@@ -1,12 +1,13 @@
 # depslib dependency file v1.0
-1462491910 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
+1462498996 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
 	<cstdlib>
 	<iostream>
 	<sstream>
 	"lib/alloc.h"
 	"lib/event_queue.h"
 	"lib/ecs.h"
-	"timer_dispach.h"
+	"timer_dispatch.h"
+	"random_functor.h"
 
 1462416662 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc.h
 	"alloc/alloc.h"
@@ -48,7 +49,7 @@
 1462416662 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\object_pool_allocator.h
 	"pool_allocator.h"
 
-1462416662 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
+1462499815 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
 	"allocator.h"
 
 1462416662 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\proxy_allocator.h
@@ -249,4 +250,13 @@
 1460067869 c:\users\tarpe\documents\github\machinula\machinula\random_functor.h
 	<algorithm>
 	<random>
+
+1462496661 source:c:\users\tarpe\documents\github\machinula\machinula\timer_dispatch.cpp
+	"timer_dispatch.h"
+
+1462496685 c:\users\tarpe\documents\github\machinula\machinula\timer_dispatch.h
+	<string>
+	<thread>
+	<chrono>
+	"lib/event_queue.h"
 

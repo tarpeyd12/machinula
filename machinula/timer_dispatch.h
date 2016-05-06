@@ -1,5 +1,5 @@
-#ifndef TIMER_DISPACH_H_INCLUDED
-#define TIMER_DISPACH_H_INCLUDED
+#ifndef TIMER_DISPATCH_H_INCLUDED
+#define TIMER_DISPATCH_H_INCLUDED
 
 #include <string>
 #include <thread>
@@ -7,7 +7,7 @@
 
 #include "lib/event_queue.h"
 
-namespace timer_dispach
+namespace timer_dispatch
 {
     typedef uintmax_t TimerID;
 
@@ -75,7 +75,7 @@ namespace timer_dispach
         { DeriveEventType<TimerStop>(); }
     };
 
-    class TimerSignalDispachListener : public evq::Listener
+    class TimerSignalDispatchListener : public evq::Listener
     {
         private:
 
@@ -83,12 +83,12 @@ namespace timer_dispach
 
         public:
 
-            TimerSignalDispachListener();
-            virtual ~TimerSignalDispachListener();
+            TimerSignalDispatchListener();
+            virtual ~TimerSignalDispatchListener();
 
             void processEvent( const evq::Event * e );
             bool isRelevant( const evq::Event * e );
     };
 }
 
-#endif // TIMER_DISPACH_H_INCLUDED
+#endif // TIMER_DISPATCH_H_INCLUDED
