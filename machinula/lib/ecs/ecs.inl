@@ -136,7 +136,7 @@ namespace ecs
     void
     Manager::_process_get_entities_verticle( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const
     {
-        // TODO: Make this function multi-threaded
+        // TODO(dean): Make this function multi-threaded
         // this section is faster for large sets of components on MULTIPLE THREADS
         auto iterPair = componentStore.equal_range( componentLikelyhood.front().second );
 

@@ -3,75 +3,79 @@
 
 #include <algorithm>
 #include <random>
+#include <mutex>
 
 namespace Rand
 {
-    // TODO: Figure out how to make this templated with the mutex working in Random_FastSafe
-
     class RandomFunctor
     {
         public:
             virtual ~RandomFunctor() {};
 
-            inline virtual double Float(void) = 0; // [0,1)
+            // NOTE(dean): the compiler will give a warning that Float(double,double) is used but not defined because it's inline, but removing the inline flag here will slow it down significantly.
+            inline virtual double Float( double min, double max ) = 0; // [min,max)
             inline virtual unsigned Int( unsigned min, unsigned max ) = 0; // [min,max]
 
             inline
             double
-            operator()()
+            operator()( double min = -1.0, double max = 1.0 )
             {
-                //return Float()-Float();
-                return Float()*2.0-1.0;
+                return Float( min, max );
             }
 
     };
 
 
-    class Random_FastSafe : public RandomFunctor
+    // TODO(dean): template the generator type
+    class Random_Safe : public RandomFunctor
     {
         private:
-            //static std::mutex randLock;
+            std::mutex randLock;
 
             std::mt19937 generator;
             //std::mt19937_64 generator;
 
         public:
-            Random_FastSafe() : generator()
+            Random_Safe()
+            : randLock(), generator()
             {
                 std::random_device rd;
                 generator.seed( rd() );
             }
 
-            Random_FastSafe( unsigned _seed ) : generator(_seed)
+            Random_Safe( unsigned _seed )
+            : randLock(), generator( _seed )
             {
 
             }
 
-            virtual ~Random_FastSafe() {}
+            virtual ~Random_Safe() {}
 
             inline
             double
-            Float(void)
+            Float( double min = 0.0, double max = 1.0 ) override
             {
-                return std::uniform_real_distribution<double>(0.0,1.0)( generator );
+                std::lock_guard<std::mutex> lock( randLock );
+                return std::uniform_real_distribution<double>( min, max )( generator );
             }
 
             inline
             unsigned
-            Int( unsigned min, unsigned max )
+            Int( unsigned min, unsigned max ) override
             {
+                std::lock_guard<std::mutex> lock( randLock );
                 return std::uniform_int_distribution<unsigned>( min, max )( generator );
             }
     };
 
 
-    extern Random_FastSafe __random;
+    extern Random_Safe __random;
 
     inline
     double
-    Float()
+    Float( double min = 0.0, double max = 1.0 )
     {
-        return __random.Float();
+        return __random.Float( min, max );
     }
 
     inline

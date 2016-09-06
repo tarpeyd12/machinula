@@ -4,7 +4,7 @@ namespace timer_dispatch
 {
 
     Timer::Timer( TimerID utid, const std::string& n, std::size_t numticks, double timerduration, evq::EventQueue * eq  )
-    : uniqueTimerID(utid), name(n), targetEventQueue(eq), total_ticks(numticks), current_tick( 0 ), infinite(false)
+    : uniqueTimerID(utid), name(n), timerThread(), targetEventQueue(eq), start_time(), run_time(), time_per_tick(), total_ticks(numticks), current_tick( 0 ), infinite(false)
     {
         start_time = std::chrono::system_clock::now();
 
@@ -15,7 +15,7 @@ namespace timer_dispatch
     }
 
     Timer::Timer( TimerID utid, const std::string& n, double timepertick, evq::EventQueue * eq )
-    : uniqueTimerID(utid), name(n), targetEventQueue(eq), total_ticks(0), current_tick( 0 ), infinite(true)
+    : uniqueTimerID(utid), name(n), timerThread(), targetEventQueue(eq), start_time(), run_time(), time_per_tick(), total_ticks(0), current_tick( 0 ), infinite(true)
     {
         start_time = std::chrono::system_clock::now();
 
@@ -44,7 +44,7 @@ namespace timer_dispatch
 
         std::chrono::system_clock::time_point lastTime = std::chrono::system_clock::now();
 
-        std::size_t current_tick = 0;
+        current_tick = 0;
         for(;;)
         {
             if( lastTime > start_time + time_per_tick*current_tick )

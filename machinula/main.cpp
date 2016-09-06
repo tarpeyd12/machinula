@@ -13,8 +13,9 @@
 
 #include "random_functor.h"
 
-// TODO: NOTE: this is a fix for Code::Blocks MinGW not having std::to_string working correctly
+// NOTE(dean): this is a fix for Code::Blocks MinGW in windows not having std::to_string working correctly
 template < typename T >
+inline
 std::string
 to_string( const T& n )
 {

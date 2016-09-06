@@ -81,7 +81,7 @@ namespace alloc
             // if allocations in the remaining memory is impossible
             if( curr_block->size - size_total <= sizeof(_AllocationHeader) )
             {
-                // TODO: figure out what the hell is going on here
+                // TODO(dean): figure out what the hell is going on here
                 // increase allocation size rather than creating a new _FreeBlock
                 size_total = curr_block->size;
 
@@ -132,8 +132,8 @@ namespace alloc
     void
     FreeListAllocator::deallocateBlock( void * block )
     {
-        // TODO: Figure out what the hell is going on in this function
-        // TODO: Comment this function
+        // TODO(dean): Figure out what the hell is going on in this function
+        // TODO(dean): Comment this function
         assert( block != nullptr );
 
         _AllocationHeader * header = (_AllocationHeader*)align::_sub( block, sizeof(_AllocationHeader) );

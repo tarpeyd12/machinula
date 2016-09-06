@@ -116,7 +116,7 @@ namespace evq
     void
     EventQueue::waitForEmpty()
     {
-        // TODO: check if _eventQueueCondition.wait( _lock ); is equal to _eventQueueCondition.wait( _eventQueueLock );
+        // TODO(dean): check if _eventQueueCondition.wait( _lock ); is equal to _eventQueueCondition.wait( _eventQueueLock );
         // get the lock
         //std::lock_guard<std::mutex> _lock(_eventQueueLock);
         std::unique_lock<std::mutex> _lock(_eventQueueLock);
@@ -132,7 +132,7 @@ namespace evq
     Event *
     EventQueue::pullNextEvent()
     {
-        // TODO: check if _eventQueueCondition.wait( _lock ); is equal to _eventQueueCondition.wait( _eventQueueLock );
+        // TODO(dean): check if _eventQueueCondition.wait( _lock ); is equal to _eventQueueCondition.wait( _eventQueueLock );
         // lock
         //std::lock_guard<std::mutex> _lock(_eventQueueLock);
         std::unique_lock<std::mutex> _lock(_eventQueueLock);
@@ -188,7 +188,7 @@ namespace evq
                 // lock
                 std::lock_guard<std::mutex> _lock(eventQueue->_listenerVectorLock);
 
-                // TODO: hoist this if-else
+                // TODO(dean): hoist this if-else
                 // threaded?
                 if( num_threads <= 1 )
                 {
@@ -258,7 +258,7 @@ namespace evq
     void
     EventQueue::_deallocateEvent( Event * e )
     {
-        // TODO: make this function thread-safe, since we might be using allocators!
+        // TODO(dean): make this function thread-safe, since we might be using allocators!
         assert( nullptr != e );
         delete e;
     }

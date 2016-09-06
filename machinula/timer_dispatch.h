@@ -28,7 +28,11 @@ namespace timer_dispatch
 
         Timer( TimerID utid, const std::string& n, std::size_t numticks, double duration, evq::EventQueue * eq );
         Timer( TimerID utid, const std::string& n, double timepertick, evq::EventQueue * eq );
+        Timer( const Timer& other ) = delete;
         ~Timer();
+
+        Timer& operator=( const Timer& other ) = default;
+
         void runTimer();
     };
 
@@ -51,7 +55,8 @@ namespace timer_dispatch
         double length;
 
         TimerTick( TimerID tid )
-        : TimerEvent( tid )
+        : TimerEvent( tid ),
+        tick_count(0), max_tick_count(0), dt(0.0), total_dt(0.0), start_time(-1.0), length(0.0)
         { DeriveEventType<TimerTick>(); }
     };
 
@@ -61,7 +66,8 @@ namespace timer_dispatch
         double length;
 
         TimerStart( TimerID tid )
-        : TimerEvent( tid )
+        : TimerEvent( tid ),
+        start_time(-1.0), length(0.0)
         { DeriveEventType<TimerStart>(); }
     };
 
@@ -71,7 +77,8 @@ namespace timer_dispatch
         double length;
 
         TimerStop( TimerID tid )
-        : TimerEvent( tid )
+        : TimerEvent( tid ),
+        start_time(-1.0), length(0.0)
         { DeriveEventType<TimerStop>(); }
     };
 

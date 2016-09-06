@@ -2,5 +2,5 @@
 
 namespace Rand
 {
-    Random_FastSafe __random;
+    Random_Safe __random;
 }

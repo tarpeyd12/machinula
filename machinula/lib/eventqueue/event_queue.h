@@ -11,7 +11,7 @@
 
 #include "primeID.h"
 
-// TODO: re-factor all the inline functions to event_queue.inl
+// TODO(dean): re-factor all the inline functions to event_queue.inl
 
 namespace evq
 {

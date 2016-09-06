@@ -40,12 +40,11 @@ namespace alloc
 
     StackAllocator::StackAllocator( std::size_t block_size, void * block_start )
     : Allocator( block_size, block_start ), _current_pos(block_start)
+    #ifndef NDEBUG
+    , _prev_pos( nullptr ) // a strange way to stop a compiler warning.
+    #endif
     {
         assert( block_size > 0 );
-
-        #ifndef NDEBUG
-        _prev_pos = nullptr;
-        #endif
     }
 
     StackAllocator::~StackAllocator()
