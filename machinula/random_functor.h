@@ -10,7 +10,7 @@ namespace Rand
     class RandomFunctor
     {
         public:
-            virtual ~RandomFunctor() {};
+            virtual ~RandomFunctor() = default;
 
             // NOTE(dean): the compiler will give a warning that Float(double,double) is used but not defined because it's inline, but removing the inline flag here will slow it down significantly.
             inline virtual double Float( double min, double max ) = 0; // [min,max)
@@ -49,7 +49,7 @@ namespace Rand
 
             }
 
-            virtual ~Random_Safe() {}
+            virtual ~Random_Safe() = default;
 
             inline
             double

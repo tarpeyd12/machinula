@@ -94,16 +94,6 @@ namespace timer_dispatch
 
     }
 
-    TimerSignalDispatchListener::TimerSignalDispatchListener()
-    {
-
-    }
-
-    TimerSignalDispatchListener::~TimerSignalDispatchListener()
-    {
-
-    }
-
     void
     TimerSignalDispatchListener::processEvent( const evq::Event * e )
     {
@@ -118,12 +108,12 @@ namespace timer_dispatch
         else if( evq::Event::isType<TimerStop>( e ) )
         {
             const TimerStop * tse = static_cast<const TimerStop*>( e );
-            std::cout << "TimerStop Event: " << tse->uniqueTimerID << " start: " << (unsigned long long int)(tse->start_time*1000000000.0) << " length: " << tse->length << std::endl;
+            std::cout << "TimerStop Event:  " << tse->uniqueTimerID << " start: " << (unsigned long long int)(tse->start_time*1000000000.0) << " length: " << tse->length << std::endl;
         }
         else if( evq::Event::isType<TimerTick>( e ) )
         {
             const TimerTick * tte = static_cast<const TimerTick*>( e );
-            std::cout << "TimerTick Event: " << tte->uniqueTimerID << " start: " << (unsigned long long int)(tte->start_time*1000000000.0) << " length: " << tte->length;
+            std::cout << "TimerTick Event:  " << tte->uniqueTimerID << " start: " << (unsigned long long int)(tte->start_time*1000000000.0) << " length: " << tte->length;
             std::cout << " tick:" << tte->tick_count << " max_tick_count:" << tte->max_tick_count << " dt:" << tte->dt << " total_dt:" << tte->total_dt;
             std::cout << std::endl;
         }

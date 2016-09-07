@@ -155,7 +155,7 @@ eventQueueStuff( evq::EventQueue * eventQueue )
 void
 memoryStuff( evq::EventQueue * eventQueue )
 {
-    // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+    // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent("Creating DefaultAllocator.") );
 
     // wrapper for ::operator new() and ::operator delete()
@@ -165,28 +165,31 @@ memoryStuff( evq::EventQueue * eventQueue )
     void * _mem_pool;
 
     // size of our memory pool: 1GB
-    std::size_t _mem_size = 1024*1024*1024;
+    //std::size_t _mem_size = 1024*1024*1024;
 
-    // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+    // size of our memory pool: 2MB
+    std::size_t _mem_size = 1024*1024*2;
+
+    // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent("Allocating Memory Pool of size " + to_string(_mem_size) + "bytes.") );
 
-    // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+    // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent("Allocating FreeListAllocator, for Memory Pool.") );
 
     // allocate a free list allocator and allocate the memory pool and pass it to the free list allocator.
-    alloc::FreeListAllocator * fla = new(defaultAllocator.allocate<alloc::FreeListAllocator>()) alloc::FreeListAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
+    alloc::FreeListAllocator * fla = new( (alloc::FreeListAllocator*)defaultAllocator ) alloc::FreeListAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
 
     std::ostringstream stream; // we don't have control over this memory
 
     {
 
-        // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+        // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
         eventQueue->queueEvent( new DebugListener::MessageEvent("Allocating IntMap from FreeListAllocator.") );
 
         // allocate a std::multimap<int,double> with our custom allocator adapters
-        alloc::stl::multimap< int, double > * intmap = new(fla->allocate<alloc::stl::multimap< int, double >>()) alloc::stl::multimap< int, double >( fla );
+        alloc::stl::multimap< int, double > * intmap = new( (alloc::stl::multimap< int, double >*)*fla ) alloc::stl::multimap< int, double >( fla );
 
-        // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+        // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
         eventQueue->queueEvent( new DebugListener::MessageEvent("") );
 
         {
@@ -204,7 +207,7 @@ memoryStuff( evq::EventQueue * eventQueue )
                 // print progress
                 if( (i) % 200 == 0 )
                 {
-                    // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+                    // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
                     eventQueue->queueEvent( new DebugListener::MessageEvent("Inserted " + to_string(i) + " pairs into IntMap on FreeListAllocator.\n") );
                 }
 
@@ -218,14 +221,14 @@ memoryStuff( evq::EventQueue * eventQueue )
         // put allocator debug info into stringstream buffer
         fla->printDebugInfo( stream );
 
-        // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+        // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
         eventQueue->queueEvent( new DebugListener::MessageEvent( stream.str() ) );
 
-        // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+        // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
         eventQueue->queueEvent( new DebugListener::MessageEvent("Deallocating all memory associated with IntMap in FreeListAllocator.") );
 
         // deallocate and destruct the multimap<int,double>
-        fla->deallocate< alloc::stl::multimap< int, double > >( intmap );
+        fla->deallocate( intmap );
     }
 
     // clear the stringstream buffer
@@ -235,16 +238,16 @@ memoryStuff( evq::EventQueue * eventQueue )
     // put allocator debug info into stringstream buffer
     fla->printDebugInfo( stream );
 
-    // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+    // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent( stream.str() ) );
 
-    // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+    // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent( "cleaning up ... fla" ) );
 
     // destruct the FreeListAllocator
-    defaultAllocator.deallocate<alloc::FreeListAllocator>( fla );
+    defaultAllocator.deallocate( fla );
 
-    // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+    // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent( "cleaning up ... _mem_pool" ) );
 
     // deallocate the memory block
@@ -257,9 +260,9 @@ memoryStuff( evq::EventQueue * eventQueue )
     // put allocator debug info into stringstream buffer
     defaultAllocator.printDebugInfo( stream );
 
-    // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+    // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent( stream.str() ) );
 
-    // we dont use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
+    // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent( "complete." ) );
 }

@@ -36,11 +36,16 @@ namespace alloc
             virtual void * allocateBlock( std::size_t size, uint8_t align = 0 ) = 0;
             virtual void deallocateBlock( void * block ) = 0;
 
+            // allocates space for object                               auto data = new( myAllocatorInstance.allocate<MyType>() ) MyType( /* args */ );
             template < class Type >
             inline Type * allocate() final { return (Type*)this->allocateBlock( sizeof(Type), alignof(Type) ); }
 
+            // allocates space for object in a visually cleaner way.    auto data = new( (MyType*)myAllocatorInstance ) MyType( /* args */ );
             template < class Type >
-            inline void deallocate( void * block ) final { if( std::is_destructible<Type>() ) { ((Type*)block)->~Type(); } this->deallocateBlock( block ); }
+            inline operator Type*() final { return (Type*)this->allocateBlock( sizeof(Type), alignof(Type) ); }
+
+            template < class Type >
+            inline void deallocate( Type * block ) final { if( std::is_destructible<Type>() ) { ((Type*)block)->~Type(); } this->deallocateBlock( block ); }
 
             virtual inline void *      getBlock() const { return _block_start; }
             virtual inline std::size_t getSize()  const { return _block_size; }
