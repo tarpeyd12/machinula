@@ -22,7 +22,6 @@ namespace Rand
             {
                 return Float( min, max );
             }
-
     };
 
 
@@ -64,6 +63,43 @@ namespace Rand
             Int( unsigned min, unsigned max ) override
             {
                 std::lock_guard<std::mutex> lock( randLock );
+                return std::uniform_int_distribution<unsigned>( min, max )( generator );
+            }
+    };
+
+    class Random_Unsafe : public RandomFunctor
+    {
+        private:
+            std::mt19937 generator;
+            //std::mt19937_64 generator;
+
+        public:
+            Random_Unsafe()
+            : generator()
+            {
+                std::random_device rd;
+                generator.seed( rd() );
+            }
+
+            Random_Unsafe( unsigned _seed )
+            : generator( _seed )
+            {
+
+            }
+
+            virtual ~Random_Unsafe() = default;
+
+            inline
+            double
+            Float( double min = 0.0, double max = 1.0 ) override
+            {
+                return std::uniform_real_distribution<double>( min, max )( generator );
+            }
+
+            inline
+            unsigned
+            Int( unsigned min, unsigned max ) override
+            {
                 return std::uniform_int_distribution<unsigned>( min, max )( generator );
             }
     };

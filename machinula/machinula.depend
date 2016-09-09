@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1473210590 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
+1473386564 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
 	<cstdlib>
 	<iostream>
 	<sstream>
@@ -12,7 +12,7 @@
 1462416662 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc.h
 	"alloc/alloc.h"
 
-1462416662 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\alloc.h
+1473385154 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\alloc.h
 	"align.h"
 	"allocator.h"
 	"default_allocator.h"
@@ -24,10 +24,11 @@
 	"proxy_allocator.h"
 	"stl_adapter.h"
 	"stl_alias.h"
+	"ptr_alias.h"
 
 1473202874 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\align.h
 
-1473216595 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\allocator.h
+1473217057 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\allocator.h
 	<type_traits>
 	<cassert>
 
@@ -58,7 +59,7 @@
 
 1464760616 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\stl_adapter.h
 
-1462416663 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\stl_alias.h
+1473380266 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\stl_alias.h
 	<vector>
 	<unordered_map>
 	<map>
@@ -247,7 +248,7 @@
 1473189974 source:c:\users\tarpe\documents\github\machinula\machinula\random_functor.cpp
 	"random_functor.h"
 
-1473214221 c:\users\tarpe\documents\github\machinula\machinula\random_functor.h
+1473362559 c:\users\tarpe\documents\github\machinula\machinula\random_functor.h
 	<algorithm>
 	<random>
 	<mutex>
@@ -260,4 +261,8 @@
 	<thread>
 	<chrono>
 	"lib/event_queue.h"
+
+1473387284 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\ptr_alias.h
+	<memory>
+	"stl_adapter.h"
 

@@ -67,6 +67,7 @@
 		<Unit filename="lib/alloc/object_pool_allocator.h" />
 		<Unit filename="lib/alloc/pool_allocator.h" />
 		<Unit filename="lib/alloc/proxy_allocator.h" />
+		<Unit filename="lib/alloc/ptr_alias.h" />
 		<Unit filename="lib/alloc/stack_allocator.h" />
 		<Unit filename="lib/alloc/stl_adapter.h" />
 		<Unit filename="lib/alloc/stl_alias.h" />

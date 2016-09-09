@@ -14,7 +14,6 @@ namespace alloc
     namespace stl
     {
 
-
         namespace alias
         {
             template < typename Type >
@@ -26,7 +25,7 @@ namespace alloc
         {
             public:
                 vector( Allocator * a = nullptr )
-                : std::vector< Type,stl_adapter<Type> >( stl_adapter<Type>(a) )
+                : alias::vector< Type >( stl_adapter<Type>(a) )
                 { }
 
                 // clear the data, attempt to shrink the array to fit. return true if successful. shrink_to_fit may do nothing depending on the library.

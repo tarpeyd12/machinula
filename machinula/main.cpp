@@ -179,6 +179,12 @@ memoryStuff( evq::EventQueue * eventQueue )
     // allocate a free list allocator and allocate the memory pool and pass it to the free list allocator.
     alloc::FreeListAllocator * fla = new( (alloc::FreeListAllocator*)defaultAllocator ) alloc::FreeListAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
 
+    {
+        alloc::ptr::shared_ptr<int> test_shared_ptr( new( (int*)*fla ) int(1), fla );
+
+        std::cout << *test_shared_ptr << std::endl;
+    }
+
     std::ostringstream stream; // we don't have control over this memory
 
     {
