@@ -10,20 +10,25 @@ namespace alloc
     namespace ptr
     {
         template < typename PtrType >
-        struct deleter_functor
+        class deleter_functor
         {
-            Allocator * _allocator;
+            private:
+                Allocator * _allocator;
 
-            deleter_functor( Allocator * a )
-            : _allocator( a )
-            { assert( a != nullptr ); }
+            public:
+                deleter_functor( Allocator * a )
+                : _allocator( a )
+                {
+                    assert( a != nullptr );
+                }
 
-            inline
-            void
-            operator()( PtrType * ptr )
-            {
-                _allocator->deallocate<PtrType>( ptr );
-            }
+                inline
+                void
+                operator()( PtrType * ptr )
+                {
+                    assert( ptr != nullptr );
+                    _allocator->deallocate<PtrType>( ptr );
+                }
         };
 
         namespace alias
@@ -37,7 +42,33 @@ namespace alloc
         {
             public:
                 shared_ptr( PtrType * ptr, Allocator * a )
-                : alias::shared_ptr< PtrType >( ptr, deleter_functor<PtrType>( a ) , stl_adapter< PtrType >( a ) )
+                : alias::shared_ptr< PtrType >( ptr, deleter_functor<PtrType>( a )/*, stl_adapter< PtrType >( a )*/ )
+                { }
+        };
+
+
+        namespace alias
+        {
+            template < typename PtrType >
+            using weak_ptr = std::weak_ptr< PtrType >;
+        }
+
+        template < typename PtrType >
+        class weak_ptr : public alias::weak_ptr< PtrType >
+        {
+            public:
+                weak_ptr( const shared_ptr< PtrType >& r )
+                : alias::weak_ptr< PtrType >( r )
+                { }
+
+                template < DerrivedPtrType >
+                weak_ptr( const weak_ptr< DerrivedPtrType >& r )
+                : alias::weak_ptr< PtrType >( r )
+                { }
+
+                template < DerrivedPtrType >
+                weak_ptr( const shared_ptr< DerrivedPtrType >& r )
+                : alias::weak_ptr< PtrType >( r )
                 { }
         };
 

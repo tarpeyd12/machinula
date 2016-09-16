@@ -167,8 +167,8 @@ memoryStuff( evq::EventQueue * eventQueue )
     // size of our memory pool: 1GB
     //std::size_t _mem_size = 1024*1024*1024;
 
-    // size of our memory pool: 2MB
-    std::size_t _mem_size = 1024*1024*2;
+    // size of our memory pool: 0.5MB
+    std::size_t _mem_size = 1024*1024*0.5f;
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent("Allocating Memory Pool of size " + to_string(_mem_size) + "bytes.") );
