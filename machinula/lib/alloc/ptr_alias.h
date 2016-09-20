@@ -38,7 +38,7 @@ namespace alloc
         }
 
         template < typename PtrType >
-        class shared_ptr : public alias::shared_ptr< PtrType >
+        class shared_ptr final : public alias::shared_ptr< PtrType >
         {
             public:
                 shared_ptr()
@@ -53,8 +53,18 @@ namespace alloc
                 : alias::shared_ptr< PtrType >( ptr, deleter_functor< PtrType >( a ), stl_adapter< PtrType >( a ) )
                 { }
 
+                template< class DerrivedPtrType >
+                inline
+                void
+                reset( DerrivedPtrType * ptr, Allocator * a )
+                {
+                    alias::shared_ptr< PtrType >::reset( ptr, deleter_functor< PtrType >( a ), stl_adapter< PtrType >( a ) );
+                }
+
             private:
                 using alias::shared_ptr< PtrType >::operator=; // TODO(dean): figure out if this is technically necessary for safety.
+                using alias::shared_ptr< PtrType >::reset;
+                using alias::shared_ptr< PtrType >::swap; // TODO(dean): figure out if this is technically necessary for safety.
         };
 
 
@@ -65,7 +75,7 @@ namespace alloc
         }
 
         template < typename PtrType >
-        class weak_ptr : public alias::weak_ptr< PtrType >
+        class weak_ptr final : public alias::weak_ptr< PtrType >
         {
             public:
                 weak_ptr()
@@ -85,7 +95,13 @@ namespace alloc
                 weak_ptr( const weak_ptr< DerrivedPtrType >& r )
                 : alias::weak_ptr< PtrType >( r )
                 { }
+
+            private:
+                using alias::weak_ptr< PtrType >::swap; // TODO(dean): figure out if this is technically necessary for safety.
         };
+
+
+
 
     }
 }

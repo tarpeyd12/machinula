@@ -180,14 +180,16 @@ memoryStuff( evq::EventQueue * eventQueue )
     alloc::FreeListAllocator * fla = new( (alloc::FreeListAllocator*)defaultAllocator ) alloc::FreeListAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
 
     {
-        alloc::ptr::weak_ptr<int> test_shared_ptr_outer;
+        alloc::ptr::weak_ptr<int> test_weak_ptr_outer;
+        alloc::ptr::shared_ptr<int> test_shared_ptr_outer;
         {
             alloc::ptr::shared_ptr<int> test_shared_ptr( new( (int*)*fla ) int(1), fla );
 
             std::cout << *test_shared_ptr << std::endl;
+            test_weak_ptr_outer = test_shared_ptr;
             test_shared_ptr_outer = test_shared_ptr;
         }
-        if( auto t = test_shared_ptr_outer.lock() )
+        if( auto t = test_weak_ptr_outer.lock() )
         {
             std::cout << *t << std::endl;
         }
