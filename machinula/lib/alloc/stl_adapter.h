@@ -8,6 +8,7 @@ namespace alloc
     namespace stl
     {
 
+        // TODO(dean): instead of inheriting from std::allocator just implement the required functionality.
         template < typename Type >
         class adapter : public std::allocator< Type >
         {
@@ -32,7 +33,7 @@ namespace alloc
 
                 template < class OtherType >
                 adapter( const adapter< OtherType > &o ) throw()
-                : std::allocator<Type>(o), _allocator( o.__getInternalAllocator() )
+                : std::allocator<Type>(), _allocator( o.__getInternalAllocator() )
                 {
                     #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
                     std::cerr << "stl::adapter< Type >::stl::adapter( const stl::adapter< OtherType > &o )\n";

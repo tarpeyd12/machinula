@@ -193,6 +193,15 @@ memoryStuff( evq::EventQueue * eventQueue )
         {
             std::cout << *t << std::endl;
         }
+
+
+        alloc::ptr::unique_ptr<int> test_unique_ptr_outer;
+        {
+            alloc::ptr::unique_ptr<int> test_unique_ptr( new( (int*)*fla ) int(1000), fla );
+
+            test_unique_ptr_outer.swap( test_unique_ptr );
+        }
+        std::cout << *test_unique_ptr_outer << std::endl;
     }
 
     std::ostringstream stream; // we don't have control over this memory

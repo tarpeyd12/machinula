@@ -16,11 +16,19 @@ namespace alloc
                 Allocator * _allocator;
 
             public:
+                deleter_functor()
+                : _allocator( nullptr )
+                { }
+
                 deleter_functor( Allocator * a )
                 : _allocator( a )
                 {
-                    assert( a != nullptr );
+                    assert( _allocator != nullptr );
                 }
+
+                deleter_functor( const deleter_functor& df )
+                : _allocator( df._allocator )
+                { }
 
                 inline
                 void
@@ -28,6 +36,12 @@ namespace alloc
                 {
                     assert( ptr != nullptr );
                     _allocator->deallocate< PtrType >( ptr );
+                }
+
+                deleter_functor&
+                operator=( const deleter_functor& df )
+                {
+                    _allocator = df._allocator;
                 }
         };
 
@@ -41,11 +55,11 @@ namespace alloc
         class shared_ptr final : public alias::shared_ptr< PtrType >
         {
             public:
-                shared_ptr()
+                constexpr shared_ptr()
                 : alias::shared_ptr< PtrType >( nullptr ) // explicitly construct empty
                 { }
 
-                shared_ptr( std::nullptr_t )
+                constexpr shared_ptr( std::nullptr_t )
                 : alias::shared_ptr< PtrType >( nullptr ) // explicitly construct empty
                 { }
 
@@ -78,7 +92,7 @@ namespace alloc
         class weak_ptr final : public alias::weak_ptr< PtrType >
         {
             public:
-                weak_ptr()
+                constexpr weak_ptr()
                 : alias::weak_ptr< PtrType >() // explicitly construct empty
                 { }
 
@@ -101,7 +115,37 @@ namespace alloc
         };
 
 
+        namespace alias
+        {
+            template < typename PtrType >
+            using unique_ptr = std::unique_ptr< PtrType, deleter_functor< PtrType > >;
+        }
 
+        // TODO(dean): implement the array specialized unique_ptr<T[]>
+        template < typename PtrType >
+        class unique_ptr final : public alias::unique_ptr< PtrType >
+        {
+            public:
+                // TODO(dean): implement the other constructors for unique_ptr
+                constexpr unique_ptr()
+                : alias::unique_ptr< PtrType >( nullptr )
+                { }
+
+                constexpr unique_ptr( std::nullptr_t )
+                : alias::unique_ptr< PtrType >( nullptr )
+                { }
+
+                unique_ptr( PtrType * ptr, Allocator * a )
+                : alias::unique_ptr< PtrType >( ptr, deleter_functor< PtrType >( a ) )
+                { }
+
+            private:
+                ;
+        };
+
+
+
+        //template< class T, typename = std::enable_if/*_t*/<!std::is_array<T>::value> > // disable for array
 
     }
 }

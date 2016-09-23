@@ -18,4 +18,11 @@
 
 #include "ptr_alias.h"
 
+namespace ptr
+{
+    using namespace alloc::stl;
+    using namespace alloc::ptr;
+    using namespace alloc;
+}
+
 #endif // ALLOC_H_INCLUDED
