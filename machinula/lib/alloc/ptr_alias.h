@@ -42,6 +42,45 @@ namespace alloc
                 operator=( const deleter_functor& df )
                 {
                     _allocator = df._allocator;
+                    return *this;
+                }
+        };
+
+        // NOTE: also used for deallocating arrays
+        template < typename PtrType >
+        class deleter_block_functor
+        {
+            private:
+                Allocator * _allocator;
+
+            public:
+                deleter_block_functor()
+                : _allocator( nullptr )
+                { }
+
+                deleter_block_functor( Allocator * a )
+                : _allocator( a )
+                {
+                    assert( _allocator != nullptr );
+                }
+
+                deleter_block_functor( const deleter_block_functor& df )
+                : _allocator( df._allocator )
+                { }
+
+                inline
+                void
+                operator()( PtrType * ptr )
+                {
+                    assert( ptr != nullptr );
+                    _allocator->deallocateBlock( ptr );
+                }
+
+                deleter_block_functor&
+                operator=( const deleter_block_functor& df )
+                {
+                    _allocator = df._allocator;
+                    return *this;
                 }
         };
 
@@ -143,6 +182,27 @@ namespace alloc
                 ;
         };
 
+
+        template < typename PtrType >
+        class unique_ptr< PtrType[] > final : public alias::unique_ptr< PtrType[] >
+        {
+            public:
+                // TODO(dean): implement the other constructors for unique_ptr
+                constexpr unique_ptr()
+                : alias::unique_ptr< PtrType >( nullptr )
+                { }
+
+                constexpr unique_ptr( std::nullptr_t )
+                : alias::unique_ptr< PtrType >( nullptr )
+                { }
+
+                unique_ptr( PtrType * ptr, Allocator * a )
+                : alias::unique_ptr< PtrType >( ptr, deleter_block_functor< PtrType >( a ) )
+                { }
+
+            private:
+                ;
+        };
 
 
         //template< class T, typename = std::enable_if/*_t*/<!std::is_array<T>::value> > // disable for array

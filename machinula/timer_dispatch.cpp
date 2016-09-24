@@ -95,7 +95,7 @@ namespace timer_dispatch
     }
 
     void
-    TimerSignalDispatchListener::processEvent( const evq::Event * e )
+    TimerSignalDispatchListener::processEvent( evq::Event * e )
     {
 
         const TimerEvent * tev = static_cast<const TimerEvent*>( e );

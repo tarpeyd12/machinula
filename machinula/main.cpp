@@ -3,7 +3,11 @@
 #include <cstdlib>
 
 #include <iostream>
+#include <iomanip>
 #include <sstream>
+
+#include <ctime>
+#include <chrono>
 
 #include "lib/alloc.h"
 #include "lib/event_queue.h"
@@ -40,10 +44,11 @@ class DebugListener : public evq::Listener
         // the message event
         struct MessageEvent : public evq::Event
         {
+            std::chrono::system_clock::time_point broadcast_timestamp;
             std::string message;
 
             MessageEvent( const std::string& m )
-            : evq::Event( evq::Event::Type<MessageEvent>() ), message( m )
+            : evq::Event( evq::Event::Type<MessageEvent>() ), message( m ), broadcast_timestamp( std::chrono::system_clock::now() )
             {  }
         };
 
@@ -51,18 +56,25 @@ class DebugListener : public evq::Listener
         ~DebugListener() {  }
 
         void
-        processEvent( const evq::Event * e )
+        processEvent( evq::Event * e )
         {
-            // pull message from given event pointer
-            std::string message = static_cast<const MessageEvent*>(e)->message;
-
-            // print message
-            out << message;
-
-            // put newline on end of message if one is not given
-            if( !message.length() || ( message.length() && '\n' != message.at( message.length() - 1 ) ) )
+            if( MessageEvent * m = dynamic_cast<MessageEvent*>( e ) )
             {
-                out << std::endl;
+                // pull message from given event pointer
+                std::string message = m->message;
+                auto t = std::chrono::system_clock::to_time_t(m->broadcast_timestamp);
+                std::string timestamp = std::string(std::ctime(&t));
+
+                while( isspace(timestamp.back()) ) { timestamp.pop_back(); }
+
+                // print message
+                out << timestamp << ( message.find("\n")!=std::string::npos ? ":\n" : ": " ) << message;
+
+                // put newline on end of message if one is not given
+                if( !message.length() || ( message.length() && '\n' != message.back() ) )
+                {
+                    out << std::endl;
+                }
             }
         }
 
@@ -70,7 +82,10 @@ class DebugListener : public evq::Listener
         bool
         isRelevant( const evq::Event * e )
         {
-            return evq::Event::isType<MessageEvent>( e );// && static_cast<const MessageEvent*>(e)->message.size();
+            //return evq::Event::isType<MessageEvent>( e );// && static_cast<const MessageEvent*>(e)->message.size();
+            // TODO(dean): check if this test is actually faster
+            const MessageEvent * m;
+            return ( m = dynamic_cast<const MessageEvent*>( e ) );
         }
 };
 
@@ -165,10 +180,10 @@ memoryStuff( evq::EventQueue * eventQueue )
     void * _mem_pool;
 
     // size of our memory pool: 1GB
-    //std::size_t _mem_size = 1024*1024*1024;
+    std::size_t _mem_size = 1024*1024*1024;
 
     // size of our memory pool: 0.5MB
-    std::size_t _mem_size = 1024*1024*0.5f;
+    //std::size_t _mem_size = 1024*1024*0.5f;
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent("Allocating Memory Pool of size " + to_string(_mem_size) + "bytes.") );
@@ -200,11 +215,16 @@ memoryStuff( evq::EventQueue * eventQueue )
             alloc::ptr::unique_ptr<int> test_unique_ptr( new( (int*)*fla ) int(1000), fla );
 
             test_unique_ptr_outer.swap( test_unique_ptr );
+
+            {
+                alloc::ptr::unique_ptr<int> test_array_unique_ptr( new( fla->allocateArray<int>( 10 ) ) int[10], fla );
+            }
         }
         std::cout << *test_unique_ptr_outer << std::endl;
     }
 
-    std::ostringstream stream; // we don't have control over this memory
+    //std::ostringstream stream; // we don't have control over this memory
+    std::basic_ostringstream< char > stream( std::basic_string< char > ( alloc::stl_adapter<char>( fla ) ), std::ios_base::out );
 
     {
 
@@ -233,21 +253,21 @@ memoryStuff( evq::EventQueue * eventQueue )
                 if( (i) % 200 == 0 )
                 {
                     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-                    eventQueue->queueEvent( new DebugListener::MessageEvent("Inserted " + to_string(i) + " pairs into IntMap on FreeListAllocator.\n") );
+                    eventQueue->queueEvent( new DebugListener::MessageEvent("Inserted " + to_string(i) + " pairs into IntMap on FreeListAllocator.") );
                 }
 
             }
         }
 
         // clear the stringstream buffer
-        stream.str( std::string() );
+        stream.str( std::basic_string< char >( alloc::stl_adapter<char>(fla) ) );
         stream.clear();
 
         // put allocator debug info into stringstream buffer
         fla->printDebugInfo( stream );
 
         // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-        eventQueue->queueEvent( new DebugListener::MessageEvent( stream.str() ) );
+        eventQueue->queueEvent( new DebugListener::MessageEvent( std::string( stream.str().c_str() ) ) );
 
         // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
         eventQueue->queueEvent( new DebugListener::MessageEvent("Deallocating all memory associated with IntMap in FreeListAllocator.") );
@@ -257,14 +277,14 @@ memoryStuff( evq::EventQueue * eventQueue )
     }
 
     // clear the stringstream buffer
-    stream.str( std::string() );
+    stream.str( std::basic_string< char >( alloc::stl_adapter<char>(fla) ) );
     stream.clear();
 
     // put allocator debug info into stringstream buffer
     fla->printDebugInfo( stream );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( new DebugListener::MessageEvent( stream.str() ) );
+    eventQueue->queueEvent( new DebugListener::MessageEvent( std::string( stream.str().c_str() ) ) );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent( "cleaning up ... fla" ) );
@@ -279,14 +299,14 @@ memoryStuff( evq::EventQueue * eventQueue )
     defaultAllocator.deallocateBlock( _mem_pool );
 
     // clear the stringstream buffer
-    stream.str( std::string() );
+    stream.str( std::basic_string< char >( alloc::stl_adapter<char>(fla) ) );
     stream.clear();
 
     // put allocator debug info into stringstream buffer
     defaultAllocator.printDebugInfo( stream );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( new DebugListener::MessageEvent( stream.str() ) );
+    eventQueue->queueEvent( new DebugListener::MessageEvent( std::string( stream.str().c_str() ) ) );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueEvent( new DebugListener::MessageEvent( "complete." ) );

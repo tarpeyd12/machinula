@@ -12,9 +12,8 @@ namespace Rand
         public:
             virtual ~RandomFunctor() = default;
 
-            // NOTE(dean): the compiler will give a warning that Float(double,double) is used but not defined because it's inline, but removing the inline flag here will slow it down significantly.
-            inline virtual double Float( double min, double max ) = 0; // [min,max)
-            inline virtual unsigned Int( unsigned min, unsigned max ) = 0; // [min,max]
+            virtual double Float( double min, double max ) = 0; // [min,max)
+            virtual unsigned Int( unsigned min, unsigned max ) = 0; // [min,max]
 
             inline
             double

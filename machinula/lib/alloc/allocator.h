@@ -47,6 +47,12 @@ namespace alloc
             template < class Type >
             inline void deallocate( Type * block ) final { if( std::is_destructible<Type>() ) { ((Type*)block)->~Type(); } this->deallocateBlock( block ); }
 
+            template < class Type >
+            inline Type * allocateArray( std::size_t numElements ) final { return (Type*)this->allocateBlock( sizeof(Type) * numElements, alignof(Type) ); }
+
+            template < class Type >
+            inline void deallocateArray( Type * block ) final { this->deallocateBlock( block ); }
+
             virtual inline void *      getBlock() const { return _block_start; }
             virtual inline std::size_t getSize()  const { return _block_size; }
 

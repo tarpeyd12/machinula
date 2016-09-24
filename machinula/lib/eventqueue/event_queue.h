@@ -20,13 +20,14 @@ namespace evq
 
     typedef uintmax_t EventType;
 
-    class Event
+    struct Event
     {
         private:
             EventType _event_type;
         public:
             Event( EventType _et ) : _event_type(_et) {  }
             Event( const Event& e ) = delete;
+            virtual ~Event() = default;
             inline EventType eventType() const;
             template < typename T > static inline EventType Type();
             template < typename T > inline EventType DeriveEventType(); // the template parameter T should be of the derived class in the derived classes constructor. ex:   class A : public Event { A() : Event(Event::Type<A>()) {} }; class B : public A { B(){ DeriveEventType<B>(); } };
@@ -85,7 +86,7 @@ namespace evq
             inline EventQueue * parentQueue() const;
             inline void broadcastEvent( Event * e );
 
-            virtual void processEvent( const Event * e ) = 0;
+            virtual void processEvent( Event * e ) = 0;
             virtual bool isRelevant( const Event * e ) = 0;
 
         private:

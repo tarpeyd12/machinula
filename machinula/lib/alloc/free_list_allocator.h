@@ -57,7 +57,7 @@ namespace alloc
     void *
     FreeListAllocator::allocateBlock( std::size_t size, uint8_t align )
     {
-        assert( size != 0 && align != 0 );
+        assert( size != 0 && align != 0 ); // TODO(dean): IMPORTANT does align ever need to be 0?????
 
         _FreeBlock * prev_block = nullptr;
         _FreeBlock * curr_block = _free_blocks;

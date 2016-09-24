@@ -26,6 +26,7 @@ namespace alloc
                     typedef adapter< OtherType > other;
                 };
 
+                //adapter();
                 adapter( Allocator * _al ) throw();
                 adapter( const adapter< Type > &o ) throw();
 
@@ -48,6 +49,13 @@ namespace alloc
                 void deallocate( pointer p, size_type n );
 
         };
+
+        /*template < typename Type >
+        adapter< Type >::adapter()
+        : _allocator( nullptr )
+        {
+
+        }*/
 
         template < typename Type >
         adapter< Type >::adapter( Allocator * _al ) throw()
@@ -88,6 +96,7 @@ namespace alloc
         typename adapter< Type >::pointer
         adapter< Type >::allocate( adapter< Type >::size_type n, const void * /*hint*/ )
         {
+            assert( _allocator != nullptr );
             #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
             std::cerr << "Alloc " << n*sizeof(Type) << " bytes, over " << n << ".\n";
             #endif // ___ALLOC_STL_ADAPTER_DEBUGPRINT
@@ -99,6 +108,7 @@ namespace alloc
         void
         adapter< Type >::deallocate( pointer p, adapter< Type >::size_type /*n*/ )
         {
+            assert( _allocator != nullptr );
             #if ___ALLOC_STL_ADAPTER_DEBUGPRINT
             std::cerr << "Dealloc "  << n*sizeof(Type) << " bytes (" << p << ").\n";
             #endif // ___ALLOC_STL_ADAPTER_DEBUGPRINT
@@ -110,6 +120,7 @@ namespace alloc
         bool
         operator==( const adapter<T1>& lhs, const adapter<T2>& rhs )
         {
+            //assert( lhs._allocator != nullptr && rhs._allocator != nullptr );
             return lhs.__getInternalAllocator() == rhs.__getInternalAllocator();
         }
 
@@ -117,6 +128,7 @@ namespace alloc
         bool
         operator!=( const adapter<T1>& lhs, const adapter<T2>& rhs )
         {
+            //assert( lhs._allocator != nullptr && rhs._allocator != nullptr );
             return lhs.__getInternalAllocator() != rhs.__getInternalAllocator();
         }
 
