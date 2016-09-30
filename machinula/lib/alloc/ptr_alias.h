@@ -46,7 +46,8 @@ namespace alloc
                 }
         };
 
-        // NOTE: also used for deallocating arrays
+        // NOTE(dean): also used for deallocating arrays
+        // TODO(dean): instead of having a completely separate class, specialize deleter_functor<T[]> for arrays
         template < typename PtrType >
         class deleter_block_functor
         {
@@ -68,6 +69,7 @@ namespace alloc
                 : _allocator( df._allocator )
                 { }
 
+                // TODO(dean): should i template this function instead of this entire class?
                 inline
                 void
                 operator()( PtrType * ptr )
@@ -115,9 +117,9 @@ namespace alloc
                 }
 
             private:
-                using alias::shared_ptr< PtrType >::operator=; // TODO(dean): figure out if this is technically necessary for safety.
+                using alias::shared_ptr< PtrType >::operator=; // TODO(dean): figure out if this is necessary for safety.
                 using alias::shared_ptr< PtrType >::reset;
-                using alias::shared_ptr< PtrType >::swap; // TODO(dean): figure out if this is technically necessary for safety.
+                using alias::shared_ptr< PtrType >::swap; // TODO(dean): figure out if this is necessary for safety.
         };
 
 
@@ -150,7 +152,7 @@ namespace alloc
                 { }
 
             private:
-                using alias::weak_ptr< PtrType >::swap; // TODO(dean): figure out if this is technically necessary for safety.
+                using alias::weak_ptr< PtrType >::swap; // TODO(dean): figure out if this is necessary for safety.
         };
 
 
@@ -158,6 +160,9 @@ namespace alloc
         {
             template < typename PtrType >
             using unique_ptr = std::unique_ptr< PtrType, deleter_functor< PtrType > >;
+
+            template < typename PtrType >
+            using unique_ptr_array = std::unique_ptr< PtrType[], deleter_block_functor< PtrType > >;
         }
 
         // TODO(dean): implement the array specialized unique_ptr<T[]>
@@ -184,21 +189,28 @@ namespace alloc
 
 
         template < typename PtrType >
-        class unique_ptr< PtrType[] > final : public alias::unique_ptr< PtrType[] >
+        class unique_ptr< PtrType[] > final : public alias::unique_ptr_array< PtrType >
         {
             public:
                 // TODO(dean): implement the other constructors for unique_ptr
                 constexpr unique_ptr()
-                : alias::unique_ptr< PtrType >( nullptr )
+                : alias::unique_ptr_array< PtrType >( nullptr )
                 { }
 
                 constexpr unique_ptr( std::nullptr_t )
-                : alias::unique_ptr< PtrType >( nullptr )
+                : alias::unique_ptr_array< PtrType >( nullptr )
                 { }
 
                 unique_ptr( PtrType * ptr, Allocator * a )
-                : alias::unique_ptr< PtrType >( ptr, deleter_block_functor< PtrType >( a ) )
+                : alias::unique_ptr_array< PtrType >( ptr, deleter_block_functor< PtrType >( a ) )
                 { }
+
+                inline
+                PtrType&
+                operator[]( std::size_t index) const
+                {
+                    return alias::unique_ptr_array< PtrType >::operator[]( index );
+                }
 
             private:
                 ;

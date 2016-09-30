@@ -217,7 +217,11 @@ memoryStuff( evq::EventQueue * eventQueue )
             test_unique_ptr_outer.swap( test_unique_ptr );
 
             {
-                alloc::ptr::unique_ptr<int> test_array_unique_ptr( new( fla->allocateArray<int>( 10 ) ) int[10], fla );
+                alloc::ptr::unique_ptr<int[]> test_array_unique_ptr( new( fla->allocateArray<int>( 10 ) ) int[10], fla );
+                for( std::size_t i = 0; i < 10; ++i )
+                {
+                    test_array_unique_ptr[i] = i;
+                }
             }
         }
         std::cout << *test_unique_ptr_outer << std::endl;
@@ -232,28 +236,28 @@ memoryStuff( evq::EventQueue * eventQueue )
         eventQueue->queueEvent( new DebugListener::MessageEvent("Allocating IntMap from FreeListAllocator.") );
 
         // allocate a std::multimap<int,double> with our custom allocator adapters
-        alloc::stl::multimap< int, double > * intmap = new( (alloc::stl::multimap< int, double >*)*fla ) alloc::stl::multimap< int, double >( fla );
+        alloc::stl::map< int, double > * intmap = new( (alloc::stl::map< int, double >*)*fla ) alloc::stl::map< int, double >( fla );
 
         // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
         eventQueue->queueEvent( new DebugListener::MessageEvent("") );
 
         {
             // make 10000 pairs!
-            for( std::size_t i = 0; i < 10000; ++i )
+            for( std::size_t i = 0; i < 100000; ++i )
             {
                 // insert a pair
 
-                int key = Rand::Int();
+                uint32_t key = Rand::Int( 0, ~1 );
                 double value = sqrt( double(key) );
 
                 // here multimap will allocate space for a node that contains a pair<int,double> in it.
                 intmap->insert( std::pair<int,double>(key,value) );
 
                 // print progress
-                if( (i) % 200 == 0 )
+                if( (i) % 500 == 0 )
                 {
                     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-                    eventQueue->queueEvent( new DebugListener::MessageEvent("Inserted " + to_string(i) + " pairs into IntMap on FreeListAllocator.") );
+                    eventQueue->queueEvent( new DebugListener::MessageEvent("Inserted " + to_string(i) + " pairs into IntMap on FreeListAllocator. Last pair: " + to_string(key) + "," + to_string(value) + ".") );
                 }
 
             }

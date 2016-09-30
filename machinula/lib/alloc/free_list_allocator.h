@@ -17,7 +17,7 @@ namespace alloc
 
             struct _FreeBlock
             {
-                std::size_t size;
+                std::size_t  size;
                 _FreeBlock * next;
             };
 
@@ -79,7 +79,7 @@ namespace alloc
             static_assert( sizeof(_AllocationHeader) >= sizeof(_FreeBlock), "sizeof(_AllocationHeader) < sizeof(_FreeBlock)" );
 
             // if allocations in the remaining memory is impossible
-            if( curr_block->size - size_total <= sizeof(_AllocationHeader) )
+            if( curr_block->size - size_total <= sizeof(_AllocationHeader) ) // NOTE(dean): the subtraction of pointers can technically give a negative value
             {
                 // TODO(dean): figure out what the hell is going on here
                 // increase allocation size rather than creating a new _FreeBlock
@@ -113,7 +113,7 @@ namespace alloc
 
             uintptr_t aligned_adderss = reinterpret_cast<uintptr_t>(curr_block) + adjust;
 
-            _AllocationHeader * header = (_AllocationHeader*)( aligned_adderss - sizeof(_AllocationHeader) );
+            _AllocationHeader * header = (_AllocationHeader*)( aligned_adderss - sizeof(_AllocationHeader) ); // NOTE(dean): the subtraction of pointers can technically give a negative value
             header->size   = size_total;
             header->adjust = adjust;
 
@@ -138,7 +138,7 @@ namespace alloc
 
         _AllocationHeader * header = (_AllocationHeader*)align::_sub( block, sizeof(_AllocationHeader) );
 
-        uintptr_t   block_start = reinterpret_cast<uintptr_t>(block) - header->adjust;
+        uintptr_t   block_start = reinterpret_cast<uintptr_t>(block) - header->adjust; // NOTE(dean): the subtraction of pointers can technically give a negative value
         std::size_t block_size  = header->size;
         uintptr_t   block_end   = block_start + block_size;
 
