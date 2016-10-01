@@ -228,7 +228,7 @@ memoryStuff( evq::EventQueue * eventQueue )
     }
 
     //std::ostringstream stream; // we don't have control over this memory
-    std::basic_ostringstream< char > stream( std::basic_string< char > ( alloc::stl_adapter<char>( fla ) ), std::ios_base::out );
+    std::basic_ostringstream<char> stream( std::basic_string<char>( alloc::stl_adapter<char>( fla ) ), std::ios_base::out );
 
     {
 
@@ -246,12 +246,12 @@ memoryStuff( evq::EventQueue * eventQueue )
             for( std::size_t i = 0; i < 100000; ++i )
             {
                 // insert a pair
-
                 uint32_t key = Rand::Int( 0, ~1 );
                 double value = sqrt( double(key) );
 
                 // here multimap will allocate space for a node that contains a pair<int,double> in it.
-                intmap->insert( std::pair<int,double>(key,value) );
+                //intmap->insert( std::pair<int,double>(key,value) );
+                (*intmap)[key] = value;
 
                 // print progress
                 if( (i) % 500 == 0 )
