@@ -10,6 +10,7 @@
 #include "pool_allocator.h"
 #include "object_pool_allocator.h"
 #include "free_list_allocator.h"
+#include "lock_allocator.h"
 
 #include "proxy_allocator.h"
 

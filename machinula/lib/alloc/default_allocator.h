@@ -8,7 +8,7 @@
 
 namespace alloc
 {
-    class DefaultAllocator final : public Allocator
+    class DefaultAllocator : public Allocator
     {
         private:
             std::map< uintptr_t, std::size_t > _allocated_blocks;

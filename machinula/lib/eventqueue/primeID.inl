@@ -13,7 +13,7 @@ namespace primeid
     {
         assert( superID != 0 );
 
-        PrimeIDType idType = PrimeIDType( typeid(T).hash_code() );
+        PrimeIDType idType = PrimeIDType( typeid(T).hash_code() ); // TODO(dean): check if typeid(T).hash_code() is fast
 
         if( issuedPrimes.count( idType ) == 0 ) // if id has not been issued yet
         {

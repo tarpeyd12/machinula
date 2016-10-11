@@ -192,7 +192,7 @@ memoryStuff( evq::EventQueue * eventQueue )
     eventQueue->queueEvent( new DebugListener::MessageEvent("Allocating FreeListAllocator, for Memory Pool.") );
 
     // allocate a free list allocator and allocate the memory pool and pass it to the free list allocator.
-    alloc::FreeListAllocator * fla = new( (alloc::FreeListAllocator*)defaultAllocator ) alloc::FreeListAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
+    alloc::LockAllocator<alloc::FreeListAllocator> * fla = new( (alloc::LockAllocator<alloc::FreeListAllocator>*)defaultAllocator ) alloc::LockAllocator<alloc::FreeListAllocator>( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
 
     {
         alloc::ptr::weak_ptr<int> test_weak_ptr_outer;
@@ -227,11 +227,16 @@ memoryStuff( evq::EventQueue * eventQueue )
         std::cout << *test_unique_ptr_outer << std::endl;
     }
 
+    {
+
+        //alloc::LockAllocator< alloc::LockAllocator< alloc::DefaultAllocator > > llalt(); // FIXME(dean): this line should not compile
+        //llalt.printDebugInfo();
+    }
+
     //std::ostringstream stream; // we don't have control over this memory
     std::basic_ostringstream<char> stream( std::basic_string<char>( alloc::stl_adapter<char>( fla ) ), std::ios_base::out );
 
     {
-
         // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
         eventQueue->queueEvent( new DebugListener::MessageEvent("Allocating IntMap from FreeListAllocator.") );
 
@@ -303,8 +308,8 @@ memoryStuff( evq::EventQueue * eventQueue )
     defaultAllocator.deallocateBlock( _mem_pool );
 
     // clear the stringstream buffer
-    stream.str( std::basic_string< char >( alloc::stl_adapter<char>(fla) ) );
-    stream.clear();
+    //stream.str( std::basic_string< char >( alloc::stl_adapter<char>(fla) ) );
+    //stream.clear();
 
     // put allocator debug info into stringstream buffer
     defaultAllocator.printDebugInfo( stream );

@@ -20,6 +20,7 @@ namespace evq
 
     typedef uintmax_t EventType;
 
+    // TODO(dean): rewrite this so that it is much cleaner ( ie. using bool(dynemic_cast<T>()) )
     struct Event
     {
         private:
@@ -55,7 +56,7 @@ namespace evq
             virtual ~EventQueue();
 
             std::size_t queueEvent( Event * e );
-            std::size_t queueEvents( const std::vector<Event *>& ve );
+            std::size_t queueEvents( const std::vector<Event*>& ve );
             std::size_t hookListener( Listener * l );
 
             std::size_t numEventsQueued();

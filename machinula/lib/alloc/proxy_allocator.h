@@ -7,7 +7,7 @@
 
 namespace alloc
 {
-    class ProxyAllocator final : public Allocator
+    class ProxyAllocator final : public Allocator // NOTE(dean): by deriving from Allocator we waste memory specifically: sizeof(Allocator)
     {
         private:
             Allocator * _allocator;

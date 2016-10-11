@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1475282739 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
+1476229336 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
 	<cstdlib>
 	<iostream>
 	<iomanip>
@@ -15,7 +15,7 @@
 1474659284 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc.h
 	"alloc/alloc.h"
 
-1474659287 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\alloc.h
+1476221621 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\alloc.h
 	"align.h"
 	"allocator.h"
 	"default_allocator.h"
@@ -24,6 +24,7 @@
 	"pool_allocator.h"
 	"object_pool_allocator.h"
 	"free_list_allocator.h"
+	"lock_allocator.h"
 	"proxy_allocator.h"
 	"stl_adapter.h"
 	"stl_alias.h"
@@ -31,11 +32,11 @@
 
 1473202874 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\align.h
 
-1475282655 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\allocator.h
+1475885221 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\allocator.h
 	<type_traits>
 	<cassert>
 
-1462416662 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\default_allocator.h
+1476220787 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\default_allocator.h
 	"allocator.h"
 	<map>
 	<unordered_map>
@@ -56,7 +57,7 @@
 1475017648 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
 	"allocator.h"
 
-1462416662 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\proxy_allocator.h
+1476220747 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\proxy_allocator.h
 	<iostream>
 	"allocator.h"
 
@@ -74,7 +75,7 @@
 	"event_queue.h"
 	<cassert>
 
-1474667031 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
+1475524782 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
 	<iostream>
 	<vector>
 	<queue>
@@ -223,12 +224,12 @@
 	<cassert>
 	"primeID.inl"
 
-1462416663 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\primeid.inl
+1475522376 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\primeid.inl
 	<typeinfo>
 
 1462416663 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\primenumbers.h
 
-1474674062 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.inl
+1475522071 c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\event_queue.inl
 
 1462491388 c:\users\tarpe\documents\github\machinula\machinula\timer_dispach.h
 	<string>
@@ -268,4 +269,8 @@
 1475271320 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\ptr_alias.h
 	<memory>
 	"stl_adapter.h"
+
+1476230100 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\lock_allocator.h
+	"allocator.h"
+	<mutex>
 
