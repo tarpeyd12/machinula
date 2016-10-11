@@ -64,6 +64,7 @@
 		<Unit filename="lib/alloc/default_allocator.h" />
 		<Unit filename="lib/alloc/free_list_allocator.h" />
 		<Unit filename="lib/alloc/linear_allocator.h" />
+		<Unit filename="lib/alloc/lock_allocator.h" />
 		<Unit filename="lib/alloc/object_pool_allocator.h" />
 		<Unit filename="lib/alloc/pool_allocator.h" />
 		<Unit filename="lib/alloc/proxy_allocator.h" />
