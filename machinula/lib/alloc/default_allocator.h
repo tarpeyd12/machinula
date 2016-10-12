@@ -6,34 +6,38 @@
 #include <map>
 #include <unordered_map>
 
+// TODO(dean): migrate implementation to cpp files
+
 namespace alloc
 {
     class DefaultAllocator : public Allocator
     {
         private:
-            std::map< uintptr_t, std::size_t > _allocated_blocks;
-            //std::unordered_map< uintptr_t, std::size_t > _allocated_blocks;
+            //std::map< uintptr_t, std::size_t > _allocated_blocks; // std::map is technically slower than unordered_map, but has a smaller memory footprint
+            std::unordered_map< uintptr_t, std::size_t > _allocated_blocks; // faster than std::map
 
         public:
             DefaultAllocator( std::size_t block_size = 0, void * block_start = nullptr );
             ~DefaultAllocator();
 
-            void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
-            void deallocateBlock( void * block ) override;
+            inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
+            inline void deallocateBlock( void * block ) override;
 
-            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+            inline void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
-            void clear();
+            inline void clear();
 
         private:
             DefaultAllocator( const DefaultAllocator & ) = delete;
             DefaultAllocator & operator = ( const DefaultAllocator & ) = delete;
     };
 
+    inline
     DefaultAllocator::DefaultAllocator( std::size_t block_size, void * block_start )
     : Allocator( block_size, block_start ), _allocated_blocks()
     { }
 
+    inline
     DefaultAllocator::~DefaultAllocator()
     {
         assert( _allocated_blocks.empty() );

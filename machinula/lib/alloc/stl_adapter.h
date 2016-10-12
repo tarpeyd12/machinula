@@ -58,6 +58,7 @@ namespace alloc
         }*/
 
         template < typename Type >
+        inline
         adapter< Type >::adapter( Allocator * _al ) throw()
         : std::allocator<Type>(), _allocator( _al )
         {
@@ -67,6 +68,7 @@ namespace alloc
         }
 
         template < typename Type >
+        inline
         adapter< Type >::adapter( const adapter< Type > &o ) throw()
         : std::allocator<Type>(o), _allocator( o._allocator )
         {
@@ -76,6 +78,7 @@ namespace alloc
         }
 
         template < typename Type >
+        inline
         adapter< Type >::~adapter() throw()
         {
             #if ___ALLOC_STL_ADAPTER_DEBUGPRINT

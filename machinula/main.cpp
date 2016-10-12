@@ -82,10 +82,10 @@ class DebugListener : public evq::Listener
         bool
         isRelevant( const evq::Event * e )
         {
-            //return evq::Event::isType<MessageEvent>( e );// && static_cast<const MessageEvent*>(e)->message.size();
+            return evq::Event::isType<MessageEvent>( e );// && static_cast<const MessageEvent*>(e)->message.size();
             // TODO(dean): check if this test is actually faster
-            const MessageEvent * m;
-            return ( m = dynamic_cast<const MessageEvent*>( e ) );
+            //const MessageEvent * m;
+            //return ( m = dynamic_cast<const MessageEvent*>( e ) );
         }
 };
 
@@ -198,7 +198,8 @@ memoryStuff( evq::EventQueue * eventQueue )
         alloc::ptr::weak_ptr<int> test_weak_ptr_outer;
         alloc::ptr::shared_ptr<int> test_shared_ptr_outer;
         {
-            alloc::ptr::shared_ptr<int> test_shared_ptr( new( (int*)*fla ) int(1), fla );
+            //alloc::ptr::shared_ptr<int> test_shared_ptr( new( (int*)*fla ) int(1), fla );
+            alloc::ptr::shared_ptr<int> test_shared_ptr( alloc::ptr::allocate_shared<int>(fla, 1) );
 
             std::cout << *test_shared_ptr << std::endl;
             test_weak_ptr_outer = test_shared_ptr;
@@ -251,7 +252,7 @@ memoryStuff( evq::EventQueue * eventQueue )
             for( std::size_t i = 0; i < 100000; ++i )
             {
                 // insert a pair
-                uint32_t key = Rand::Int( 0, ~1 );
+                uint32_t key = Rand::Int( 0u, ~0u );
                 double value = sqrt( double(key) );
 
                 // here multimap will allocate space for a node that contains a pair<int,double> in it.
@@ -259,7 +260,7 @@ memoryStuff( evq::EventQueue * eventQueue )
                 (*intmap)[key] = value;
 
                 // print progress
-                if( (i) % 500 == 0 )
+                if( (i) % 1000 == 0 )
                 {
                     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
                     eventQueue->queueEvent( new DebugListener::MessageEvent("Inserted " + to_string(i) + " pairs into IntMap on FreeListAllocator. Last pair: " + to_string(key) + "," + to_string(value) + ".") );

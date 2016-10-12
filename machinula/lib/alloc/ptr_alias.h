@@ -170,7 +170,7 @@ namespace alloc
         class unique_ptr final : public alias::unique_ptr< PtrType >
         {
             public:
-                // TODO(dean): implement the other constructors for unique_ptr
+                // TODO(dean): implement the other constructors for unique_ptr<T>
                 constexpr unique_ptr()
                 : alias::unique_ptr< PtrType >( nullptr )
                 { }
@@ -192,7 +192,7 @@ namespace alloc
         class unique_ptr< PtrType[] > final : public alias::unique_ptr_array< PtrType >
         {
             public:
-                // TODO(dean): implement the other constructors for unique_ptr
+                // TODO(dean): implement the other constructors for unique_ptr<T[]>
                 constexpr unique_ptr()
                 : alias::unique_ptr_array< PtrType >( nullptr )
                 { }
@@ -216,6 +216,28 @@ namespace alloc
                 ;
         };
 
+        template< class T, class... Args >
+        inline
+        shared_ptr< T >
+        allocate_shared( Allocator * alloc, Args && ... args )
+        {
+            return shared_ptr< T >( new( alloc->allocate<T>() ) T( args... ), alloc );
+        }
+
+        // we copy allocate_shared<> because we have allocators to deal with so .. we need to pass an allocator which is exactly allocate_shared
+        template< class T, class... Args >
+        inline
+        shared_ptr< T >
+        make_shared( Allocator * alloc, Args && ... args )
+        {
+            return allocate_shared< T >( alloc, args... );
+        }
+
+        // TODO(dean): make allocate_unique<T>
+        // TODO(dean): make allocate_unique<T[]>
+
+        // TODO(dean): make make_unique<T>
+        // TODO(dean): make make_unique<T[]>
 
         //template< class T, typename = std::enable_if/*_t*/<!std::is_array<T>::value> > // disable for array
 

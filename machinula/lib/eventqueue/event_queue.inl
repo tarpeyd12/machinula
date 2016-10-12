@@ -41,7 +41,18 @@ namespace evq
         // TODO(dean): check if this test is actually faster
         /*const T * ev;
         return ( ev = dynamic_cast< const T * >(e) );*/
+    }
 
+    template < typename T >
+    inline
+    bool
+    Event::isType( ptr::shared_ptr<Event> e )
+    {
+        static_assert( std::is_base_of< Event, T >::value, "evq::Event::isType<T>: T is not derived from evq::Event." );
+        return e->eventType() % Type< T >() == 0;
+        // TODO(dean): check if this test is actually faster
+        /*const T * ev;
+        return ( ev = dynamic_cast< const T * >(e) );*/
     }
 
 

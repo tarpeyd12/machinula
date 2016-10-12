@@ -11,6 +11,8 @@
 
 #include "primeID.h"
 
+#include "../alloc.h"
+
 // TODO(dean): re-factor all the inline functions to event_queue.inl
 
 namespace evq
@@ -33,6 +35,7 @@ namespace evq
             template < typename T > static inline EventType Type();
             template < typename T > inline EventType DeriveEventType(); // the template parameter T should be of the derived class in the derived classes constructor. ex:   class A : public Event { A() : Event(Event::Type<A>()) {} }; class B : public A { B(){ DeriveEventType<B>(); } };
             template < typename T > static inline bool isType( const Event * e );
+            template < typename T > static inline bool isType( const ptr::shared_ptr<Event> e );
     };
 
     class EventQueue
@@ -91,6 +94,7 @@ namespace evq
             virtual bool isRelevant( const Event * e ) = 0;
 
         private:
+            // non assignable
             Listener & operator= ( const Listener & _l ) = delete;
     };
 }

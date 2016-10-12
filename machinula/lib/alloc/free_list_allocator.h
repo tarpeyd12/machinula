@@ -3,6 +3,8 @@
 
 #include "allocator.h"
 
+// TODO(dean): migrate implementation to cpp files
+
 namespace alloc
 {
     class FreeListAllocator : public Allocator
@@ -31,7 +33,7 @@ namespace alloc
             inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             inline void deallocateBlock( void * block ) override;
 
-            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+            inline void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
         private:
             FreeListAllocator( const FreeListAllocator & ) = delete;
@@ -39,6 +41,7 @@ namespace alloc
 
     };
 
+    inline
     FreeListAllocator::FreeListAllocator( std::size_t block_size, void * block_start )
     : Allocator( block_size, block_start ), _free_blocks( (_FreeBlock*)block_start )
     {
@@ -49,6 +52,7 @@ namespace alloc
         //deallocLoops = 0;
     }
 
+    inline
     FreeListAllocator::~FreeListAllocator()
     {
         _free_blocks = nullptr;

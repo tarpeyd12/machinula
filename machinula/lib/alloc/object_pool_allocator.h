@@ -17,6 +17,7 @@ namespace alloc
     };
 
     template < typename Type >
+    inline
     ObjectPoolAllocator<Type>::ObjectPoolAllocator( std::size_t block_size, void * block_start )
     : PoolAllocator( sizeof(Type), alignof(Type), block_size, block_start )
     {  }

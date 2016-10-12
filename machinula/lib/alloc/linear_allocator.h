@@ -4,6 +4,8 @@
 #include "allocator.h"
 #include "align.h"
 
+// TODO(dean): migrate implementation to cpp files
+
 namespace alloc
 {
     class LinearAllocator : public Allocator
@@ -18,21 +20,23 @@ namespace alloc
             inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             inline void deallocateBlock( void * block ) override;
 
-            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+            inline void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
-            void clear();
+            inline void clear();
 
         private:
             LinearAllocator( const LinearAllocator & ) = delete;
             LinearAllocator & operator = ( const LinearAllocator & ) = delete;
     };
 
+    inline
     LinearAllocator::LinearAllocator( std::size_t block_size, void * block_start )
     : Allocator( block_size, block_start ), _next_free_block(block_start)
     {
         assert( block_size > 0 );
     }
 
+    inline
     LinearAllocator::~LinearAllocator()
     {
         _next_free_block = nullptr;

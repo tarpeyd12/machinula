@@ -3,6 +3,8 @@
 
 #include "allocator.h"
 
+// TODO(dean): migrate implementation to cpp files
+
 namespace alloc
 {
     class StackAllocator : public Allocator
@@ -31,13 +33,14 @@ namespace alloc
             inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             inline void deallocateBlock( void * block ) override;
 
-            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+            inline void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
         private:
             StackAllocator( const StackAllocator & ) = delete;
             StackAllocator & operator = ( const StackAllocator & ) = delete;
     };
 
+    inline
     StackAllocator::StackAllocator( std::size_t block_size, void * block_start )
     : Allocator( block_size, block_start ), _current_pos(block_start)
     #ifndef NDEBUG
@@ -47,6 +50,7 @@ namespace alloc
         assert( block_size > 0 );
     }
 
+    inline
     StackAllocator::~StackAllocator()
     {
         #ifndef NDEBUG

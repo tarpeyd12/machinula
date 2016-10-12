@@ -5,6 +5,8 @@
 
 #include "allocator.h"
 
+// TODO(dean): migrate implementation to cpp files
+
 namespace alloc
 {
     class ProxyAllocator final : public Allocator // NOTE(dean): by deriving from Allocator we waste memory specifically: sizeof(Allocator)
@@ -29,19 +31,21 @@ namespace alloc
             inline std::size_t maxUsedMemory()     const override { return _allocator->maxUsedMemory(); }
             inline std::size_t maxNumAllocations() const override { return _allocator->maxNumAllocations(); }
 
-            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+            inline void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
         private:
             ProxyAllocator( const ProxyAllocator & ) = delete;
             ProxyAllocator & operator = ( const ProxyAllocator & ) = delete;
     };
 
+    inline
     ProxyAllocator::ProxyAllocator(  Allocator * a  )
     : Allocator( 0, nullptr ), _allocator( a )
     {
         assert( a != nullptr );
     }
 
+    inline
     ProxyAllocator::~ProxyAllocator()
     {
         _allocator = nullptr;

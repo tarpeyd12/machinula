@@ -5,6 +5,8 @@
 
 #include <mutex>
 
+// TODO(dean): migrate implementation to cpp files
+
 namespace alloc
 {
     template < typename AllocatorType >
@@ -30,6 +32,7 @@ namespace alloc
     };
 
     template < typename AllocatorType >
+    inline
     void *
     LockAllocator<AllocatorType>::allocateBlock( std::size_t size, uint8_t align )
     {
@@ -38,6 +41,7 @@ namespace alloc
     }
 
     template < typename AllocatorType >
+    inline
     void
     LockAllocator<AllocatorType>::deallocateBlock( void * block )
     {

@@ -3,6 +3,8 @@
 
 #include "allocator.h"
 
+// TODO(dean): migrate implementation to cpp files
+
 namespace alloc
 {
     class PoolAllocator : public Allocator
@@ -20,13 +22,14 @@ namespace alloc
             inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             inline void deallocateBlock( void * block ) override;
 
-            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+            inline void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
         private:
             PoolAllocator( const PoolAllocator & ) = delete;
             PoolAllocator & operator = ( const PoolAllocator & ) = delete;
     };
 
+    inline
     PoolAllocator::PoolAllocator( std::size_t object_size, uint8_t object_align, std::size_t block_size, void * block_start )
     : Allocator( block_size, block_start ), _object_size(object_size), _object_alignment(object_align), _free_block_list(nullptr)
     {
@@ -56,6 +59,7 @@ namespace alloc
         *ptemp = nullptr;
     }
 
+    inline
     PoolAllocator::~PoolAllocator()
     {
         _free_block_list = nullptr;
