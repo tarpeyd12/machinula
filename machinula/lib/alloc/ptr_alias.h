@@ -165,7 +165,6 @@ namespace alloc
             using unique_ptr_array = std::unique_ptr< PtrType[], deleter_block_functor< PtrType > >;
         }
 
-        // TODO(dean): implement the array specialized unique_ptr<T[]>
         template < typename PtrType >
         class unique_ptr final : public alias::unique_ptr< PtrType >
         {
@@ -224,7 +223,7 @@ namespace alloc
             return shared_ptr< T >( new( alloc->allocate<T>() ) T( args... ), alloc );
         }
 
-        // we copy allocate_shared<> because we have allocators to deal with so .. we need to pass an allocator which is exactly allocate_shared
+        // we copy allocate_shared<> because we have allocators to deal with ... so we need to pass an allocator which is exactly allocate_shared
         template< class T, class... Args >
         inline
         shared_ptr< T >
