@@ -192,7 +192,7 @@ memoryStuff( evq::EventQueue * eventQueue )
     eventQueue->queueEvent( new DebugListener::MessageEvent("Allocating FreeListAllocator, for Memory Pool.") );
 
     // allocate a free list allocator and allocate the memory pool and pass it to the free list allocator.
-    alloc::LockAllocator<alloc::FreeListAllocator> * fla = new( (alloc::LockAllocator<alloc::FreeListAllocator>*)defaultAllocator ) alloc::LockAllocator<alloc::FreeListAllocator>( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
+    alloc::SafeFreeListAllocator * fla = new( (alloc::SafeFreeListAllocator*)defaultAllocator ) alloc::SafeFreeListAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
 
     {
         alloc::ptr::weak_ptr<int> test_weak_ptr_outer;
@@ -210,7 +210,6 @@ memoryStuff( evq::EventQueue * eventQueue )
             std::cout << *t << std::endl;
         }
 
-
         alloc::ptr::unique_ptr<int> test_unique_ptr_outer;
         {
             alloc::ptr::unique_ptr<int> test_unique_ptr( new( (int*)*fla ) int(1000), fla );
@@ -218,8 +217,8 @@ memoryStuff( evq::EventQueue * eventQueue )
             test_unique_ptr_outer.swap( test_unique_ptr );
 
             {
-                alloc::ptr::unique_ptr<int[]> test_array_unique_ptr( new( fla->allocateArray<int>( 10 ) ) int[10], fla );
-                for( std::size_t i = 0; i < 10; ++i )
+                alloc::ptr::unique_ptr<int[]> test_array_unique_ptr( new( fla->allocateArray<int>( 100 ) ) int[100], fla );
+                for( std::size_t i = 0; i < 100; ++i )
                 {
                     test_array_unique_ptr[i] = i;
                 }
@@ -229,7 +228,6 @@ memoryStuff( evq::EventQueue * eventQueue )
     }
 
     {
-
         //alloc::LockAllocator< alloc::LockAllocator< alloc::DefaultAllocator > > llalt(); // FIXME(dean): this line should not compile
         //llalt.printDebugInfo();
     }
@@ -265,7 +263,6 @@ memoryStuff( evq::EventQueue * eventQueue )
                     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
                     eventQueue->queueEvent( new DebugListener::MessageEvent("Inserted " + to_string(i) + " pairs into IntMap on FreeListAllocator. Last pair: " + to_string(key) + "," + to_string(value) + ".") );
                 }
-
             }
         }
 

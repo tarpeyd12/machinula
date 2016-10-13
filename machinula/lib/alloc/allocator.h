@@ -4,6 +4,8 @@
 #include <type_traits>
 #include <cassert>
 
+#include <iostream> // used in printDebugInfo
+
 namespace alloc
 {
     class Allocator

@@ -1,6 +1,8 @@
 #ifndef ALIGN_H_INCLUDED
 #define ALIGN_H_INCLUDED
 
+#include <cstdint>
+
 namespace alloc
 {
     namespace align

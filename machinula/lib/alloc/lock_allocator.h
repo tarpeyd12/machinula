@@ -5,8 +5,6 @@
 
 #include <mutex>
 
-// TODO(dean): migrate implementation to cpp files
-
 namespace alloc
 {
     template < typename AllocatorType >
@@ -31,33 +29,6 @@ namespace alloc
             LockAllocator<AllocatorType> & operator = ( const LockAllocator<AllocatorType> & ) = delete;
     };
 
-    template < typename AllocatorType >
-    inline
-    void *
-    LockAllocator<AllocatorType>::allocateBlock( std::size_t size, uint8_t align )
-    {
-        std::lock_guard<std::mutex> lock( _allocatorMutex );
-        return AllocatorType::allocateBlock( size, align );
-    }
-
-    template < typename AllocatorType >
-    inline
-    void
-    LockAllocator<AllocatorType>::deallocateBlock( void * block )
-    {
-        std::lock_guard<std::mutex> lock( _allocatorMutex );
-        return AllocatorType::deallocateBlock( block );
-    }
-
-    template < typename AllocatorType >
-    void
-    LockAllocator<AllocatorType>::printDebugInfo( std::ostream& out ) const
-    {
-        // FIXME(dean): fix up this line, will probably break with two threads.
-        std::lock_guard<std::mutex> lock( const_cast<std::mutex&>(_allocatorMutex) );
-        return AllocatorType::printDebugInfo( out );
-    }
-
     // disable nested lock allocators.
     // FIXME(dean): this does not block compilation when the object is empty parameter initialized. WTF?
     /*template < typename SubAllocatorType >
@@ -77,5 +48,6 @@ namespace alloc
 
 }
 
+#include "lock_allocator.inl"
 
 #endif // LOCK_ALLOCATOR_H_INCLUDED

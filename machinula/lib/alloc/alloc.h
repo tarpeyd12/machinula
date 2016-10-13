@@ -14,6 +14,8 @@
 
 #include "proxy_allocator.h"
 
+#include "safe_allocators.h"
+
 #include "stl_adapter.h"
 #include "stl_alias.h"
 
