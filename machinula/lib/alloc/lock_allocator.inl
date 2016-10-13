@@ -1,8 +1,6 @@
 #ifndef LOCK_ALLOCATOR_INL_INCLUDED
 #define LOCK_ALLOCATOR_INL_INCLUDED
 
-// TODO(dean): migrate implementation to cpp files
-
 namespace alloc
 {
     template < typename AllocatorType >
