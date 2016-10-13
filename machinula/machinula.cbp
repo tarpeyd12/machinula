@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="machinula" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/machinula" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="main.cpp" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/machinula" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-fomit-frame-pointer" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-fexpensive-optimizations" />
+			<Add option="-O3" />
+			<Add option="-Wnon-virtual-dtor" />
+			<Add option="-Wshadow" />
+			<Add option="-Winit-self" />
+			<Add option="-Wredundant-decls" />
+			<Add option="-Wcast-align" />
+			<Add option="-Wundef" />
+			<Add option="-Wfloat-equal" />
+			<Add option="-Winline" />
+			<Add option="-Wunreachable-code" />
+			<Add option="-Wmissing-declarations" />
+			<Add option="-Wmissing-include-dirs" />
+			<Add option="-Wswitch-enum" />
+			<Add option="-Wswitch-default" />
+			<Add option="-Weffc++" />
+			<Add option="-Wzero-as-null-pointer-constant" />
+			<Add option="-Wmain" />
+			<Add option="-Wextra" />
+			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="lib/alloc.h" />
+		<Unit filename="lib/alloc/align.h" />
+		<Unit filename="lib/alloc/alloc.h" />
+		<Unit filename="lib/alloc/allocator.h" />
+		<Unit filename="lib/alloc/default_allocator.cpp" />
+		<Unit filename="lib/alloc/default_allocator.h" />
+		<Unit filename="lib/alloc/default_allocator.inl" />
+		<Unit filename="lib/alloc/free_list_allocator.cpp" />
+		<Unit filename="lib/alloc/free_list_allocator.h" />
+		<Unit filename="lib/alloc/linear_allocator.cpp" />
+		<Unit filename="lib/alloc/linear_allocator.h" />
+		<Unit filename="lib/alloc/linear_allocator.inl" />
+		<Unit filename="lib/alloc/lock_allocator.h" />
+		<Unit filename="lib/alloc/lock_allocator.inl" />
+		<Unit filename="lib/alloc/object_pool_allocator.h" />
+		<Unit filename="lib/alloc/pool_allocator.cpp" />
+		<Unit filename="lib/alloc/pool_allocator.h" />
+		<Unit filename="lib/alloc/pool_allocator.inl" />
+		<Unit filename="lib/alloc/proxy_allocator.h" />
+		<Unit filename="lib/alloc/proxy_allocator.inl" />
+		<Unit filename="lib/alloc/ptr_alias.h" />
+		<Unit filename="lib/alloc/safe_allocators.h" />
+		<Unit filename="lib/alloc/stack_allocator.cpp" />
+		<Unit filename="lib/alloc/stack_allocator.h" />
+		<Unit filename="lib/alloc/stack_allocator.inl" />
+		<Unit filename="lib/alloc/stl_adapter.h" />
+		<Unit filename="lib/alloc/stl_alias.h" />
+		<Unit filename="lib/ecs.h" />
+		<Unit filename="lib/ecs/ecs.h" />
+		<Unit filename="lib/ecs/ecs.inl" />
+		<Unit filename="lib/event_queue.h" />
+		<Unit filename="lib/eventqueue/event_queue.cpp" />
+		<Unit filename="lib/eventqueue/event_queue.h" />
+		<Unit filename="lib/eventqueue/event_queue.inl" />
+		<Unit filename="lib/eventqueue/primeID.h" />
+		<Unit filename="lib/eventqueue/primeID.inl" />
+		<Unit filename="lib/eventqueue/primeid.cpp" />
+		<Unit filename="lib/eventqueue/primenumbers.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="random_functor.cpp" />
+		<Unit filename="random_functor.h" />
+		<Unit filename="timer_dispatch.cpp" />
+		<Unit filename="timer_dispatch.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
