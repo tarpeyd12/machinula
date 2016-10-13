@@ -1,8 +1,6 @@
 #ifndef PROXY_ALLOCATOR_INL_INCLUDED
 #define PROXY_ALLOCATOR_INL_INCLUDED
 
-// TODO(dean): migrate implementation to cpp files
-
 namespace alloc
 {
     inline
