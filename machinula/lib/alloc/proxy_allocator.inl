@@ -16,7 +16,6 @@ namespace alloc
         _allocator = nullptr;
     }
 
-    // TODO(dean): ? inline this ?
     void
     ProxyAllocator::printDebugInfo( std::ostream& out ) const
     {
