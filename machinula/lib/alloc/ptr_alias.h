@@ -2,6 +2,7 @@
 #define PTR_ALIAS_H_INCLUDED
 
 #include <memory>
+#include <type_traits>
 
 #include "stl_adapter.h"
 
@@ -113,42 +114,71 @@ namespace alloc
                 : alias::shared_ptr< PtrType >( ptr, deleter_functor< PtrType >( a ), stl_adapter< PtrType >( a ) )
                 { }
 
-                // TODO(dean): is this implemented correctly?
-                template < typename DerrivedPtrType >
-                explicit shared_ptr( shared_ptr< DerrivedPtrType >&& other )
+                // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
+                template < typename DerrivedPtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, DerrivedPtrType* >::value >::type >
+                shared_ptr( const shared_ptr< DerrivedPtrType > & other )
+                : alias::shared_ptr< PtrType >( (alias::shared_ptr< PtrType >&)other )
+                { }
+
+                // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
+                template < typename DerrivedPtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, DerrivedPtrType* >::value >::type >
+                shared_ptr( const shared_ptr< DerrivedPtrType > && other )
+                : alias::shared_ptr< PtrType >( (alias::shared_ptr< PtrType >&)other )
+                { }
+
+                shared_ptr( shared_ptr< PtrType > && other )
+                : alias::shared_ptr< PtrType >( other )
+                { }
+
+                shared_ptr( const shared_ptr< PtrType > & other )
                 : alias::shared_ptr< PtrType >( other )
                 { }
 
 
-                shared_ptr&
+                // rejiggers the operator= to use this shared_ptr type instead of alias::shared_ptr
+                shared_ptr &
                 operator=( const shared_ptr& r ) noexcept
                 {
-                    return alias::shared_ptr< PtrType >::operator=( r );
+                    alias::shared_ptr< PtrType >::operator=( r );
+                    return *this;
                 }
 
-                template<class Y>
-                shared_ptr&
-                operator=( const shared_ptr<Y>& r ) noexcept
+                // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
+                template < typename DerrivedPtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, DerrivedPtrType* >::value >::type >
+                shared_ptr &
+                operator=( const shared_ptr< DerrivedPtrType > & r ) noexcept
                 {
-                    return alias::shared_ptr< PtrType >::operator=( r );
+                    alias::shared_ptr< PtrType >::operator=( r );
+                    return *this;
                 }
 
-                shared_ptr&
+                shared_ptr &
                 operator=( shared_ptr&& r ) noexcept
                 {
-                    return alias::shared_ptr< PtrType >::operator=( r );
+                    alias::shared_ptr< PtrType >::operator=( r );
+                    return *this;
                 }
 
-                template<class Y>
-                shared_ptr&
-                operator=( shared_ptr<Y>&& r ) noexcept
+                // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
+                template < typename DerrivedPtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, DerrivedPtrType* >::value >::type >
+                shared_ptr &
+                operator=( shared_ptr< DerrivedPtrType > && r ) noexcept
                 {
-                    return alias::shared_ptr< PtrType >::operator=( r );
+                    alias::shared_ptr< PtrType >::operator=( r );
+                    return *this;
                 }
 
-                //using alias::shared_ptr< PtrType >::operator=;
+                // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
+                // FIXME(dean): ? is this even safe? why is it not in the standard library? is it because i derived the class that i need this???
+                // pointer up-cast operator, can be implicit
+                /*template < typename BasePtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, BasePtrType* >::value && std::is_base_of< BasePtrType, PtrType >::value >::type >
+                operator shared_ptr<BasePtrType>&()
+                {
+                    std::cerr << "ptr::shared_ptr<" << typeid(PtrType).name() << ">operator shared_ptr<" << typeid(BasePtrType).name() << ">()" << std::endl;
+                    return std::static_pointer_cast< BasePtrType >( (alias::shared_ptr<PtrType>)*this );
+                }*/
 
-                template< class DerrivedPtrType >
+                template< typename DerrivedPtrType >
                 inline
                 void
                 reset( DerrivedPtrType * ptr, Allocator * a )
@@ -157,7 +187,7 @@ namespace alloc
                 }
 
             private:
-                using alias::shared_ptr< PtrType >::operator=; // TODO(dean): figure out if this is necessary for safety.
+                using alias::shared_ptr< PtrType >::operator=;
                 using alias::shared_ptr< PtrType >::reset;
                 using alias::shared_ptr< PtrType >::swap; // TODO(dean): figure out if this is necessary for safety.
         };

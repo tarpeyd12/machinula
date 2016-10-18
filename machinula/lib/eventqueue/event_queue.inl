@@ -65,7 +65,7 @@ namespace evq
 
     inline
     void
-    Listener::broadcastEvent( ptr::shared_ptr<Event>  e )
+    Listener::broadcastEvent( ptr::shared_ptr<Event>& e )
     {
         parentQueue()->queueEvent(e);
     }

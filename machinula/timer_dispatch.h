@@ -96,8 +96,8 @@ namespace timer_dispatch
             TimerSignalDispatchListener() = default;
             virtual ~TimerSignalDispatchListener() = default;
 
-            void processEvent( evq::Event * e );
-            bool isRelevant( const evq::Event * e );
+            void processEvent( ptr::shared_ptr<evq::Event>& e );
+            bool isRelevant( const ptr::shared_ptr<evq::Event>& e );
     };
 }
 

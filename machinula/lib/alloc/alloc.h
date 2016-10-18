@@ -4,6 +4,7 @@
 #include "align.h"
 
 #include "allocator.h"
+#include "global_allocator.h"
 #include "default_allocator.h"
 #include "linear_allocator.h"
 #include "stack_allocator.h"

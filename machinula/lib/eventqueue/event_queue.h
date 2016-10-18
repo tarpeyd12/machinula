@@ -71,9 +71,9 @@ namespace evq
         private:
             static void _eventProcessingFunction( EventQueue * eventQueue );
 
-            void _passEventToListeners( ptr::shared_ptr<Event>  e, std::size_t starting_index = 0, std::size_t increment = 1 );
+            void _passEventToListeners( ptr::shared_ptr<Event> e, std::size_t starting_index = 0, std::size_t increment = 1 );
 
-            void _deallocateEvent( ptr::shared_ptr<Event>  e );
+            void _deallocateEvent( ptr::shared_ptr<Event> e );
     };
 
     class Listener
@@ -88,10 +88,10 @@ namespace evq
             virtual ~Listener() { _parent_queue = nullptr; }
 
             inline EventQueue * parentQueue() const;
-            inline void broadcastEvent( ptr::shared_ptr<Event>  e );
+            inline void broadcastEvent( ptr::shared_ptr<Event>& e );
 
-            virtual void processEvent( ptr::shared_ptr<Event>  e ) = 0;
-            virtual bool isRelevant( const ptr::shared_ptr<Event>  e ) = 0;
+            virtual void processEvent( ptr::shared_ptr<Event>& e ) = 0;
+            virtual bool isRelevant( const ptr::shared_ptr<Event>& e ) = 0;
 
         private:
             // non assignable

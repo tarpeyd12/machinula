@@ -3,6 +3,7 @@
 
 #include "lock_allocator.h"
 
+#include "global_allocator.h"
 #include "default_allocator.h"
 #include "linear_allocator.h"
 #include "stack_allocator.h"
@@ -14,6 +15,8 @@
 
 namespace alloc
 {
+    using SafeGlobalAllocator = LockAllocator< GlobalAllocator >;
+
     using SafeDefaultAllocator = LockAllocator< DefaultAllocator >;
 
     using SafeLinearAllocator = LockAllocator< LinearAllocator >;

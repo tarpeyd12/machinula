@@ -38,7 +38,7 @@ namespace timer_dispatch
         timer_start_event->length     = std::chrono::duration_cast< std::chrono::duration<double> >(run_time).count();
         timer_start_event->start_time = std::chrono::duration_cast< std::chrono::duration<double> >(start_time.time_since_epoch()).count();
 
-        targetEventQueue->queueEvent( timer_start_event );
+        targetEventQueue->queueEvent( (ptr::shared_ptr<evq::Event>&)timer_start_event );
         //timer_start_event = nullptr;
 
 
@@ -69,7 +69,7 @@ namespace timer_dispatch
             timer_tick_event->length         = std::chrono::duration_cast< std::chrono::duration<double> >( run_time ).count();
             timer_tick_event->start_time     = std::chrono::duration_cast< std::chrono::duration<double> >( start_time.time_since_epoch() ).count();
 
-            targetEventQueue->queueEvent( timer_tick_event );
+            targetEventQueue->queueEvent( (ptr::shared_ptr<evq::Event>&)timer_tick_event );
             //timer_tick_event = nullptr;
 
             lastTime = currentTime;
@@ -89,30 +89,33 @@ namespace timer_dispatch
         timer_stop_event->length     = std::chrono::duration_cast< std::chrono::duration<double> >(run_time).count();
         timer_stop_event->start_time = std::chrono::duration_cast< std::chrono::duration<double> >(start_time.time_since_epoch()).count();
 
-        targetEventQueue->queueEvent( timer_stop_event );
+        targetEventQueue->queueEvent( (ptr::shared_ptr<evq::Event>&)timer_stop_event );
         //timer_stop_event = nullptr;
 
     }
 
     void
-    TimerSignalDispatchListener::processEvent( evq::Event * e )
+    TimerSignalDispatchListener::processEvent( ptr::shared_ptr<evq::Event>& e )
     {
 
-        const TimerEvent * tev = static_cast<const TimerEvent*>( e );
+        ptr::shared_ptr<TimerEvent> tev = e;
 
         if( evq::Event::isType<TimerStart>( e ) )
         {
-            const TimerStart * tse = static_cast<const TimerStart*>( e );
+            //const TimerStart * tse = static_cast<const TimerStart*>( e );
+            const ptr::shared_ptr<TimerStart> tse = e;
             std::cout << "TimerStart Event: " << tse->uniqueTimerID << " start: " << (unsigned long long int)(tse->start_time*1000000000.0) << " length: " << tse->length << std::endl;
         }
         else if( evq::Event::isType<TimerStop>( e ) )
         {
-            const TimerStop * tse = static_cast<const TimerStop*>( e );
+            //const TimerStop * tse = static_cast<const TimerStop*>( e );
+            const ptr::shared_ptr<TimerStop> tse = e;
             std::cout << "TimerStop Event:  " << tse->uniqueTimerID << " start: " << (unsigned long long int)(tse->start_time*1000000000.0) << " length: " << tse->length << std::endl;
         }
         else if( evq::Event::isType<TimerTick>( e ) )
         {
-            const TimerTick * tte = static_cast<const TimerTick*>( e );
+            //const TimerTick * tte = static_cast<const TimerTick*>( e );
+            const ptr::shared_ptr<TimerTick> tte = e;
             std::cout << "TimerTick Event:  " << tte->uniqueTimerID << " start: " << (unsigned long long int)(tte->start_time*1000000000.0) << " length: " << tte->length;
             std::cout << " tick:" << tte->tick_count << " max_tick_count:" << tte->max_tick_count << " dt:" << tte->dt << " total_dt:" << tte->total_dt;
             std::cout << std::endl;
@@ -124,7 +127,7 @@ namespace timer_dispatch
     }
 
     bool
-    TimerSignalDispatchListener::isRelevant( const evq::Event * e )
+    TimerSignalDispatchListener::isRelevant( const ptr::shared_ptr<evq::Event>& e )
     {
         return evq::Event::isType<TimerEvent>( e );
     }
