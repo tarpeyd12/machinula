@@ -3,8 +3,8 @@
 namespace timer_dispatch
 {
 
-    Timer::Timer( TimerID utid, const std::string& n, std::size_t numticks, double timerduration, evq::EventQueue * eq  )
-    : uniqueTimerID(utid), name(n), timerThread(), targetEventQueue(eq), start_time(), run_time(), time_per_tick(), total_ticks(numticks), current_tick( 0 ), infinite(false)
+    Timer::Timer( ptr::Allocator * alloc, TimerID utid, const std::string& n, std::size_t numticks, double timerduration, evq::EventQueue * eq  )
+    : _allocator(alloc), uniqueTimerID(utid), name(n), timerThread(), targetEventQueue(eq), start_time(), run_time(), time_per_tick(), total_ticks(numticks), current_tick( 0 ), infinite(false)
     {
         start_time = std::chrono::system_clock::now();
 
@@ -14,8 +14,8 @@ namespace timer_dispatch
         timerThread = std::thread( [=]{ this->runTimer(); } );
     }
 
-    Timer::Timer( TimerID utid, const std::string& n, double timepertick, evq::EventQueue * eq )
-    : uniqueTimerID(utid), name(n), timerThread(), targetEventQueue(eq), start_time(), run_time(), time_per_tick(), total_ticks(0), current_tick( 0 ), infinite(true)
+    Timer::Timer( ptr::Allocator * alloc, TimerID utid, const std::string& n, double timepertick, evq::EventQueue * eq )
+    : _allocator(alloc), uniqueTimerID(utid), name(n), timerThread(), targetEventQueue(eq), start_time(), run_time(), time_per_tick(), total_ticks(0), current_tick( 0 ), infinite(true)
     {
         start_time = std::chrono::system_clock::now();
 
@@ -33,13 +33,13 @@ namespace timer_dispatch
     void
     Timer::runTimer()
     {
-        TimerStart * timer_start_event = new TimerStart( uniqueTimerID );
+        ptr::shared_ptr<TimerStart> timer_start_event = ptr::allocate_shared<TimerStart>( _allocator, uniqueTimerID );
 
         timer_start_event->length     = std::chrono::duration_cast< std::chrono::duration<double> >(run_time).count();
         timer_start_event->start_time = std::chrono::duration_cast< std::chrono::duration<double> >(start_time.time_since_epoch()).count();
 
         targetEventQueue->queueEvent( timer_start_event );
-        timer_start_event = nullptr;
+        //timer_start_event = nullptr;
 
 
         std::chrono::system_clock::time_point lastTime = std::chrono::system_clock::now();
@@ -60,7 +60,7 @@ namespace timer_dispatch
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
             std::chrono::duration<double> deltaTime = ( currentTime - lastTime );
 
-            TimerTick * timer_tick_event = new TimerTick( uniqueTimerID );
+            ptr::shared_ptr<TimerTick> timer_tick_event = ptr::allocate_shared<TimerTick>( _allocator, uniqueTimerID );
 
             timer_tick_event->tick_count     = current_tick;
             timer_tick_event->max_tick_count = total_ticks;
@@ -70,7 +70,7 @@ namespace timer_dispatch
             timer_tick_event->start_time     = std::chrono::duration_cast< std::chrono::duration<double> >( start_time.time_since_epoch() ).count();
 
             targetEventQueue->queueEvent( timer_tick_event );
-            timer_tick_event = nullptr;
+            //timer_tick_event = nullptr;
 
             lastTime = currentTime;
 
@@ -84,13 +84,13 @@ namespace timer_dispatch
             ++current_tick;
         }
 
-        TimerStop * timer_stop_event = new TimerStop( uniqueTimerID );
+        ptr::shared_ptr<TimerStop> timer_stop_event = ptr::allocate_shared<TimerStop>( _allocator, uniqueTimerID );
 
         timer_stop_event->length     = std::chrono::duration_cast< std::chrono::duration<double> >(run_time).count();
         timer_stop_event->start_time = std::chrono::duration_cast< std::chrono::duration<double> >(start_time.time_since_epoch()).count();
 
         targetEventQueue->queueEvent( timer_stop_event );
-        timer_stop_event = nullptr;
+        //timer_stop_event = nullptr;
 
     }
 

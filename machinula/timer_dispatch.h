@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "lib/event_queue.h"
+#include "lib/alloc.h"
 
 namespace timer_dispatch
 {
@@ -13,6 +14,8 @@ namespace timer_dispatch
 
     struct Timer
     {
+        ptr::Allocator * _allocator;
+
         TimerID uniqueTimerID;
         std::string name;
         std::thread timerThread;
@@ -26,8 +29,8 @@ namespace timer_dispatch
         std::size_t current_tick;
         bool infinite;
 
-        Timer( TimerID utid, const std::string& n, std::size_t numticks, double duration, evq::EventQueue * eq );
-        Timer( TimerID utid, const std::string& n, double timepertick, evq::EventQueue * eq );
+        Timer( ptr::Allocator * alloc, TimerID utid, const std::string& n, std::size_t numticks, double duration, evq::EventQueue * eq );
+        Timer( ptr::Allocator * alloc, TimerID utid, const std::string& n, double timepertick, evq::EventQueue * eq );
         Timer( const Timer& other ) = delete;
         ~Timer();
 

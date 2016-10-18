@@ -31,7 +31,7 @@ namespace evq
     }
 
     std::size_t
-    EventQueue::queueEvent( Event * e )
+    EventQueue::queueEvent( ptr::shared_ptr<Event>& e )
     {
         assert( e != nullptr );
 
@@ -56,7 +56,7 @@ namespace evq
     }
 
     std::size_t
-    EventQueue::queueEvents( const std::vector< Event * > & ve )
+    EventQueue::queueEvents( const std::vector< ptr::shared_ptr<Event>  > & ve )
     {
         std::size_t size = 0;
         {
@@ -129,7 +129,7 @@ namespace evq
         }
     }
 
-    Event *
+    ptr::shared_ptr<Event>
     EventQueue::pullNextEvent()
     {
         // TODO(dean): check if _eventQueueCondition.wait( _lock ); is equal to _eventQueueCondition.wait( _eventQueueLock );
@@ -144,7 +144,7 @@ namespace evq
             _eventQueueCondition.wait( _lock );
         }
 
-        Event * e = events.front();
+        ptr::shared_ptr<Event> e = events.front();
         events.pop();
 
         _eventQueueCondition.notify_all();
@@ -177,7 +177,7 @@ namespace evq
 
         while( true )
         {
-            Event * e = eventQueue->pullNextEvent();
+            ptr::shared_ptr<Event> e = eventQueue->pullNextEvent();
 
             // if the event is a null pointer we exit the infinite loop
             if( e == nullptr )
@@ -223,7 +223,7 @@ namespace evq
     }
 
     void
-    EventQueue::_passEventToListeners( Event * e, std::size_t starting_index, std::size_t increment )
+    EventQueue::_passEventToListeners( ptr::shared_ptr<Event> e, std::size_t starting_index, std::size_t increment )
     {
         // this function assumes that it is being executed when _listenerVectorLock is locked
 
@@ -256,11 +256,11 @@ namespace evq
     }
 
     void
-    EventQueue::_deallocateEvent( Event * e )
+    EventQueue::_deallocateEvent( ptr::shared_ptr<Event> e )
     {
         // TODO(dean): make this function thread-safe, since we might be using allocators!
         assert( nullptr != e );
-        delete e;
+        //delete e;
     }
 
 }

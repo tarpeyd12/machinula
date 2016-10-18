@@ -45,7 +45,7 @@ namespace evq
         private:
             std::mutex _eventQueueLock;
             std::condition_variable _eventQueueCondition;
-            std::queue<Event*> events;
+            std::queue< ptr::shared_ptr<Event> > events;
 
             std::mutex _listenerVectorLock;
             std::vector<Listener*> listeners;
@@ -58,22 +58,22 @@ namespace evq
             EventQueue( std::size_t num_threads = 1 );
             virtual ~EventQueue();
 
-            std::size_t queueEvent( Event * e );
-            std::size_t queueEvents( const std::vector<Event*>& ve );
+            std::size_t queueEvent( ptr::shared_ptr<Event>& );
+            std::size_t queueEvents( const std::vector< ptr::shared_ptr<Event> >& ve );
             std::size_t hookListener( Listener * l );
 
             std::size_t numEventsQueued();
 
             void waitForEmpty();
 
-            Event * pullNextEvent();
+            ptr::shared_ptr<Event> pullNextEvent();
 
         private:
             static void _eventProcessingFunction( EventQueue * eventQueue );
 
-            void _passEventToListeners( Event * e, std::size_t starting_index = 0, std::size_t increment = 1 );
+            void _passEventToListeners( ptr::shared_ptr<Event>  e, std::size_t starting_index = 0, std::size_t increment = 1 );
 
-            void _deallocateEvent( Event * e );
+            void _deallocateEvent( ptr::shared_ptr<Event>  e );
     };
 
     class Listener
@@ -88,10 +88,10 @@ namespace evq
             virtual ~Listener() { _parent_queue = nullptr; }
 
             inline EventQueue * parentQueue() const;
-            inline void broadcastEvent( Event * e );
+            inline void broadcastEvent( ptr::shared_ptr<Event>  e );
 
-            virtual void processEvent( Event * e ) = 0;
-            virtual bool isRelevant( const Event * e ) = 0;
+            virtual void processEvent( ptr::shared_ptr<Event>  e ) = 0;
+            virtual bool isRelevant( const ptr::shared_ptr<Event>  e ) = 0;
 
         private:
             // non assignable

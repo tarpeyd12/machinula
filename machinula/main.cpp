@@ -199,7 +199,7 @@ memoryStuff( evq::EventQueue * eventQueue )
         alloc::ptr::shared_ptr<int> test_shared_ptr_outer;
         {
             //alloc::ptr::shared_ptr<int> test_shared_ptr( new( (int*)*fla ) int(1), fla );
-            alloc::ptr::shared_ptr<int> test_shared_ptr( alloc::ptr::allocate_shared<int>(fla, 1) );
+            alloc::ptr::shared_ptr<int> test_shared_ptr( alloc::ptr::allocate_shared<int>( fla, 1 ) );
 
             std::cout << *test_shared_ptr << std::endl;
             test_weak_ptr_outer = test_shared_ptr;

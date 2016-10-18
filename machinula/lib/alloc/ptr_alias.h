@@ -108,6 +108,46 @@ namespace alloc
                 : alias::shared_ptr< PtrType >( ptr, deleter_functor< PtrType >( a ), stl_adapter< PtrType >( a ) )
                 { }
 
+                template < typename DerrivedPtrType >
+                shared_ptr( DerrivedPtrType * ptr, Allocator * a )
+                : alias::shared_ptr< PtrType >( ptr, deleter_functor< PtrType >( a ), stl_adapter< PtrType >( a ) )
+                { }
+
+                // TODO(dean): is this implemented correctly?
+                template < typename DerrivedPtrType >
+                explicit shared_ptr( shared_ptr< DerrivedPtrType >&& other )
+                : alias::shared_ptr< PtrType >( other )
+                { }
+
+
+                shared_ptr&
+                operator=( const shared_ptr& r ) noexcept
+                {
+                    return alias::shared_ptr< PtrType >::operator=( r );
+                }
+
+                template<class Y>
+                shared_ptr&
+                operator=( const shared_ptr<Y>& r ) noexcept
+                {
+                    return alias::shared_ptr< PtrType >::operator=( r );
+                }
+
+                shared_ptr&
+                operator=( shared_ptr&& r ) noexcept
+                {
+                    return alias::shared_ptr< PtrType >::operator=( r );
+                }
+
+                template<class Y>
+                shared_ptr&
+                operator=( shared_ptr<Y>&& r ) noexcept
+                {
+                    return alias::shared_ptr< PtrType >::operator=( r );
+                }
+
+                //using alias::shared_ptr< PtrType >::operator=;
+
                 template< class DerrivedPtrType >
                 inline
                 void
