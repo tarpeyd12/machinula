@@ -27,6 +27,8 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-fomit-frame-pointer" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -34,8 +36,6 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-fexpensive-optimizations" />
-			<Add option="-O3" />
 			<Add option="-Wnon-virtual-dtor" />
 			<Add option="-Wshadow" />
 			<Add option="-Winit-self" />
@@ -66,6 +66,9 @@
 		<Unit filename="lib/alloc/default_allocator.inl" />
 		<Unit filename="lib/alloc/free_list_allocator.cpp" />
 		<Unit filename="lib/alloc/free_list_allocator.h" />
+		<Unit filename="lib/alloc/global_allocator.cpp" />
+		<Unit filename="lib/alloc/global_allocator.h" />
+		<Unit filename="lib/alloc/global_allocator.inl" />
 		<Unit filename="lib/alloc/linear_allocator.cpp" />
 		<Unit filename="lib/alloc/linear_allocator.h" />
 		<Unit filename="lib/alloc/linear_allocator.inl" />
