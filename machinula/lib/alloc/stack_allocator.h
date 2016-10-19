@@ -28,10 +28,10 @@ namespace alloc
             StackAllocator( std::size_t block_size, void * block_start );
             ~StackAllocator();
 
-                   void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
-            inline void deallocateBlock( void * block ) override;
+            virtual        void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
+            virtual inline void deallocateBlock( void * block ) override;
 
-                   void printDebugInfo( std::ostream& out = std::cerr ) const override;
+            virtual        void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
         private:
             StackAllocator( const StackAllocator & ) = delete;

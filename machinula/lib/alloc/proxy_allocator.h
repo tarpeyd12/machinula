@@ -16,8 +16,8 @@ namespace alloc
             ProxyAllocator( Allocator * a );
             ~ProxyAllocator();
 
-            inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) { return _allocator->allocateBlock( size, align ); }
-            inline void deallocateBlock( void * block ) { _allocator->deallocateBlock( block ); }
+            virtual inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) { return _allocator->allocateBlock( size, align ); }
+            virtual inline void deallocateBlock( void * block ) { _allocator->deallocateBlock( block ); }
 
             inline void *      getBlock() const override { return _allocator->getBlock(); }
             inline std::size_t getSize()  const override { return _allocator->getSize(); }
@@ -29,7 +29,7 @@ namespace alloc
             inline std::size_t maxUsedMemory()     const override { return _allocator->maxUsedMemory(); }
             inline std::size_t maxNumAllocations() const override { return _allocator->maxNumAllocations(); }
 
-            inline void printDebugInfo( std::ostream& out = std::cerr ) const override;
+            virtual inline void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
         private:
             ProxyAllocator( const ProxyAllocator & ) = delete;

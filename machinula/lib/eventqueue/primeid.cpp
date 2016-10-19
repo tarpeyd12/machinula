@@ -1,9 +1,13 @@
+//#include <mutex>
+
 #include "primeID.h"
 
 #include "primenumbers.h"
 
 namespace primeid
 {
+    //std::mutex _prime_id_lock;
+
     std::unordered_map< uintmax_t, uintmax_t > issuedPrimes;
 
     uintmax_t nextPrimeIndex = 0;

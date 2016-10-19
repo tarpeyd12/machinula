@@ -7,6 +7,13 @@
 
 namespace alloc
 {
+    /*template < typename AllocatorType, typename _Enabled = void >
+    class LockAllocator;
+
+    template < typename AllocatorType >
+    class LockAllocator< AllocatorType, typename std::enable_if< std::is_base_of< Allocator, AllocatorType >::value >::type > final : public AllocatorType
+    */
+
     template < typename AllocatorType >
     class LockAllocator final : public AllocatorType
     {
@@ -16,8 +23,8 @@ namespace alloc
         public:
 
             template < typename ... ArgTypes >
-            LockAllocator<AllocatorType>( ArgTypes ... args ) : AllocatorType( args... ), _allocatorMutex() {  }
-            virtual ~LockAllocator<AllocatorType>() = default;
+            explicit LockAllocator( ArgTypes ... args ) : AllocatorType( args... ), _allocatorMutex() { }
+            ~LockAllocator() = default;
 
             inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             inline void deallocateBlock( void * block ) override;
@@ -25,8 +32,8 @@ namespace alloc
             inline void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
         private:
-            LockAllocator<AllocatorType>( const LockAllocator<AllocatorType> & ) = delete;
-            LockAllocator<AllocatorType> & operator = ( const LockAllocator<AllocatorType> & ) = delete;
+            LockAllocator( const LockAllocator & ) = delete;
+            LockAllocator & operator = ( const LockAllocator & ) = delete;
     };
 
     // disable nested lock allocators.

@@ -17,10 +17,10 @@ namespace alloc
             PoolAllocator( std::size_t object_size, uint8_t object_align, std::size_t block_size, void * block_start );
             ~PoolAllocator();
 
-            inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
-            inline void deallocateBlock( void * block ) override;
+            virtual inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
+            virtual inline void deallocateBlock( void * block ) override;
 
-            void printDebugInfo( std::ostream& out = std::cerr ) const override;
+            virtual void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
         private:
             PoolAllocator( const PoolAllocator & ) = delete;

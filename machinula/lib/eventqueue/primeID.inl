@@ -2,9 +2,12 @@
 #define PRIMEID_INL_INCLUDED
 
 #include <typeinfo>
+//#include <mutex>
 
 namespace primeid
 {
+    //extern std::mutex _prime_id_lock;
+
     extern std::unordered_map< PrimeIDType, PrimeIDType > issuedPrimes;
 
     template< class T >

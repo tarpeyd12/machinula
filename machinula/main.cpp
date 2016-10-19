@@ -94,37 +94,46 @@ class DebugListener : public evq::Listener
 int
 main( int /*argc*/, char* /*argv*/[] )
 {
-    std::ios_base::sync_with_stdio( false );
+    try
+    {
+        std::ios_base::sync_with_stdio( false );
 
-    // GlobalAllocator() is a bare-bones wrapper for ::operator new() and ::operator delete()
-    std::size_t _size = 1024*10; // 10K
-    void * _mem = ptr::GlobalAllocator().allocateBlock( _size );
+        // SafeGlobalAllocator() is a bare-bones wrapper for ::operator new() and ::operator delete()
+        std::size_t _size = 1024*1024*512; //
+        void * _mem = ptr::SafeGlobalAllocator().allocateBlock( _size );
 
-    globalAllocator = new ptr::SafeFreeListAllocator( _size, _mem );
+        globalAllocator = new ptr::SafeFreeListAllocator( _size, _mem );
 
-    // create our event queue
-    evq::EventQueue * eventQueue = new( (evq::EventQueue*)*globalAllocator ) evq::EventQueue();
+        // create our event queue
+        evq::EventQueue * eventQueue = new( (evq::EventQueue*)*globalAllocator ) evq::EventQueue();
 
-    // register our debug listener to the event queue
-    eventQueue->hookListener( ptr::allocate_shared<DebugListener>( globalAllocator, std::cout ) );
+        // register our debug listener to the event queue
+        eventQueue->hookListener( ptr::allocate_shared<DebugListener>( globalAllocator, std::cout ) );
 
-    // execute some fun stuff with timers and the event queue.
-    eventQueueStuff( eventQueue );
+        // execute some fun stuff with timers and the event queue.
+        eventQueueStuff( eventQueue );
 
-    // execute some fun stuff with memory allocators, print debug with event queue
-    memoryStuff( eventQueue );
+        // execute some fun stuff with memory allocators, print debug with event queue
+        memoryStuff( eventQueue );
 
-    // make sure there are no more events to execute
-    eventQueue->waitForEmpty();
+        // make sure there are no more events to execute
+        eventQueue->waitForEmpty();
 
-    // delete the event queue to be clean
-    globalAllocator->deallocate( eventQueue );
+        // delete the event queue to be clean
+        globalAllocator->deallocate( eventQueue );
 
-    globalAllocator->printDebugInfo();
+        globalAllocator->printDebugInfo();
 
-    delete globalAllocator;
+        delete globalAllocator;
 
-    ptr::GlobalAllocator().deallocateBlock( _mem );
+        ptr::SafeGlobalAllocator().deallocateBlock( _mem );
+    }
+    catch( std::exception e )
+    {
+        std::cerr << std::flush;
+        std::cout << std::flush;
+        std::cerr << e.what() << std::endl;
+    }
 
     // good by program.
     return EXIT_SUCCESS;
@@ -138,13 +147,13 @@ eventQueueStuff( evq::EventQueue * eventQueue )
     // hook a listener to the event queue so we can see the timers ticking
     eventQueue->hookListener( ptr::allocate_shared<timer_dispatch::TimerSignalDispatchListener>( globalAllocator ) );
 
-    double timers_runtime = 30.0; // seconds
+    double timers_runtime = 3.0; // seconds
 
     // list of timers
     std::vector< timer_dispatch::Timer * > timers;
 
     // we make 4 timers to keep things simple
-    for( std::size_t i = 1; i <= 24; ++i )
+    for( std::size_t i = 1; i <= 5; ++i )
     {
         timer_dispatch::Timer * timer = new timer_dispatch::Timer( globalAllocator,
                                                                    i,                          // timer ID number
@@ -162,12 +171,34 @@ eventQueueStuff( evq::EventQueue * eventQueue )
     // wait for timers to finish.
     // timer threads are joined in their destructor
 
+    std::string s = std::string( ptr::stl_adapter<char>( globalAllocator ) );
+    //std::string s( ptr::stl_adapter<char>( globalAllocator ) );
+
+    {
+        std::this_thread::sleep_for( std::chrono::seconds(0) );
+
+        std::basic_ostringstream< char > stream( std::string( ptr::stl_adapter<char>( globalAllocator ) ), std::ios_base::out );
+        stream.str( std::string( ptr::stl_adapter<char>( globalAllocator ) ) );
+        stream.clear();
+
+        globalAllocator->printDebugInfo( stream );
+
+        //s = std::basic_string< char, std::char_traits<char>, ptr::stl_adapter<char> >( stream.str().c_str(), ptr::stl_adapter<char>( globalAllocator ) );
+        //s.assign( (const char*)stream.str().c_str() );
+        s = stream.str();
+
+        stream.str( std::string( ptr::stl_adapter<char>( globalAllocator ) ) );
+        stream.clear();
+    }
+
     for( auto t : timers )
     {
         delete t;
     }
 
     eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Timers Done." ) );
+
+    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, s ) );
 }
 
 /*
@@ -188,7 +219,7 @@ memoryStuff( evq::EventQueue * eventQueue )
     eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Creating DefaultAllocator." ) );
 
     // wrapper for ::operator new() and ::operator delete() that also keeps track of all allocations unlike GlobalAllocator
-    ptr::DefaultAllocator defaultAllocator( 0, nullptr );
+    ptr::SafeDefaultAllocator defaultAllocator( 0, nullptr );
 
     // pointer to our memory pool
     void * _mem_pool;
@@ -242,7 +273,8 @@ memoryStuff( evq::EventQueue * eventQueue )
     }
 
     {
-        //ptr::LockAllocator< ptr::LockAllocator< ptr::DefaultAllocator > > llalt(); // FIXME(dean): this line should not compile
+        ptr::LockAllocator< ptr::LockAllocator< int > > llalt(); // FIXME(dean): this line should not compile
+        ptr::LockAllocator< int > llalt2(); // FIXME(dean): this line should not compile
         //llalt.printDebugInfo();
     }
 
