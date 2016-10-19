@@ -28,7 +28,7 @@ namespace evq
         private:
             EventType _event_type;
         public:
-            Event( EventType _et ) : _event_type(_et) {  }
+            Event( EventType _et ) : _event_type( _et ) { }
             Event( const Event& e ) = delete;
             virtual ~Event() = default;
             inline EventType eventType() const;
@@ -48,7 +48,7 @@ namespace evq
             std::queue< ptr::shared_ptr<Event> > events;
 
             std::mutex _listenerVectorLock;
-            std::vector<Listener*> listeners;
+            std::vector< ptr::shared_ptr<Listener> > listeners;
 
             std::size_t numThreads;
 
@@ -60,7 +60,7 @@ namespace evq
 
             std::size_t queueEvent( ptr::shared_ptr<Event> );
             std::size_t queueEvents( const std::vector< ptr::shared_ptr<Event> >& ve );
-            std::size_t hookListener( Listener * l );
+            std::size_t hookListener( ptr::shared_ptr<Listener> l );
 
             std::size_t numEventsQueued();
 
@@ -69,6 +69,9 @@ namespace evq
             ptr::shared_ptr<Event> pullNextEvent();
 
         private:
+            EventQueue( const EventQueue & ) = delete;
+            EventQueue & operator= ( const EventQueue & ) = delete;
+
             static void _eventProcessingFunction( EventQueue * eventQueue );
 
             void _passEventToListeners( ptr::shared_ptr<Event> e, std::size_t starting_index = 0, std::size_t increment = 1 );
@@ -79,12 +82,13 @@ namespace evq
     class Listener
     {
         friend class EventQueue;
+
         private:
             EventQueue * _parent_queue;
         public:
 
-            Listener() : _parent_queue(nullptr) {  }
-            Listener( const Listener & _l ) : _parent_queue( _l._parent_queue ) {  }
+            Listener() : _parent_queue(nullptr) { }
+            Listener( const Listener & _l ) : _parent_queue( _l._parent_queue ) { }
             virtual ~Listener() { _parent_queue = nullptr; }
 
             inline EventQueue * parentQueue() const;

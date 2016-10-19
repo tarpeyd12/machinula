@@ -81,7 +81,7 @@ namespace evq
     }
 
     std::size_t
-    EventQueue::hookListener( Listener * l )
+    EventQueue::hookListener( ptr::shared_ptr<Listener> l )
     {
         assert( l != nullptr );
         assert( l->_parent_queue == nullptr && this != l->_parent_queue );
@@ -245,7 +245,7 @@ namespace evq
         // iterate over the listeners
         for( std::size_t i = starting_index; i < listeners.size(); i += increment )
         {
-            Listener * l = listeners.at( i );
+            auto l = listeners.at( i );
 
             // give listeners relevant events
             if( l->isRelevant( e ) )
