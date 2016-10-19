@@ -58,7 +58,7 @@ namespace evq
             EventQueue( std::size_t num_threads = 1 );
             virtual ~EventQueue();
 
-            std::size_t queueEvent( ptr::shared_ptr<Event>& );
+            std::size_t queueEvent( ptr::shared_ptr<Event> );
             std::size_t queueEvents( const std::vector< ptr::shared_ptr<Event> >& ve );
             std::size_t hookListener( Listener * l );
 

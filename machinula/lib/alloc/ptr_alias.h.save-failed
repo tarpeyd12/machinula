@@ -111,7 +111,7 @@ namespace alloc
 
                 template < typename DerrivedPtrType >
                 shared_ptr( DerrivedPtrType * ptr, Allocator * a )
-                : alias::shared_ptr< PtrType >( ptr, deleter_functor< DerrivedPtrType >( a ), stl_adapter< DerrivedPtrType >( a ) )
+                : alias::shared_ptr< PtrType >( ptr, deleter_functor< PtrType >( a ), stl_adapter< PtrType >( a ) )
                 { }
 
                 shared_ptr( const shared_ptr< PtrType > & other )
@@ -119,20 +119,20 @@ namespace alloc
                 { }
 
                 // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
-                template < typename DerrivedPtrType >
+                template < typename DerrivedPtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, DerrivedPtrType* >::value >::type >
                 shared_ptr( const shared_ptr< DerrivedPtrType > & other )
-                : alias::shared_ptr< PtrType >( (shared_ptr< PtrType >&)other )
+                : alias::shared_ptr< PtrType >( (alias::shared_ptr< PtrType >&)other )
                 { }
 
 
                 shared_ptr( shared_ptr< PtrType > && other )
-                : alias::shared_ptr< PtrType >( (shared_ptr< PtrType >&&)other )
+                : alias::shared_ptr< PtrType >( other )
                 { }
 
                 // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
-                template < typename DerrivedPtrType >
+                template < typename DerrivedPtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, DerrivedPtrType* >::value >::type >
                 shared_ptr( const shared_ptr< DerrivedPtrType > && other )
-                : alias::shared_ptr< PtrType >( (shared_ptr< DerrivedPtrType >&&)other )
+                : alias::shared_ptr< PtrType >( (alias::shared_ptr< DerrivedPtrType >&&)other )
                 { }
 
 
@@ -145,7 +145,7 @@ namespace alloc
                 }
 
                 // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
-                template < typename DerrivedPtrType >
+                template < typename DerrivedPtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, DerrivedPtrType* >::value >::type >
                 shared_ptr &
                 operator=( const shared_ptr< DerrivedPtrType > & r ) noexcept
                 {
@@ -161,7 +161,7 @@ namespace alloc
                 }
 
                 // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
-                template < typename DerrivedPtrType >
+                template < typename DerrivedPtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, DerrivedPtrType* >::value >::type >
                 shared_ptr &
                 operator=( shared_ptr< DerrivedPtrType > && r ) noexcept
                 {
@@ -169,16 +169,15 @@ namespace alloc
                     return *this;
                 }
 
-
                 // FIXME(dean): TODO(dean): test to see if this actually disabling if not derived
                 // FIXME(dean): ? is this even safe? why is it not in the standard library? is it because i derived the class that i need this???
                 // pointer up-cast operator, can be implicit
-                /*template < typename BasePtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, BasePtrType* >::value && std::is_base_of< BasePtrType, PtrType >::value >::type >
-                operator shared_ptr<BasePtrType>()
+                template < typename BasePtrType, typename = typename std::enable_if< std::is_convertible< PtrType*, BasePtrType* >::value && std::is_base_of< BasePtrType, PtrType >::value >::type >
+                operator shared_ptr<BasePtrType>&()
                 {
-                    std::cerr << "ptr::shared_ptr<" << typeid(PtrType).name() << ">::operator shared_ptr<" << typeid(BasePtrType).name() << ">()" << std::endl;
+                    std::cerr << "ptr::shared_ptr<" << typeid(PtrType).name() << ">operator shared_ptr<" << typeid(BasePtrType).name() << ">()" << std::endl;
                     return *this;
-                }*/
+                }
 
                 template< typename DerrivedPtrType >
                 inline

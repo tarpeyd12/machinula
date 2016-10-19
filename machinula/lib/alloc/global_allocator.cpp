@@ -8,6 +8,11 @@ namespace alloc
 
     }
 
+    GlobalAllocator::~GlobalAllocator()
+    {
+        _num_allocations = 0;
+    }
+
     void
     GlobalAllocator::printDebugInfo( std::ostream& out ) const
     {

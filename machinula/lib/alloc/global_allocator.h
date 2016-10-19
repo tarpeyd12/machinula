@@ -5,23 +5,22 @@
 
 namespace alloc
 {
-    class GlobalAllocator final : public Allocator
+    class GlobalAllocator : public Allocator
     {
         private:
 
         public:
             GlobalAllocator();
-            ~GlobalAllocator() = default;
+            ~GlobalAllocator();
 
             inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             inline void deallocateBlock( void * block ) override;
 
             void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
-            GlobalAllocator & operator = ( const GlobalAllocator & ) = default;
-
         private:
             GlobalAllocator( const GlobalAllocator & ) = delete;
+            GlobalAllocator & operator = ( const GlobalAllocator & ) = delete;
     };
 }
 

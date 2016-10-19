@@ -31,7 +31,7 @@ namespace evq
     }
 
     std::size_t
-    EventQueue::queueEvent( ptr::shared_ptr<Event>& e )
+    EventQueue::queueEvent( ptr::shared_ptr<Event> e )
     {
         assert( e != nullptr );
 
