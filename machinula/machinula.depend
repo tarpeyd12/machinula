@@ -109,11 +109,11 @@
 
 1476324299 c:\users\tarpe\documents\github\machinula\machinula\lib\ecs\ecs.inl
 
-1461386235 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.cpp
+1476936002 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.cpp
 	"event_queue.h"
 	<cassert>
 
-1461386235 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
+1476930363 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.h
 	<iostream>
 	<vector>
 	<queue>
@@ -121,83 +121,98 @@
 	<mutex>
 	<condition_variable>
 	"primeID.h"
+	"../alloc.h"
 	"event_queue.inl"
 
-1460852851 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\primeid.h
+1460856451 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\primeid.h
 	<iostream>
 	<cstdio>
 	<unordered_map>
 	<cassert>
 	"primeID.inl"
 
-1461386235 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\primeid.inl
+1476930363 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\primeid.inl
 	<typeinfo>
 
-1460852977 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\primeid.cpp
+1476930363 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\primeid.cpp
 	"primeID.h"
 	"primenumbers.h"
 
-1460852851 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\primenumbers.h
+1460856451 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\primenumbers.h
 
-1461387556 source:c:\users\tarpeyd12\documents\github\machinula\machinula\main.cpp
+1476943275 source:c:\users\tarpeyd12\documents\github\machinula\machinula\main.cpp
 	<cstdlib>
 	<iostream>
+	<iomanip>
 	<sstream>
+	<ctime>
+	<chrono>
 	"lib/alloc.h"
 	"lib/event_queue.h"
 	"lib/ecs.h"
-	"timer_dispach.h"
+	"timer_dispatch.h"
+	"random_functor.h"
 
-1460849754 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc.h
+1460853354 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc.h
 	"alloc/alloc.h"
 
-1460849754 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\alloc.h
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\alloc.h
 	"align.h"
 	"allocator.h"
+	"global_allocator.h"
 	"default_allocator.h"
 	"linear_allocator.h"
 	"stack_allocator.h"
 	"pool_allocator.h"
 	"object_pool_allocator.h"
 	"free_list_allocator.h"
+	"lock_allocator.h"
 	"proxy_allocator.h"
+	"safe_allocators.h"
 	"stl_adapter.h"
 	"stl_alias.h"
+	"ptr_alias.h"
 
-1460849754 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\align.h
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\align.h
+	<cstdint>
 
-1460849754 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\allocator.h
+1476938898 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\allocator.h
 	<type_traits>
 	<cassert>
+	<iostream>
 
-1460849754 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\default_allocator.h
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\default_allocator.h
 	"allocator.h"
 	<map>
 	<unordered_map>
+	"default_allocator.inl"
 
-1460849755 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\linear_allocator.h
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\linear_allocator.h
 	"allocator.h"
-	"align.h"
+	"linear_allocator.inl"
 
-1460849755 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\stack_allocator.h
+1476930363 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\stack_allocator.h
 	"allocator.h"
+	"stack_allocator.inl"
 
-1460849755 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\pool_allocator.h
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\pool_allocator.h
 	"allocator.h"
+	"pool_allocator.inl"
 
-1460849755 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\object_pool_allocator.h
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\object_pool_allocator.h
 	"pool_allocator.h"
 
-1460849764 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
 	"allocator.h"
 
-1460849755 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\proxy_allocator.h
+1476939030 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\proxy_allocator.h
 	<iostream>
 	"allocator.h"
+	"proxy_allocator.inl"
 
-1460849755 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\stl_adapter.h
+1476930363 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\stl_adapter.h
 
-1460849755 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\stl_alias.h
+1473401609 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\stl_alias.h
 	<vector>
 	<unordered_map>
 	<map>
@@ -205,22 +220,22 @@
 	<queue>
 	"stl_adapter.h"
 
-1460849755 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\event_queue.h
+1460853355 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\event_queue.h
 	"eventqueue/event_queue.h"
 
-1460849755 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\ecs.h
+1460853355 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\ecs.h
 	"ecs/ecs.h"
 
-1460849764 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\ecs\ecs.h
+1460853364 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\ecs\ecs.h
 	<map>
 	<unordered_map>
 	<algorithm>
 	<cassert>
 	"ecs.inl"
 
-1460939470 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\ecs\ecs.inl
+1473401609 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\ecs\ecs.inl
 
-1460938027 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.inl
+1476930363 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\eventqueue\event_queue.inl
 
 1476922757 source:c:\users\tarpe\documents\github\machinula\machinula\lib\eventqueue\primeid.cpp
 	"primeID.h"
@@ -339,4 +354,84 @@
 
 1476840377 source:c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\global_allocator.cpp
 	"global_allocator.h"
+
+1476938920 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\default_allocator.cpp
+	"default_allocator.h"
+
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\default_allocator.inl
+
+1476938934 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\free_list_allocator.cpp
+	"align.h"
+	"free_list_allocator.h"
+
+1476935673 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\global_allocator.cpp
+	"global_allocator.h"
+
+1476935655 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\global_allocator.h
+	"allocator.h"
+	"global_allocator.inl"
+
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\global_allocator.inl
+	<iostream>
+
+1476938953 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\linear_allocator.cpp
+	"linear_allocator.h"
+
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\linear_allocator.inl
+	"align.h"
+
+1476938983 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\pool_allocator.cpp
+	"align.h"
+	"pool_allocator.h"
+
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\pool_allocator.inl
+
+1476939053 source:c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\stack_allocator.cpp
+	"align.h"
+	"stack_allocator.h"
+
+1476930363 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\stack_allocator.inl
+
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\lock_allocator.h
+	"allocator.h"
+	<mutex>
+	"lock_allocator.inl"
+
+1476937969 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\lock_allocator.inl
+
+1476939038 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\proxy_allocator.inl
+
+1476930362 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\safe_allocators.h
+	"lock_allocator.h"
+	"global_allocator.h"
+	"default_allocator.h"
+	"linear_allocator.h"
+	"stack_allocator.h"
+	"pool_allocator.h"
+	"object_pool_allocator.h"
+	"free_list_allocator.h"
+	"proxy_allocator.h"
+
+1476937929 c:\users\tarpeyd12\documents\github\machinula\machinula\lib\alloc\ptr_alias.h
+	<memory>
+	<type_traits>
+	"stl_adapter.h"
+
+1476941766 c:\users\tarpeyd12\documents\github\machinula\machinula\timer_dispatch.h
+	<string>
+	<thread>
+	<chrono>
+	"lib/event_queue.h"
+	"lib/alloc.h"
+
+1476930363 c:\users\tarpeyd12\documents\github\machinula\machinula\random_functor.h
+	<algorithm>
+	<random>
+	<mutex>
+
+1473401609 source:c:\users\tarpeyd12\documents\github\machinula\machinula\random_functor.cpp
+	"random_functor.h"
+
+1476942863 source:c:\users\tarpeyd12\documents\github\machinula\machinula\timer_dispatch.cpp
+	"timer_dispatch.h"
 

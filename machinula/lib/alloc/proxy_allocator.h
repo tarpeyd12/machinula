@@ -27,6 +27,7 @@ namespace alloc
             inline std::size_t numAllocations() const override { return _allocator->numAllocations(); }
 
             inline std::size_t maxUsedMemory()     const override { return _allocator->maxUsedMemory(); }
+            inline std::size_t minFreeMemory()     const override { return _allocator->minFreeMemory(); }
             inline std::size_t maxNumAllocations() const override { return _allocator->maxNumAllocations(); }
 
             virtual inline void printDebugInfo( std::ostream& out = std::cerr ) const override;

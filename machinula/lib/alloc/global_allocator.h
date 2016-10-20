@@ -10,7 +10,7 @@ namespace alloc
         private:
 
         public:
-            GlobalAllocator();
+            GlobalAllocator( std::size_t block_size = 0, void * block_start = nullptr );
             ~GlobalAllocator();
 
             virtual inline void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;

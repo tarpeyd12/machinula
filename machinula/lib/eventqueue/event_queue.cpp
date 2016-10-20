@@ -38,7 +38,8 @@ namespace evq
         std::size_t size = 0;
         {
             // lock
-            std::lock_guard<std::mutex> _lock(_eventQueueLock);
+            //std::lock_guard<std::mutex> _lock(_eventQueueLock);
+            std::unique_lock<std::mutex> _lock(_eventQueueLock);
 
             // wait for a slot in the queue
             /*while( events.size() > 8192 )
@@ -50,6 +51,7 @@ namespace evq
             events.push( e );
             size = events.size();
 
+            _lock.unlock();
             _eventQueueCondition.notify_all();
         }
         return size;
@@ -61,7 +63,8 @@ namespace evq
         std::size_t size = 0;
         {
             // lock
-            std::lock_guard<std::mutex> _lock(_eventQueueLock);
+            //std::lock_guard<std::mutex> _lock(_eventQueueLock);
+            std::unique_lock<std::mutex> _lock(_eventQueueLock);
 
             // enque
             //for( auto e : ve )
@@ -75,6 +78,7 @@ namespace evq
 
             size = events.size();
 
+            _lock.unlock();
             _eventQueueCondition.notify_all();
         }
         return size;
@@ -105,7 +109,8 @@ namespace evq
         std::size_t size = 0;
         {
              // lock
-            std::lock_guard<std::mutex> _lock(_eventQueueLock);
+            //std::lock_guard<std::mutex> _lock(_eventQueueLock);
+            std::unique_lock<std::mutex> _lock(_eventQueueLock);
 
             // get size
             size = events.size();
@@ -122,11 +127,14 @@ namespace evq
         std::unique_lock<std::mutex> _lock(_eventQueueLock);
 
         // wait for an empty queue
-        while( events.size() > 0 )
+        //while( events.size() > 0 )
         {
             //_eventQueueCondition.wait( _eventQueueLock );
-            _eventQueueCondition.wait( _lock );
+            _eventQueueCondition.wait( _lock, [&]{ return !events.size(); } );
         }
+
+        _lock.unlock();
+        _eventQueueCondition.notify_all();
     }
 
     ptr::shared_ptr<Event>
@@ -138,15 +146,16 @@ namespace evq
         std::unique_lock<std::mutex> _lock(_eventQueueLock);
 
         // wait until we have events to process
-        while( events.size() < 1 )
+        //while( events.size() < 1 )
         {
             //_eventQueueCondition.wait( _eventQueueLock );
-            _eventQueueCondition.wait( _lock );
+            _eventQueueCondition.wait( _lock, [&]{ return events.size(); } );
         }
 
         ptr::shared_ptr<Event> e = events.front();
         events.pop();
 
+        _lock.unlock();
         _eventQueueCondition.notify_all();
 
         return e;
@@ -214,6 +223,12 @@ namespace evq
 
             // deallocate event
             eventQueue->_deallocateEvent( e );
+
+            // wait a bit
+            //std::this_thread::sleep_for( std::chrono::nanoseconds(500) );
+            //std::this_thread::sleep_for( std::chrono::microseconds(10) );
+            //std::this_thread::sleep_for( std::chrono::seconds(0.5) );
+            //std::this_thread::sleep_for( std::chrono::duration<double>(0.0001) );
         }
 
         if( listenerThreads )

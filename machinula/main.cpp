@@ -99,7 +99,7 @@ main( int /*argc*/, char* /*argv*/[] )
         std::ios_base::sync_with_stdio( false );
 
         // SafeGlobalAllocator() is a bare-bones wrapper for ::operator new() and ::operator delete()
-        std::size_t _size = 1024*1024*512; //
+        std::size_t _size = 1024*1024*1024; // 3M
         void * _mem = ptr::SafeGlobalAllocator().allocateBlock( _size );
 
         globalAllocator = new ptr::SafeFreeListAllocator( _size, _mem );
@@ -131,8 +131,8 @@ main( int /*argc*/, char* /*argv*/[] )
     catch( std::exception e )
     {
         std::cerr << std::flush;
-        std::cout << std::flush;
         std::cerr << e.what() << std::endl;
+        std::cout << std::flush;
     }
 
     // good by program.
@@ -147,13 +147,13 @@ eventQueueStuff( evq::EventQueue * eventQueue )
     // hook a listener to the event queue so we can see the timers ticking
     eventQueue->hookListener( ptr::allocate_shared<timer_dispatch::TimerSignalDispatchListener>( globalAllocator ) );
 
-    double timers_runtime = 3.0; // seconds
+    double timers_runtime = 10.0; // seconds
 
     // list of timers
     std::vector< timer_dispatch::Timer * > timers;
 
     // we make 4 timers to keep things simple
-    for( std::size_t i = 1; i <= 5; ++i )
+    for( std::size_t i = 1; i <= 100; ++i )
     {
         timer_dispatch::Timer * timer = new timer_dispatch::Timer( globalAllocator,
                                                                    i,                          // timer ID number
@@ -175,7 +175,7 @@ eventQueueStuff( evq::EventQueue * eventQueue )
     //std::string s( ptr::stl_adapter<char>( globalAllocator ) );
 
     {
-        std::this_thread::sleep_for( std::chrono::seconds(0) );
+        //std::this_thread::sleep_for( std::chrono::seconds(1) );
 
         std::basic_ostringstream< char > stream( std::string( ptr::stl_adapter<char>( globalAllocator ) ), std::ios_base::out );
         stream.str( std::string( ptr::stl_adapter<char>( globalAllocator ) ) );
@@ -191,8 +191,13 @@ eventQueueStuff( evq::EventQueue * eventQueue )
         stream.clear();
     }
 
-    for( auto t : timers )
+    //for( auto t : timers )
+    for( std::size_t i = 0; i < timers.size(); ++i )
     {
+        auto t = timers.at(i);
+
+        eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Deleting Timer_" + to_string(i) ) );
+
         delete t;
     }
 
@@ -225,7 +230,7 @@ memoryStuff( evq::EventQueue * eventQueue )
     void * _mem_pool;
 
     // size of our memory pool: 1GB
-    std::size_t _mem_size = 1024*1024*1024;
+    std::size_t _mem_size = 1024*1024*512;
 
     // size of our memory pool: 0.5MB
     //std::size_t _mem_size = 1024*1024*0.5f;

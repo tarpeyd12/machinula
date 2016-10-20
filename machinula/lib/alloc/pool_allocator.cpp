@@ -56,6 +56,7 @@ namespace alloc
         out << "\tUnused Memory: " << unusedMemory() << " bytes\n";
         out << "\tNumber of Allocations: " << numAllocations() << "\n";
         out << "\tMax Used Memory: " << maxUsedMemory() << " bytes\n";
+        out << "\tMin Free Memory: " << minFreeMemory() << " bytes\n";
         out << "\tMax Number of Allocations: " << maxNumAllocations() << "\n";
         out << "\tNumber of Buckets: " << (( _block_size - align::forwardAdj( _block_start, _object_alignment ) ) / _object_size - 1) << "\n";
 

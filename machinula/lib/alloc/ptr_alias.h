@@ -288,7 +288,7 @@ namespace alloc
         };
 
         template< class T, class... Args >
-        inline
+        /*inline*/
         shared_ptr< T >
         allocate_shared( Allocator * alloc, Args && ... args )
         {
@@ -297,7 +297,7 @@ namespace alloc
 
         // we copy allocate_shared<> because we have allocators to deal with ... so we need to pass an allocator which is exactly allocate_shared
         template< class T, class... Args >
-        inline
+        /*inline*/
         shared_ptr< T >
         make_shared( Allocator * alloc, Args && ... args )
         {

@@ -2,8 +2,8 @@
 
 namespace alloc
 {
-    GlobalAllocator::GlobalAllocator()
-    : Allocator( 0, nullptr )
+    GlobalAllocator::GlobalAllocator( std::size_t block_size, void * block_start )
+    : Allocator( block_size, block_start )
     {
 
     }
