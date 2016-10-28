@@ -62,7 +62,6 @@ namespace timer_dispatch
             {
                 std::this_thread::sleep_until( start_time + time_per_tick*current_tick );
             }
-            //
 
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
             std::chrono::duration<double> deltaTime = ( currentTime - lastTime );

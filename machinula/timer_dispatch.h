@@ -26,7 +26,6 @@ namespace timer_dispatch
         std::chrono::duration<double> run_time;
         std::chrono::duration<double> time_per_tick;
         std::size_t total_ticks;
-        //std::size_t current_tick;
         bool infinite;
 
         Timer( ptr::Allocator * alloc, TimerID utid, const std::string& n, std::size_t numticks, double duration, evq::EventQueue * eq );

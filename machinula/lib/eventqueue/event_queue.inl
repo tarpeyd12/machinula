@@ -4,7 +4,6 @@
 
 namespace evq
 {
-    inline
     EventType
     Event::eventType() const
     {
@@ -12,7 +11,6 @@ namespace evq
     }
 
     template < typename T >
-    inline
     EventType
     Event::Type()
     {
@@ -21,7 +19,6 @@ namespace evq
     }
 
     template < typename T >
-    inline
     EventType
     Event::DeriveEventType()
     {
@@ -32,7 +29,6 @@ namespace evq
     }
 
     template < typename T >
-    inline
     bool
     Event::isType( const Event * e )
     {
@@ -44,7 +40,6 @@ namespace evq
     }
 
     template < typename T >
-    inline
     bool
     Event::isType( ptr::shared_ptr<Event> e )
     {
@@ -55,6 +50,15 @@ namespace evq
         return ( ev = dynamic_cast< const T * >(e) );*/
     }
 
+    template < typename T, typename ... ArgTypes >
+    std::size_t
+    EventQueue::queueNewEvent( ptr::Allocator * alloc, ArgTypes && ... args )
+    {
+        static_assert( std::is_base_of< Event, T >::value, "evq::Event::isType<T>: T is not derived from evq::Event." );
+        assert( alloc != nullptr );
+        return queueEvent( ptr::allocate_shared< T >( alloc, args... ) );
+        //return queueEvent( ptr::shared_ptr< T >( new( alloc->allocate<T>() ) T( args... ), alloc ) );
+    }
 
     inline
     EventQueue *

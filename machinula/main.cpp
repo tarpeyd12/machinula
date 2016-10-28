@@ -26,7 +26,7 @@ std::string
 to_string( const T& n )
 {
     std::ostringstream stm;
-    stm << n ;
+    stm << n;
     return stm.str();
 }
 
@@ -51,11 +51,11 @@ class DebugListener : public evq::Listener
 
             MessageEvent( const std::string& m )
             : evq::Event( evq::Event::Type<MessageEvent>() ), broadcast_timestamp( std::chrono::system_clock::now() ), message( m )
-            {  }
+            { }
         };
 
-        DebugListener( std::ostream & o = std::cout ) : out(o) {  }
-        ~DebugListener() {  }
+        DebugListener( std::ostream & o = std::cout ) : out(o) { }
+        ~DebugListener() { }
 
         void
         processEvent( ptr::shared_ptr<evq::Event>& e )
@@ -64,13 +64,13 @@ class DebugListener : public evq::Listener
             {
                 // pull message from given event pointer
                 std::string message = m->message;
-                auto t = std::chrono::system_clock::to_time_t(m->broadcast_timestamp);
-                std::string timestamp = std::string(std::ctime(&t));
+                auto t = std::chrono::system_clock::to_time_t( m->broadcast_timestamp );
+                std::string timestamp = std::string( std::ctime( &t ) );
 
-                while( isspace(timestamp.back()) ) { timestamp.pop_back(); }
+                while( isspace( timestamp.back() ) ) { timestamp.pop_back(); }
 
                 // print message
-                out << timestamp << ( message.find("\n")!=std::string::npos ? ":\n" : ": " ) << message;
+                out << timestamp << ( message.find( "\n" ) != std::string::npos ? ":\n" : ": " ) << message;
 
                 // put newline on end of message if one is not given
                 if( !message.length() || ( message.length() && '\n' != message.back() ) )
@@ -99,10 +99,11 @@ main( int /*argc*/, char* /*argv*/[] )
         std::ios_base::sync_with_stdio( false );
 
         // SafeGlobalAllocator() is a bare-bones wrapper for ::operator new() and ::operator delete()
-        std::size_t _size = 1024*1024*1024; // 3M
+        std::size_t _size = 1024*8; // 5K
         void * _mem = ptr::SafeGlobalAllocator().allocateBlock( _size );
 
         globalAllocator = new ptr::SafeFreeListAllocator( _size, _mem );
+        //globalAllocator = new ptr::GlobalAllocator();// _size, _mem );
 
         // create our event queue
         evq::EventQueue * eventQueue = new( (evq::EventQueue*)*globalAllocator ) evq::EventQueue();
@@ -142,7 +143,7 @@ main( int /*argc*/, char* /*argv*/[] )
 void
 eventQueueStuff( evq::EventQueue * eventQueue )
 {
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Hooking TimerSignalDispatchListener." ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Hooking TimerSignalDispatchListener." );
 
     // hook a listener to the event queue so we can see the timers ticking
     eventQueue->hookListener( ptr::allocate_shared<timer_dispatch::TimerSignalDispatchListener>( globalAllocator ) );
@@ -153,7 +154,7 @@ eventQueueStuff( evq::EventQueue * eventQueue )
     std::vector< timer_dispatch::Timer * > timers;
 
     // we make 4 timers to keep things simple
-    for( std::size_t i = 1; i <= 100; ++i )
+    for( std::size_t i = 1; i <= 10; ++i )
     {
         timer_dispatch::Timer * timer = new timer_dispatch::Timer( globalAllocator,
                                                                    i,                          // timer ID number
@@ -171,11 +172,11 @@ eventQueueStuff( evq::EventQueue * eventQueue )
     // wait for timers to finish.
     // timer threads are joined in their destructor
 
-    std::string s = std::string( ptr::stl_adapter<char>( globalAllocator ) );
-    //std::string s( ptr::stl_adapter<char>( globalAllocator ) );
+    //std::string s = std::string( ptr::stl_adapter<char>( globalAllocator ) );
 
+    if( false )
     {
-        //std::this_thread::sleep_for( std::chrono::seconds(1) );
+        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
 
         std::basic_ostringstream< char > stream( std::string( ptr::stl_adapter<char>( globalAllocator ) ), std::ios_base::out );
         stream.str( std::string( ptr::stl_adapter<char>( globalAllocator ) ) );
@@ -185,7 +186,7 @@ eventQueueStuff( evq::EventQueue * eventQueue )
 
         //s = std::basic_string< char, std::char_traits<char>, ptr::stl_adapter<char> >( stream.str().c_str(), ptr::stl_adapter<char>( globalAllocator ) );
         //s.assign( (const char*)stream.str().c_str() );
-        s = stream.str();
+        //s = stream.str();
 
         stream.str( std::string( ptr::stl_adapter<char>( globalAllocator ) ) );
         stream.clear();
@@ -196,14 +197,14 @@ eventQueueStuff( evq::EventQueue * eventQueue )
     {
         auto t = timers.at(i);
 
-        eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Deleting Timer_" + to_string(i) ) );
+        eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Deleting Timer_" + to_string(i) );
 
         delete t;
     }
 
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Timers Done." ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Timers Done." );
 
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, s ) );
+    //eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, s );
 }
 
 /*
@@ -221,7 +222,7 @@ void
 memoryStuff( evq::EventQueue * eventQueue )
 {
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Creating DefaultAllocator." ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Creating DefaultAllocator." );
 
     // wrapper for ::operator new() and ::operator delete() that also keeps track of all allocations unlike GlobalAllocator
     ptr::SafeDefaultAllocator defaultAllocator( 0, nullptr );
@@ -236,10 +237,10 @@ memoryStuff( evq::EventQueue * eventQueue )
     //std::size_t _mem_size = 1024*1024*0.5f;
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Allocating Memory Pool of size " + to_string(_mem_size) + "bytes." ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Allocating Memory Pool of size " + to_string(_mem_size) + "bytes." );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Allocating FreeListAllocator, for Memory Pool." ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Allocating FreeListAllocator, for Memory Pool." );
 
     // allocate a free list allocator and allocate the memory pool and pass it to the free list allocator.
     ptr::SafeFreeListAllocator * fla = new( (ptr::SafeFreeListAllocator*)defaultAllocator ) ptr::SafeFreeListAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
@@ -284,17 +285,17 @@ memoryStuff( evq::EventQueue * eventQueue )
     }
 
     //std::ostringstream stream; // we don't have control over this memory
-    std::basic_ostringstream<char> stream( std::basic_string<char>( ptr::stl_adapter<char>( fla ) ), std::ios_base::out );
+    std::ostringstream stream( std::string( ptr::stl_adapter<char>( fla ) ), std::ios_base::out );
 
     {
         // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-        eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Allocating IntMap from FreeListAllocator." ) );
+        eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Allocating IntMap from FreeListAllocator." );
 
         // allocate a std::multimap<int,double> with our custom allocator adapters
         ptr::map< int, double > * intmap = new( (ptr::map< int, double >*)*fla ) ptr::map< int, double >( fla );
 
         // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-        eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "" ) );
+        eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "" );
 
         {
             // make 10000 pairs!
@@ -312,7 +313,7 @@ memoryStuff( evq::EventQueue * eventQueue )
                 if( (i) % 1000 == 0 )
                 {
                     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-                    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Inserted " + to_string(i) + " pairs into IntMap on FreeListAllocator. Last pair: " + to_string(key) + "," + to_string(value) + "." ) );
+                    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Inserted " + to_string(i) + " pairs into IntMap on FreeListAllocator. Last pair: " + to_string(key) + "," + to_string(value) + "." );
                 }
             }
         }
@@ -325,10 +326,10 @@ memoryStuff( evq::EventQueue * eventQueue )
         fla->printDebugInfo( stream );
 
         // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-        eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator,  std::string( stream.str().c_str() ) ) );
+        eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator,  std::string( stream.str().c_str() ) );
 
         // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-        eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator, "Deallocating all memory associated with IntMap in FreeListAllocator." ) );
+        eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Deallocating all memory associated with IntMap in FreeListAllocator." );
 
         // deallocate and destruct the multimap<int,double>
         fla->deallocate( intmap );
@@ -342,16 +343,16 @@ memoryStuff( evq::EventQueue * eventQueue )
     fla->printDebugInfo( stream );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator,  std::string( stream.str().c_str() ) ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator,  std::string( stream.str().c_str() ) );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator,  "cleaning up ... fla" ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator,  "cleaning up ... fla" );
 
     // destruct the FreeListAllocator
     defaultAllocator.deallocate( fla );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator,  "cleaning up ... _mem_pool" ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator,  "cleaning up ... _mem_pool" );
 
     // deallocate the memory block
     defaultAllocator.deallocateBlock( _mem_pool );
@@ -364,8 +365,8 @@ memoryStuff( evq::EventQueue * eventQueue )
     defaultAllocator.printDebugInfo( stream );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator,  std::string( stream.str().c_str() ) ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator,  std::string( stream.str().c_str() ) );
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
-    eventQueue->queueEvent( ptr::allocate_shared<DebugListener::MessageEvent>( globalAllocator,  "complete." ) );
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator,  "complete." );
 }

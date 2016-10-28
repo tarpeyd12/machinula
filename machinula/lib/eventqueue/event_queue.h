@@ -60,6 +60,10 @@ namespace evq
 
             std::size_t queueEvent( ptr::shared_ptr<Event> );
             std::size_t queueEvents( const std::vector< ptr::shared_ptr<Event> >& ve );
+
+            template < typename T, typename ... ArgTypes >
+            inline std::size_t queueNewEvent( ptr::Allocator * alloc, ArgTypes && ... args );
+
             std::size_t hookListener( ptr::shared_ptr<Listener> l );
 
             std::size_t numEventsQueued();

@@ -58,7 +58,7 @@ namespace evq
     }
 
     std::size_t
-    EventQueue::queueEvents( const std::vector< ptr::shared_ptr<Event>  > & ve )
+    EventQueue::queueEvents( const std::vector< ptr::shared_ptr<Event> > & ve )
     {
         std::size_t size = 0;
         {
@@ -188,9 +188,11 @@ namespace evq
         {
             ptr::shared_ptr<Event> e = eventQueue->pullNextEvent();
 
-            // if the event is a null pointer we exit the infinite loop
+            // if the event is a null pointer we exit the infinite loop, this is the stop signal
             if( e == nullptr )
+            {
                 break;
+            }
 
             // pass the event to the listeners
             {
