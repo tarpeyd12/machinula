@@ -1,23 +1,22 @@
 #ifndef ECS_H_INCLUDED
 #define ECS_H_INCLUDED
 
-/*#include <vector>
-#include <map>
-#include <unordered_map>*/
-
 #include <algorithm>
 #include <cassert>
+
+// TODO(dean): Rewrite to use the allocator system i developed
 
 /* pulled and adapted from :
  *   http://entity-systems.wikidot.com/test-for-parallel-processing-of-components#cpp
  */
 
+// TODO(dean): try std::type_index which hopefully can be made const. http://en.cppreference.com/w/cpp/types/type_index
 #define ecs_ComponentID      static ecs::ComponentID    _component_id;
 #define ecs_initComponentID(a)      ecs::ComponentID a::_component_id = typeid(a).hash_code();
 
 namespace ecs
 {
-    typedef std::size_t ComponentID;
+    typedef std::size_t ComponentID; // TODO(dean): try std::type_index which hopefully can be made const. http://en.cppreference.com/w/cpp/types/type_index
     struct Manager;
 
     struct Component
@@ -32,15 +31,18 @@ namespace ecs
         Entity();
 
         template< typename ComponentType > ComponentType *get();
+        // TODO(dean): Add addComponent here
+        // TODO(dean): Add removeComponent here
     };
 
     struct Manager
     {
         protected:
-            static std::multimap< ComponentID, Entity* > componentStore;
+            static std::multimap< ComponentID, Entity* > componentStore; // TODO(dean): make non-static, so each manager can exist on its own.
         public:
 
             Manager();
+            ~Manager();
 
             template < typename ComponentType >
             inline void addComponent( Entity * e, ComponentType * comp );
@@ -60,6 +62,7 @@ namespace ecs
 
     std::multimap< ComponentID, Entity* > Manager::componentStore;
 
+    // TODO(dean): remove the globality of the manager
     static Manager * manager;// There should only be one entity manager in a game, and this is it
 
     class System
@@ -69,6 +72,7 @@ namespace ecs
 
         public:
             System( const std::vector<ComponentID> &_requiredComponentTypes );
+            System( ComponentID _requiredComponentType );
             virtual ~System();
 
             inline void getReleventEntities( std::vector< Entity* > &result );
@@ -76,7 +80,7 @@ namespace ecs
             inline void processEntities();
 
         protected:
-            virtual void processEntity( Entity *e ) = 0;
+            virtual void processEntity( Entity * e ) = 0;
     };
 }
 

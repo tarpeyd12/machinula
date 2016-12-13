@@ -21,8 +21,14 @@ namespace ecs
 
     Manager::Manager()
     {
-        assert( manager == NULL );
+        assert( manager == nullptr );
         manager = this;//so all entity systems can register themselves
+    }
+
+    Manager::~Manager()
+    {
+        assert( manager == this );
+        manager = nullptr;
     }
 
     template < typename ComponentType >
@@ -190,6 +196,12 @@ namespace ecs
     : requiredComponentTypes( _requiredComponentTypes )
     {
 
+    }
+
+    System::System( ComponentID _requiredComponentType )
+    : requiredComponentTypes()
+    {
+        requiredComponentTypes.push_back( _requiredComponentType );
     }
 
     System::~System()

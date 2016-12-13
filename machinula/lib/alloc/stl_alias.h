@@ -14,6 +14,19 @@ namespace alloc
     namespace stl
     {
 
+        // TODO(dean): implement: std::list<> std::forward_list<>
+
+        namespace alias
+        {
+            template < typename CharT >
+            using basic_string = std::basic_string< CharT, std::char_traits< CharT >, stl_adapter< CharT > >;
+        }
+
+        using    string = alias::basic_string<char>;
+        using   wstring = alias::basic_string<wchar_t>;
+        using u16string = alias::basic_string<char16_t>;
+        using u32string = alias::basic_string<char32_t>;
+
         namespace alias
         {
             template < typename Type >

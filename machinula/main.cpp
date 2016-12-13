@@ -32,6 +32,7 @@ to_string( const T& n )
 
 void eventQueueStuff( evq::EventQueue * eventQueue );
 void memoryStuff( evq::EventQueue * eventQueue );
+void entityStuff( evq::EventQueue * eventQueue );
 
 // an event listener that prints out message events to a given std::ostream & ( default = std::cout )
 class DebugListener : public evq::Listener
@@ -50,7 +51,7 @@ class DebugListener : public evq::Listener
             std::string message;
 
             MessageEvent( const std::string& m )
-            : evq::Event( evq::Event::Type<MessageEvent>() ), broadcast_timestamp( std::chrono::system_clock::now() ), message( m )
+            : evq::Event( evq::Event::Type<MessageEvent>() ), broadcast_timestamp( std::chrono::system_clock::now() ), message( std::move(m) )
             { }
         };
 
@@ -63,9 +64,9 @@ class DebugListener : public evq::Listener
             if( auto m = std::dynamic_pointer_cast<MessageEvent>( e ) )
             {
                 // pull message from given event pointer
-                std::string message = m->message;
+                std::string message( std::move(m->message) );
                 auto t = std::chrono::system_clock::to_time_t( m->broadcast_timestamp );
-                std::string timestamp = std::string( std::ctime( &t ) );
+                std::string timestamp( std::move(std::ctime( &t )) ); // uses non-managed memory
 
                 while( isspace( timestamp.back() ) ) { timestamp.pop_back(); }
 
@@ -99,7 +100,7 @@ main( int /*argc*/, char* /*argv*/[] )
         std::ios_base::sync_with_stdio( false );
 
         // SafeGlobalAllocator() is a bare-bones wrapper for ::operator new() and ::operator delete()
-        std::size_t _size = 1024*8; // 5K
+        std::size_t _size = 1024*10; // 3K
         void * _mem = ptr::SafeGlobalAllocator().allocateBlock( _size );
 
         globalAllocator = new ptr::SafeFreeListAllocator( _size, _mem );
@@ -117,6 +118,9 @@ main( int /*argc*/, char* /*argv*/[] )
         // execute some fun stuff with memory allocators, print debug with event queue
         memoryStuff( eventQueue );
 
+        // execute some entity component test code
+        entityStuff( eventQueue );
+
         // make sure there are no more events to execute
         eventQueue->waitForEmpty();
 
@@ -132,7 +136,9 @@ main( int /*argc*/, char* /*argv*/[] )
     catch( std::exception e )
     {
         std::cerr << std::flush;
+        std::cout << std::flush;
         std::cerr << e.what() << std::endl;
+        std::cerr << std::flush;
         std::cout << std::flush;
     }
 
@@ -148,7 +154,7 @@ eventQueueStuff( evq::EventQueue * eventQueue )
     // hook a listener to the event queue so we can see the timers ticking
     eventQueue->hookListener( ptr::allocate_shared<timer_dispatch::TimerSignalDispatchListener>( globalAllocator ) );
 
-    double timers_runtime = 10.0; // seconds
+    double timers_runtime = 10; // seconds
 
     // list of timers
     std::vector< timer_dispatch::Timer * > timers;
@@ -319,7 +325,7 @@ memoryStuff( evq::EventQueue * eventQueue )
         }
 
         // clear the stringstream buffer
-        stream.str( std::basic_string< char >( ptr::stl_adapter<char>(fla) ) );
+        stream.str( std::string( ptr::stl_adapter<char>(fla) ) );
         stream.clear();
 
         // put allocator debug info into stringstream buffer
@@ -369,4 +375,49 @@ memoryStuff( evq::EventQueue * eventQueue )
 
     // we don't use the memory allocator with the events because we have yet to properly setup custom allocator deletion for events
     eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator,  "complete." );
+}
+
+
+class StringTestComponent : public ecs::Component
+{
+    public:
+        ecs_ComponentID;
+
+        std::string string;
+
+        StringTestComponent( const std::string& str ) : string( str )
+        { }
+};
+ecs_initComponentID( StringTestComponent );
+
+class StringTestSystem : public ecs::System
+{
+    private:
+        evq::EventQueue * eventQueue;
+    public:
+        StringTestSystem( evq::EventQueue * eq ) : ecs::System( StringTestComponent::_component_id ), eventQueue(eq) {}
+
+        void
+        processEntity( ecs::Entity * e ) override
+        {
+            eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, e->get<StringTestComponent>()->string );
+            //std::cout <<  << std::cout;
+        }
+};
+
+void
+entityStuff( evq::EventQueue * eventQueue )
+{
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Begin ECS Tests." );
+
+    //ecs::
+    StringTestSystem s( eventQueue );
+
+    ecs::Manager manager;
+
+    manager.addComponent( new ecs::Entity(), new StringTestComponent("StringTestComponent") );
+
+    s.processEntities();
+
+    eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "End ECS Tests." );
 }
