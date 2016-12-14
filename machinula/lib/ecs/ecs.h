@@ -62,17 +62,19 @@ namespace ecs
 
     std::multimap< ComponentID, Entity* > Manager::componentStore;
 
-    // TODO(dean): remove the globality of the manager
-    static Manager * manager;// There should only be one entity manager in a game, and this is it
+    // TODO(dean): remove the global-ness of the manager
+    //static Manager * manager;// There should only be one entity manager in a game, and this is it
 
     class System
     {
+        private:
+            Manager * manager;
         protected:
             std::vector<ComponentID> requiredComponentTypes;
 
         public:
-            System( const std::vector<ComponentID> &_requiredComponentTypes );
-            System( ComponentID _requiredComponentType );
+            System( Manager * _manager, const std::vector<ComponentID> &_requiredComponentTypes );
+            System( Manager * _manager, ComponentID _requiredComponentType );
             virtual ~System();
 
             inline void getReleventEntities( std::vector< Entity* > &result );

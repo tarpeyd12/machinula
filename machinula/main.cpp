@@ -100,7 +100,7 @@ main( int /*argc*/, char* /*argv*/[] )
         std::ios_base::sync_with_stdio( false );
 
         // SafeGlobalAllocator() is a bare-bones wrapper for ::operator new() and ::operator delete()
-        std::size_t _size = 1024*10; // 3K
+        std::size_t _size = 1024*7; // 3K
         void * _mem = ptr::SafeGlobalAllocator().allocateBlock( _size );
 
         globalAllocator = new ptr::SafeFreeListAllocator( _size, _mem );
@@ -390,34 +390,88 @@ class StringTestComponent : public ecs::Component
 };
 ecs_initComponentID( StringTestComponent );
 
+class IntTestComponent : public ecs::Component
+{
+    public:
+        ecs_ComponentID;
+
+        int value;
+
+        IntTestComponent( int v ) : value( v )
+        { }
+};
+ecs_initComponentID( IntTestComponent );
+
+
 class StringTestSystem : public ecs::System
 {
     private:
         evq::EventQueue * eventQueue;
     public:
-        StringTestSystem( evq::EventQueue * eq ) : ecs::System( StringTestComponent::_component_id ), eventQueue(eq) {}
+        StringTestSystem( ecs::Manager * m, evq::EventQueue * eq )
+        : ecs::System( m, StringTestComponent::_component_id ), eventQueue(eq) {}
+
+        StringTestSystem( const StringTestSystem& ) = delete;
 
         void
         processEntity( ecs::Entity * e ) override
         {
             eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, e->get<StringTestComponent>()->string );
-            //std::cout <<  << std::cout;
         }
 };
 
+class IntStringTestSystem : public ecs::System
+{
+    private:
+        evq::EventQueue * eventQueue;
+    public:
+        IntStringTestSystem( ecs::Manager * m, evq::EventQueue * eq )
+        : ecs::System( m, {StringTestComponent::_component_id, IntTestComponent::_component_id } ), eventQueue(eq) {}
+
+        IntStringTestSystem( const StringTestSystem& ) = delete;
+
+        void
+        processEntity( ecs::Entity * e ) override
+        {
+            eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, e->get<StringTestComponent>()->string + to_string( e->get<IntTestComponent>()->value ) );
+        }
+};
+
+// TODO(dean): make this function use the allocators
 void
 entityStuff( evq::EventQueue * eventQueue )
 {
     eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Begin ECS Tests." );
 
-    //ecs::
-    StringTestSystem s( eventQueue );
-
     ecs::Manager manager;
+
+    StringTestSystem s( &manager, eventQueue );
+    IntStringTestSystem is( &manager, eventQueue );
 
     manager.addComponent( new ecs::Entity(), new StringTestComponent("StringTestComponent") );
 
-    s.processEntities();
+    ecs::Entity * e = nullptr;
+
+    for( std::size_t i = 0; i < 10; ++i )
+    {
+        e = new ecs::Entity();
+        manager.addComponent( e, new StringTestComponent("IntStringTestComponent") );
+        manager.addComponent( e, new IntTestComponent( i ) );
+    }
+
+    for( std::size_t i = 0; i < 100; ++i )
+    {
+        s.processEntities();
+        is.processEntities();
+
+        // we wait to see if we have the memory to allocate more messages, 512 is an arbitrary number
+        while( globalAllocator->unusedMemory() < 5120 )
+        {
+            std::this_thread::sleep_for( std::chrono::milliseconds(100) );
+        }
+
+        //eventQueue->waitForEmpty();
+    }
 
     eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "End ECS Tests." );
 }

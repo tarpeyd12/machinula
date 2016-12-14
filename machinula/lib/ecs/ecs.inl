@@ -21,14 +21,12 @@ namespace ecs
 
     Manager::Manager()
     {
-        assert( manager == nullptr );
-        manager = this;//so all entity systems can register themselves
+
     }
 
     Manager::~Manager()
     {
-        assert( manager == this );
-        manager = nullptr;
+
     }
 
     template < typename ComponentType >
@@ -143,7 +141,7 @@ namespace ecs
     Manager::_process_get_entities_verticle( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const
     {
         // TODO(dean): Make this function multi-threaded
-        // this section is faster for large sets of components on MULTIPLE THREADS
+        // this section is faster for large sets of components on MULTIPLE THREADS ( I think )
         auto iterPair = componentStore.equal_range( componentLikelyhood.front().second );
 
         std::size_t numents = std::distance( iterPair.first, iterPair.second );
@@ -192,28 +190,30 @@ namespace ecs
         }
     }
 
-    System::System( const std::vector<ComponentID> &_requiredComponentTypes )
-    : requiredComponentTypes( _requiredComponentTypes )
+    System::System( Manager * _manager, const std::vector<ComponentID> &_requiredComponentTypes )
+    : manager(_manager), requiredComponentTypes( _requiredComponentTypes )
     {
-
+        assert( nullptr != manager );
     }
 
-    System::System( ComponentID _requiredComponentType )
-    : requiredComponentTypes()
+    System::System( Manager * _manager, ComponentID _requiredComponentType )
+    : manager(_manager), requiredComponentTypes()
     {
+        assert( nullptr != manager );
         requiredComponentTypes.push_back( _requiredComponentType );
     }
 
     System::~System()
     {
+        manager = nullptr;
         requiredComponentTypes.clear();
     }
 
     inline
     void
-    System::getReleventEntities( std::vector< Entity* > &result )
+    System::getReleventEntities( std::vector< Entity* > & result )
     {
-        manager->getEntities(requiredComponentTypes, result);
+        manager->getEntities( requiredComponentTypes, result );
     }
 
     inline
@@ -221,11 +221,11 @@ namespace ecs
     System::processEntities()
     {
         std::vector< Entity* > toProcess;
-        getReleventEntities(toProcess);
+        getReleventEntities( toProcess );
 
-        for(Entity* e : toProcess)
+        for( Entity * e : toProcess )
         {
-            processEntity(e);
+            processEntity( e );
         }
     }
 }
