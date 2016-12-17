@@ -10,7 +10,6 @@ namespace ecs
     }
 
     template< typename ComponentType >
-    inline
     ComponentType *
     Entity::get()
     {
@@ -30,7 +29,6 @@ namespace ecs
     }
 
     template < typename ComponentType >
-    inline
     void
     Manager::addComponent( Entity * e, ComponentType * comp )
     {
@@ -40,7 +38,6 @@ namespace ecs
     }
 
     template < typename ComponentType >
-    inline
     ComponentType *
     Manager::getComponent( Entity * e ) const
     {
@@ -49,7 +46,6 @@ namespace ecs
     }
 
     template < typename ComponentType >
-    inline
     void
     Manager::getEntities( std::vector< Entity* > &result ) const
     {
@@ -61,7 +57,6 @@ namespace ecs
         }
     }
 
-    inline
     void
     Manager::getEntities( const std::vector<ComponentID> &componentTypes, std::vector< Entity* > &result ) const
     {
@@ -106,7 +101,6 @@ namespace ecs
         //_process_get_entities_verticle( componentLikelyhood, result );
     }
 
-    inline
     void
     Manager::_process_get_entities_horizontal( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const
     {
@@ -136,7 +130,6 @@ namespace ecs
         }
     }
 
-    inline
     void
     Manager::_process_get_entities_verticle( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const
     {
@@ -209,14 +202,12 @@ namespace ecs
         requiredComponentTypes.clear();
     }
 
-    inline
     void
     System::getReleventEntities( std::vector< Entity* > & result )
     {
         manager->getEntities( requiredComponentTypes, result );
     }
 
-    inline
     void
     System::processEntities()
     {

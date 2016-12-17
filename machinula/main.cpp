@@ -418,6 +418,8 @@ class StringTestSystem : public ecs::System
         {
             eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, e->get<StringTestComponent>()->string );
         }
+
+        StringTestSystem& operator=( const StringTestSystem& ) = delete;
 };
 
 class IntStringTestSystem : public ecs::System
@@ -427,14 +429,15 @@ class IntStringTestSystem : public ecs::System
     public:
         IntStringTestSystem( ecs::Manager * m, evq::EventQueue * eq )
         : ecs::System( m, {StringTestComponent::_component_id, IntTestComponent::_component_id } ), eventQueue(eq) {}
-
-        IntStringTestSystem( const StringTestSystem& ) = delete;
+        IntStringTestSystem( const IntStringTestSystem& ) = delete;
 
         void
         processEntity( ecs::Entity * e ) override
         {
             eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, e->get<StringTestComponent>()->string + to_string( e->get<IntTestComponent>()->value ) );
         }
+
+        IntStringTestSystem& operator=( const IntStringTestSystem& ) = delete;
 };
 
 // TODO(dean): make this function use the allocators

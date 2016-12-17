@@ -53,7 +53,7 @@ namespace ecs
             template < typename ComponentType >
             inline void getEntities( std::vector< Entity* > &result ) const;
 
-            inline void getEntities( const std::vector<ComponentID> &componentTypes, std::vector< Entity* > &result ) const;
+            void getEntities( const std::vector<ComponentID> &componentTypes, std::vector< Entity* > &result ) const;
 
         private:
             inline void _process_get_entities_horizontal( const std::vector< std::pair<std::size_t,ComponentID> > & componentLikelyhood, std::vector< Entity* > &result ) const;
@@ -75,11 +75,15 @@ namespace ecs
         public:
             System( Manager * _manager, const std::vector<ComponentID> &_requiredComponentTypes );
             System( Manager * _manager, ComponentID _requiredComponentType );
+            System( const System& ) = delete;
+
             virtual ~System();
 
             inline void getReleventEntities( std::vector< Entity* > &result );
 
             inline void processEntities();
+
+            System& operator=( const System& ) = delete;
 
         protected:
             virtual void processEntity( Entity * e ) = 0;
