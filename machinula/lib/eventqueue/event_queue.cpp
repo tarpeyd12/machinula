@@ -275,7 +275,6 @@ namespace evq
     void
     EventQueue::_deallocateEvent( ptr::shared_ptr<Event> e )
     {
-        // TODO(dean): make this function thread-safe, since we might be using allocators!
         assert( nullptr != e );
         //delete e;
     }

@@ -100,8 +100,8 @@ main( int /*argc*/, char* /*argv*/[] )
         std::ios_base::sync_with_stdio( false );
 
         // SafeGlobalAllocator() is a bare-bones wrapper for ::operator new() and ::operator delete()
-        std::size_t _size = 1024*7; // 3K
-        void * _mem = ptr::SafeGlobalAllocator().allocateBlock( _size );
+        std::size_t _size = 1024*3; // 3K
+        void * _mem = ptr::GlobalAllocator().allocateBlock( _size );
 
         globalAllocator = new ptr::SafeFreeListAllocator( _size, _mem );
         //globalAllocator = new ptr::GlobalAllocator();// _size, _mem );
@@ -131,7 +131,7 @@ main( int /*argc*/, char* /*argv*/[] )
 
         delete globalAllocator;
 
-        ptr::SafeGlobalAllocator().deallocateBlock( _mem );
+        ptr::GlobalAllocator().deallocateBlock( _mem );
     }
     catch( std::exception e )
     {
@@ -462,18 +462,12 @@ entityStuff( evq::EventQueue * eventQueue )
         manager.addComponent( e, new IntTestComponent( i ) );
     }
 
-    for( std::size_t i = 0; i < 100; ++i )
+    for( std::size_t i = 0; i < 1000; ++i )
     {
         s.processEntities();
         is.processEntities();
 
-        // we wait to see if we have the memory to allocate more messages, 512 is an arbitrary number
-        while( globalAllocator->unusedMemory() < 5120 )
-        {
-            std::this_thread::sleep_for( std::chrono::milliseconds(100) );
-        }
-
-        //eventQueue->waitForEmpty();
+        eventQueue->waitForEmpty();
     }
 
     eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "End ECS Tests." );
