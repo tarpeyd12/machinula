@@ -67,6 +67,7 @@
 		<Unit filename="lib/alloc/default_allocator.inl" />
 		<Unit filename="lib/alloc/free_list_allocator.cpp" />
 		<Unit filename="lib/alloc/free_list_allocator.h" />
+		<Unit filename="lib/alloc/free_list_allocator.inl" />
 		<Unit filename="lib/alloc/global_allocator.cpp" />
 		<Unit filename="lib/alloc/global_allocator.h" />
 		<Unit filename="lib/alloc/global_allocator.inl" />
@@ -102,6 +103,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="random_functor.cpp" />
 		<Unit filename="random_functor.h" />
+		<Unit filename="simple_test.cpp" />
+		<Unit filename="simple_test.h" />
 		<Unit filename="timer_dispatch.cpp" />
 		<Unit filename="timer_dispatch.h" />
 		<Extensions>

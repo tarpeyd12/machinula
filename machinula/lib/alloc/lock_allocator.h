@@ -38,7 +38,7 @@ namespace alloc
 
     // disable nested lock allocators.
     // FIXME(dean): this does not block compilation when the object is empty parameter initialized. WTF?
-    /*template < typename SubAllocatorType >
+    template < typename SubAllocatorType >
     class LockAllocator< LockAllocator< SubAllocatorType > >
     {
         template < typename ... ArgTypes >
@@ -51,7 +51,7 @@ namespace alloc
         LockAllocator< LockAllocator< SubAllocatorType > > & operator = ( const LockAllocator< LockAllocator< SubAllocatorType > > & ) = delete;
 
         virtual void DO_NOT_USE_NESTED_LOCK_ALLOCATORS() = 0;
-    };*/
+    };
 
 }
 

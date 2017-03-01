@@ -75,6 +75,7 @@ namespace ecs
         public:
             System( Manager * _manager, const std::vector<ComponentID> &_requiredComponentTypes );
             System( Manager * _manager, ComponentID _requiredComponentType );
+
             virtual ~System();
 
             inline void getReleventEntities( std::vector< Entity* > &result );
@@ -83,6 +84,10 @@ namespace ecs
 
         protected:
             virtual void processEntity( Entity * e ) = 0;
+
+        private:
+            System( const System& ) = delete;
+            System& operator=( const System& ) = delete;
     };
 }
 
