@@ -1,8 +1,12 @@
 # depslib dependency file v1.0
-1488324070 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
+1488413767 source:c:\users\tarpe\documents\github\machinula\machinula\main.cpp
 	<cstdlib>
 	<iostream>
+	<stack>
+	<set>
+	<algorithm>
 	"simple_test.h"
+	"lib/alloc.h"
 
 1476320699 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc.h
 	"alloc/alloc.h"
@@ -53,7 +57,7 @@
 1476320699 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\object_pool_allocator.h
 	"pool_allocator.h"
 
-1488336054 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
+1488412304 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.h
 	"allocator.h"
 	"free_list_allocator.inl"
 
@@ -297,7 +301,8 @@
 1476320699 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\linear_allocator.inl
 	"align.h"
 
-1488336239 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.inl
+1488413322 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\free_list_allocator.inl
+	<cstring>
 
 1476981084 c:\users\tarpe\documents\github\machinula\machinula\lib\alloc\lock_allocator.inl
 

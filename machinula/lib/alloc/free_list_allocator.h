@@ -39,9 +39,12 @@ namespace alloc
 
     };
 
-    template < int deallocBlockSize = 128 >
+    template < unsigned int deallocBlockSize >
     class DefferedFreeListAllocator : public FreeListAllocator
     {
+        private:
+            std::size_t numPointersToDeallocate;
+
         public:
             DefferedFreeListAllocator( std::size_t block_size, void * block_start );
             ~DefferedFreeListAllocator();
@@ -49,15 +52,21 @@ namespace alloc
             virtual void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             virtual void deallocateBlock( void * block ) override;
 
+            virtual std::size_t unusedMemory() const override;
+
             virtual void printDebugInfo( std::ostream& out = std::cerr ) const override;
 
         private:
             DefferedFreeListAllocator( const DefferedFreeListAllocator & ) = delete;
             DefferedFreeListAllocator & operator = ( const DefferedFreeListAllocator & ) = delete;
 
-            void trueDeallocateBlock( void * block );
+            inline void trueDeallocateBlock( void * block );
 
-            void batchDeallocate();
+            inline void batchDeallocate();
+
+            inline void clearDeallocationBlock();
+
+            constexpr inline void ** deallocBlock() const;
     };
 }
 
