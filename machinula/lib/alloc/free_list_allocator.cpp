@@ -98,7 +98,6 @@ namespace alloc
     FreeListAllocator::deallocateBlock( void * block )
     {
         // TODO(dean): Figure out what the hell is going on in this function
-        // TODO(dean): Comment this function
         assert( block != nullptr );
 
         _AllocationHeader * header = (_AllocationHeader*)align::_sub( block, sizeof(_AllocationHeader) );
@@ -110,17 +109,20 @@ namespace alloc
         _FreeBlock * prev_block = nullptr;
         _FreeBlock * curr_block = _free_blocks;
 
+        // step through the free list until we overstep the given address
         while( curr_block != nullptr )
         {
+            // TODO(dean): put this check into while loop check.
+            // check for overstep
             if( reinterpret_cast<uintptr_t>(curr_block) >= block_end )
             {
                 break;
             }
             prev_block = curr_block;
             curr_block = curr_block->next;
-            //++deallocLoops;
         }
 
+        //
         if( prev_block == nullptr )
         {
             prev_block = (_FreeBlock*)block_start;
@@ -129,10 +131,13 @@ namespace alloc
 
             _free_blocks = prev_block;
         }
+        // if the previous block hits the exact beginning of the given block
         else if( reinterpret_cast<uintptr_t>(prev_block) + prev_block->size == block_start )
         {
+            // extend the previous block to encompass the given block
             prev_block->size += block_size;
         }
+        // if the given block is in the middle of allocated blocks, add a new node into the free list denoting the given block as free
         else
         {
             _FreeBlock * tmp = (_FreeBlock*)block_start;
@@ -143,8 +148,10 @@ namespace alloc
             prev_block = tmp;
         }
 
+        // if the current block(the free block after the given block) touches the end of the given block
         if( curr_block != nullptr && reinterpret_cast<uintptr_t>(curr_block) == block_end )
         {
+            // consolidate the current block into the previous free block by skipping the current block, since the memory is contiguous
             prev_block->size += curr_block->size;
             prev_block->next = curr_block->next;
         }
@@ -183,6 +190,80 @@ namespace alloc
             }
             out << "\t}(freeBlocks:" << numFreeBlocks << ");\n";
             out << "};\n";
+        }
+    }
+
+    void
+    FreeListAllocator::deallocateSortedBlockBatch( void ** blockList, std::size_t num )
+    {
+        _FreeBlock * prev_block = nullptr;
+        _FreeBlock * curr_block = _free_blocks;
+
+        for( std::size_t i = 0; i < num; ++i )
+        {
+            void * block = blockList[i];
+
+            if( !block )
+            {
+                continue;
+            }
+
+            _AllocationHeader * header = (_AllocationHeader*)align::_sub( block, sizeof(_AllocationHeader) );
+
+            uintptr_t   block_start = reinterpret_cast<uintptr_t>(block) - header->adjust; // NOTE(dean): the subtraction of pointers can technically give a negative value
+            std::size_t block_size  = header->size;
+            uintptr_t   block_end   = block_start + block_size;
+
+            // step through the free list until we overstep the given address
+            while( curr_block != nullptr )
+            {
+                // check for overstep
+                if( reinterpret_cast<uintptr_t>(curr_block) >= block_end )
+                {
+                    break;
+                }
+                prev_block = curr_block;
+                curr_block = curr_block->next;
+            }
+
+            //
+            if( prev_block == nullptr )
+            {
+                prev_block = (_FreeBlock*)block_start;
+                prev_block->size = block_size;
+                prev_block->next = _free_blocks;
+
+                _free_blocks = prev_block;
+            }
+            // if the previous block hits the exact beginning of the given block
+            else if( reinterpret_cast<uintptr_t>(prev_block) + prev_block->size == block_start )
+            {
+                // extend the previous block to encompass the given block
+                prev_block->size += block_size;
+            }
+            // if the given block is in the middle of allocated blocks, add a new node into the free list denoting the given block as free
+            else
+            {
+                _FreeBlock * tmp = (_FreeBlock*)block_start;
+                tmp->size = block_size;
+                tmp->next = prev_block->next;
+                prev_block->next = tmp;
+
+                prev_block = tmp;
+            }
+
+            // if the current block(the free block after the given block) touches the end of the given block
+            if( curr_block != nullptr && reinterpret_cast<uintptr_t>(curr_block) == block_end )
+            {
+                // consolidate the current block into the previous free block by skipping the current block, since the memory is contiguous
+                prev_block->size += curr_block->size;
+                prev_block->next = curr_block->next;
+            }
+
+            _decrementAllocations( block_size );
+
+            prev_block = nullptr;
+            curr_block = prev_block;
         }
     }
 }

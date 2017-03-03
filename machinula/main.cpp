@@ -16,9 +16,9 @@ test_random_deallocation( ptr::Allocator * alloc, bool debug = false )
 {
     std::set< void* > allocated_blocks;
 
-    int testblocksize = 32;
+    unsigned int testblocksize = 32;
 
-    while( alloc->unusedMemory() > 2*testblocksize )
+    while( alloc->unusedMemory() > 2 * testblocksize )
     {
         allocated_blocks.insert( alloc->allocateBlock( testblocksize, 1 ) );
     }
@@ -27,13 +27,16 @@ test_random_deallocation( ptr::Allocator * alloc, bool debug = false )
     {
         if( debug ) alloc->printDebugInfo();
 
-        std::set<void*>::const_iterator it(allocated_blocks.begin());
+        std::set< void* >::const_iterator it(allocated_blocks.begin());
         std::advance( it, int(rand()%allocated_blocks.size()) );
 
-        void * element = *(it);
-
         alloc->deallocateBlock( *it );
-        allocated_blocks.erase(it);
+        allocated_blocks.erase( it );
+
+        if( allocated_blocks.size() % 1000 == 0 )
+        {
+            std::cout << allocated_blocks.size() << std::endl;
+        }
     }
     if( debug ) alloc->printDebugInfo();
 }
@@ -45,9 +48,7 @@ main( int /*argc*/, char* /*argv*/[] )
 
     //Simple_Test::test_all();
 
-
-
-    std::size_t _size = 1024*1024*1;
+    std::size_t _size = 1024*1024*100;
     void * _mem = ptr::SafeGlobalAllocator().allocateBlock( _size );
 
     auto dfla = new ptr::DefferedFreeListAllocator<512>( _size, _mem );

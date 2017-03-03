@@ -22,7 +22,6 @@ namespace alloc
             };
 
             _FreeBlock * _free_blocks;
-            //uintmax_t deallocLoops;
 
         public:
             FreeListAllocator( std::size_t block_size, void * block_start );
@@ -32,6 +31,9 @@ namespace alloc
             virtual void deallocateBlock( void * block ) override;
 
             virtual void printDebugInfo( std::ostream& out = std::cerr ) const override;
+
+        protected:
+            void deallocateSortedBlockBatch( void ** blockList, std::size_t num );
 
         private:
             FreeListAllocator( const FreeListAllocator & ) = delete;

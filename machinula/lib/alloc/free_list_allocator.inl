@@ -10,7 +10,7 @@ namespace alloc
     : FreeListAllocator( block_size, block_start ), numPointersToDeallocate(0)
     {
         static_assert( deallocBlockSize > 3, "template argument must have 4 or more as its value." );
-        assert( deallocBlockSize*sizeof(void*) < _block_size/2 && "deallocation block mus t be less than half the size of the total size of the allocation space." );
+        assert( deallocBlockSize * sizeof(void*) < _block_size/2 && "deallocation block mus t be less than half the size of the total size of the allocation space." );
 
         // subtract the deallocation block from the available size in the free list
         _free_blocks->size = block_size - sizeof(void*) * deallocBlockSize;
@@ -158,17 +158,19 @@ namespace alloc
 
         void ** deallocList = deallocBlock();
 
-        for( std::size_t i = 0; i < deallocBlockSize; ++i )
+        /*for( std::size_t i = 0; i < deallocBlockSize; ++i )
         {
             if( !deallocList[i] )
             {
-                deallocList[i] = nullptr;
+                //deallocList[i] = nullptr;
                 continue;
             }
 
             trueDeallocateBlock( deallocList[i] );
             deallocList[i] = nullptr;
-        }
+        }*/
+
+        FreeListAllocator::deallocateSortedBlockBatch( deallocList, deallocBlockSize );
 
         clearDeallocationBlock();
     }
