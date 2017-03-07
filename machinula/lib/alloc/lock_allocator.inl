@@ -7,7 +7,7 @@ namespace alloc
     void *
     LockAllocator<AllocatorType>::allocateBlock( std::size_t size, uint8_t align )
     {
-        std::lock_guard<std::mutex> lock( _allocatorMutex );
+        std::unique_lock<std::mutex> lock( _allocatorMutex );
         return AllocatorType::allocateBlock( size, align );
     }
 
@@ -15,7 +15,7 @@ namespace alloc
     void
     LockAllocator<AllocatorType>::deallocateBlock( void * block )
     {
-        std::lock_guard<std::mutex> lock( _allocatorMutex );
+        std::unique_lock<std::mutex> lock( _allocatorMutex );
         AllocatorType::deallocateBlock( block );
     }
 
@@ -24,7 +24,7 @@ namespace alloc
     LockAllocator<AllocatorType>::printDebugInfo( std::ostream& out ) const
     {
         // FIXME(dean): fix up this line, will probably break with two threads.
-        std::lock_guard<std::mutex> lock( const_cast<std::mutex&>(_allocatorMutex) );
+        std::unique_lock<std::mutex> lock( const_cast<std::mutex&>(_allocatorMutex) );
         AllocatorType::printDebugInfo( out );
     }
 }

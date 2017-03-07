@@ -109,7 +109,7 @@ namespace Simple_Test
             std::size_t _size = 1024*7; // 7K
             void * _mem = ptr::SafeGlobalAllocator().allocateBlock( _size );
 
-            globalAllocator = new ptr::SafeFreeListAllocator( _size, _mem );
+            globalAllocator = new ptr::SafeDefferedFreeListAllocator<32>( _size, _mem );
             //globalAllocator = new ptr::GlobalAllocator();// _size, _mem );
 
             // create our event queue
@@ -255,7 +255,7 @@ namespace Simple_Test
         eventQueue->queueNewEvent<DebugListener::MessageEvent>( globalAllocator, "Allocating FreeListAllocator, for Memory Pool." );
 
         // allocate a free list allocator and allocate the memory pool and pass it to the free list allocator.
-        ptr::SafeFreeListAllocator * fla = new( (ptr::SafeFreeListAllocator*)defaultAllocator ) ptr::SafeFreeListAllocator( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
+        ptr::SafeDefferedFreeListAllocator<512> * fla = new( (ptr::SafeDefferedFreeListAllocator<512>*)defaultAllocator ) ptr::SafeDefferedFreeListAllocator<512>( _mem_size, _mem_pool = defaultAllocator.allocateBlock(_mem_size,0) );
 
         {
             ptr::weak_ptr<int> test_weak_ptr_outer;

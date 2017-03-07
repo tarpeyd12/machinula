@@ -36,7 +36,7 @@ namespace alloc
 
         void * block = FreeListAllocator::allocateBlock( size, align );
 
-        if( block )
+        if( block != nullptr )
         {
             return block;
         }
@@ -53,7 +53,7 @@ namespace alloc
         // if there is no more space to add in the newest block, batchDeallocate()
         // if there is still space in the to free list add in block and make sure its sorted ( insertion sort )
 
-        void ** deallocList = deallocBlock();
+        void ** deallocList = getDeallocBlock();
 
         // if the list of pointers is full
         if( deallocList[0] )
@@ -98,7 +98,7 @@ namespace alloc
     DefferedFreeListAllocator< deallocBlockSize >::printDebugInfo( std::ostream& out ) const
     {
         void * pend;
-        out << "FreeListAllocator(" << this << "):\n";
+        out << "DefferedFreeListAllocator(" << this << "):\n";
         out << "\tBlock Start: " << getBlock() << "\n";
         out << "\tBlock Size: " << getSize() << " bytes\n";
         out << "\tBlock End:  " << (pend = (void*)(reinterpret_cast<uintptr_t>(getBlock())+getSize())) << "\n";
@@ -127,14 +127,14 @@ namespace alloc
 
 
             out << "\tpending_deallocation:\n\t{\n";
-            void ** deallocList = deallocBlock();
+            void ** deallocList = getDeallocBlock();
             for( std::size_t i = 0; i < deallocBlockSize; ++i )
             {
                 if( !deallocList[i] )
                 {
-                    //continue;
+                    continue;
                 }
-                out << "\t\t" << i << ": 0x" << deallocList[i] << "\n";
+                out << "\t\t" << i << ": " << deallocList[i] << "\n";
             }
             out << "\t};\n";
 
@@ -156,11 +156,11 @@ namespace alloc
         // deallocate all in the stored list
         // then clear the list
 
-        void ** deallocList = deallocBlock();
+        void ** deallocList = getDeallocBlock();
 
         /*for( std::size_t i = 0; i < deallocBlockSize; ++i )
         {
-            if( !deallocList[i] )
+            if( deallocList[i] == nullptr )
             {
                 //deallocList[i] = nullptr;
                 continue;
@@ -180,14 +180,19 @@ namespace alloc
     DefferedFreeListAllocator< deallocBlockSize >::clearDeallocationBlock()
     {
         // sets all the pointers in the deallocation list to null
-        memset( (void*)deallocBlock(), 0, sizeof(void*) * deallocBlockSize );
+        //memset( (void*)getDeallocBlock(), 0, sizeof(void*) * deallocBlockSize );
+        void ** deallocList = getDeallocBlock();
+        for( std::size_t i = 0; i < deallocBlockSize; ++i )
+        {
+            deallocList[i] = nullptr;
+        }
         numPointersToDeallocate = 0;
     }
 
     template < unsigned int deallocBlockSize >
     constexpr
     void **
-    DefferedFreeListAllocator< deallocBlockSize >::deallocBlock() const
+    DefferedFreeListAllocator< deallocBlockSize >::getDeallocBlock() const
     {
         return (void**)( ( reinterpret_cast<intptr_t>( getBlock() ) + getSize() ) - ( sizeof(void*) * deallocBlockSize ) );
     }

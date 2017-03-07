@@ -25,7 +25,7 @@ namespace alloc
 
         public:
             FreeListAllocator( std::size_t block_size, void * block_start );
-            ~FreeListAllocator();
+            virtual ~FreeListAllocator();
 
             virtual void * allocateBlock( std::size_t size, uint8_t align = 0 ) override;
             virtual void deallocateBlock( void * block ) override;
@@ -68,7 +68,7 @@ namespace alloc
 
             inline void clearDeallocationBlock();
 
-            constexpr inline void ** deallocBlock() const;
+            constexpr inline void ** getDeallocBlock() const;
     };
 }
 

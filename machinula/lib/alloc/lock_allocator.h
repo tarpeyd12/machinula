@@ -37,7 +37,6 @@ namespace alloc
     };
 
     // disable nested lock allocators.
-    // FIXME(dean): this does not block compilation when the object is empty parameter initialized. WTF?
     template < typename SubAllocatorType >
     class LockAllocator< LockAllocator< SubAllocatorType > >
     {

@@ -1,4 +1,3 @@
-
 #include <cstdlib>
 
 #include <iostream>
@@ -9,7 +8,6 @@
 #include "simple_test.h"
 
 #include "lib/alloc.h"
-
 
 void
 test_random_deallocation( ptr::Allocator * alloc, bool debug = false )
@@ -46,15 +44,16 @@ main( int /*argc*/, char* /*argv*/[] )
 {
     std::ios_base::sync_with_stdio( false );
 
-    //Simple_Test::test_all();
+    Simple_Test::test_all();
 
-    std::size_t _size = 1024*1024*100;
+    std::size_t _size = 1024*1024*1;
     void * _mem = ptr::SafeGlobalAllocator().allocateBlock( _size );
 
     auto dfla = new ptr::DefferedFreeListAllocator<512>( _size, _mem );
     //auto dfla = new ptr::FreeListAllocator( _size - sizeof(void*)*512, _mem );
 
-    test_random_deallocation( dfla );
+    //test_random_deallocation( dfla );
+    //test_random_deallocation( dfla );
 
     std::cout << "complete.\nCleaning up..." << std::endl;
 

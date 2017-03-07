@@ -89,7 +89,7 @@ namespace alloc
             return (void*)aligned_adderss;
         }
 
-        assert( 0 && "Could not find block of memory large enough for requested size." );
+        //assert( 0 && "Could not find block of memory large enough for requested size." );
 
         return nullptr;
     }
@@ -262,8 +262,8 @@ namespace alloc
 
             _decrementAllocations( block_size );
 
-            prev_block = nullptr;
             curr_block = prev_block;
+            prev_block = nullptr;
         }
     }
 }

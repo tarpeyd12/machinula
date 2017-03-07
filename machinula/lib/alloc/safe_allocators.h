@@ -30,6 +30,9 @@ namespace alloc
 
     using SafeFreeListAllocator = LockAllocator< FreeListAllocator >;
 
+    template < unsigned int Value >
+    using SafeDefferedFreeListAllocator = LockAllocator< DefferedFreeListAllocator< Value > >;
+
     using SafeProxyAllocator = LockAllocator< ProxyAllocator >;
 }
 
